@@ -63,27 +63,29 @@ MediaWind(direction)
 ; ===== Close gesture =====
 ^Pause:: ; Close all windows of that process    (Ctrl + Three finger down)
 +Pause:: ; Close window                        (Shift + Three finger down)
-Pause:: ; Close tab if existing otherwise close window (Three finger down)
-    if (GetKeyState("Ctrl", "P")) ; Is Ctrl pressed?
-    { ; Close active window group
-        if (!isCoreApp())
-        { ; active window is NO protected app
-            closeWindowGroup()
-            killTarget := "WindowGroup" ; Prevent further kills
+Pause:: ; Close tab if existing otherwise close window (Three finger down)    
+    if GetKeyState("Ctrl", "P") ; Is Ctrl pressed?
+        && !isCoreApp()
+    { ; close active window group
+        closeWindowGroup()
+        return ; prevent further kills
+    }
+    else if !GetKeyState("Ctrl", "P") ; Nether Ctrl
+        && !GetKeyState("Shift", "P") ; nor Shift is pressed?
+    { ; Close tab (if one exist), otherwise close window
+        switch isTabActive()
+        {
+        Case true:
+            killTarget := "Tab"
+        Case false:
+            killTarget := "Window"
+        default:
+            killTarget := "noTarget"
         }
-        else 
-        { ; active window IS a protected app
-            killTarget := "Window" ; Close active window
-        }
-
-    } 
-    else if (GetKeyState("Shift", "P")) ; Is Shift pressed?
-    { ; Close window
-        killTarget := "Window"
     }
     else
-    { 
-        closeTabOrApp() ; Close tab (if existing), otherwise close window
+    { ; no key pressed or pretected core app
+        killTarget := "Window"
     }
 
 
