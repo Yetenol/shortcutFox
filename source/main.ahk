@@ -1,19 +1,19 @@
 #Include, <utilities>
+; #Include, touchpad.ahk
 #SingleInstance, force ; Override existing instance when lauched again
-SetWorkingDir, % A_ScriptDir ; Ensures a consistent starting directory
+SplitPath, % A_ScriptDir,, projectDir ; Get this script's parent folder
+SetWorkingDir, % projectDir ; Ensures a consistent working directory (project root folder)
 
 ; ========================= Setup Tray Menu =========================
 Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 Menu, Tray, Add ; Create a separator line.
-Menu, Tray, Add, Send Pause, SendPause ;
-Menu, Tray, Add, Send Ctrl+Pause, SendCtrlBreak ;
+Menu, Tray, Add, % "Send Pause", SendPause ;
+Menu, Tray, Add, % "Send Ctrl+Pause", SendCtrlBreak ;
 
 ; ========================= Setup Keyboard Modifications =========================
 SetNumLockState, AlwaysOn ; Always use digits on NumPad
 return
 ; ========================= End of Setup =========================
-
-
 
 
 ; ==================== Windows Media API ====================
@@ -91,7 +91,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
             ; Close all windows of that process
 
             ; Get all candidates for windows of the same window group
-            GroupAdd, % "activeGroup", % "ahk_exe " windowExe " ahk_class " windowClass
+            GroupAdd, activeGroup, % "ahk_exe " windowExe " ahk_class " windowClass
             WinGet, windowList, List, % "ahk_group activeGroup"
 
             ; Double check all candidates
@@ -134,7 +134,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
         else if (WinActive("ahk_exe bMC.exe"))
         { ; Baramundi Managment Center
             ; Is the active tab a client?
-            image := getFile("BMC Active client.png", [".", "..\resources"])
+            image := getFile("BMC Active client.png", [".", "resources"])
             if (locateImageInWindow("ahk_exe bMC.exe", image))
             { ; Found image! => Active tab is a client
                 killTarget := "Tab"
@@ -142,7 +142,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
             else
             { ; Cannot find image! => No client is active
                 ; Is there an inactive client open?
-                image := getFile("BMC Inactive client.png", [".", "..\resources"])
+                image := getFile("BMC Inactive client.png", [".", "resources"])
                 if (clickImageInWindow("ahk_exe bMC.exe", image))
                 { ; Found image! => Switched to inactive client
                     killTarget := "Tab"
@@ -150,7 +150,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
                 else
                 { ; Cannot find image! => No clients are open
                     ; Protected tab shoundn't be closed
-                    image := getFile("BMC Expand client.png", [".", "..\resources"])
+                    image := getFile("BMC Expand client.png", [".", "resources"])
                     if (clickImageInWindow("ahk_exe bMC.exe", image))
                     { ; Found image! => At least one client open
                         killTarget := "none"
@@ -169,7 +169,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
         }
         else if (WinActive("ahk_exe gitkraken.exe"))
         { ; GitKraken is active but no tab is open
-            image := getFile("GitKraken single empty tab.png", [".", "..\resources"])
+            image := getFile("GitKraken single empty tab.png", [".", "resources"])
             if (!locateImageInWindow("ahk_exe gitkraken.exe", image))
             { ; Cannot find image! => At least one tab open
                 killTarget := "Tab"
@@ -191,7 +191,7 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
     if (WinActive("ahk_exe bMC.exe"))
     { ; Baramundi Managment Center
         ; Open the Environment tab?
-        image := getFile("BMC environment tab.png", [".", "..\resources"])
+        image := getFile("BMC environment tab.png", [".", "resources"])
         if (!clickImageInWindow("ahk_exe bMC.exe", image))
         { ; Cannot find image!
             toastError("Cannot find Environment tab")
