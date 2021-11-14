@@ -1,13 +1,8 @@
-/* Build command: (PowerShell)
-start "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" "/in Window-Tools.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico"
-*/
-
 #Include, <utilities>
 #SingleInstance, force ; Override existing instance when lauched again
 SetWorkingDir, % A_ScriptDir ; Ensures a consistent starting directory
 
 ; ========================= Setup Tray Menu =========================
-; Design Tray Menu
 Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 Menu, Tray, Add ; Create a separator line.
 Menu, Tray, Add, Send Pause, SendPause ;
@@ -18,8 +13,11 @@ SetNumLockState, AlwaysOn ; Always use digits on NumPad
 return
 ; ========================= End of Setup =========================
 
+
+
+
 ; ==================== Windows Media API ====================
-; Enables remote media control for Netflix, PrimeVideo
+; Enables remote media control for media apps like Netflix and PrimeVideo
 
 ; Play/Pause media (Netflix, PrimeVideo)
 Media_Play_Pause::
@@ -56,6 +54,9 @@ MediaWind(direction)
     }
     return
 }
+
+
+
 
 ; ==================== Touchpad gestures ====================
 ; ===== Close gesture =====
@@ -206,8 +207,9 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
     }
 return
 
-; ==================== Window shortcuts ====================
 
+
+; ==================== Window shortcuts ====================
 ; Pin active window always on top (Win + Numpad-)
 #NumpadSub::
     Winset, Alwaysontop, On, A
@@ -231,6 +233,8 @@ return
     Sleep, 2000
     Send, {LWin}
 return
+
+
 
 ; ==================== Transparency shortcuts ====================
 

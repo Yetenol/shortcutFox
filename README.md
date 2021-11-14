@@ -4,13 +4,13 @@
 Powershell
 ```powershell
 $compilerPath = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
-& $compilerPath /in Window-Tools.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico
+& $compilerPath /in source/main.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico
 ```
 
 Cmd
 ```cmd
 set compilerPath=%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe
-"%compilerPath%" /in Window-Tools.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico
+"%compilerPath%" /in source/main.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico
 ```
 
 ; Main control program to 
