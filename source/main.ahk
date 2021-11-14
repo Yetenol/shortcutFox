@@ -1,5 +1,6 @@
 #Include, <utilities>
-; #Include, touchpad.ahk
+#Include, windowCategories.ahk
+#Include, closeWindow.ahk
 #SingleInstance, force ; Override existing instance when lauched again
 SplitPath, % A_ScriptDir,, projectDir ; Get this script's parent folder
 SetWorkingDir, % projectDir ; Ensures a consistent working directory (project root folder)
@@ -65,7 +66,6 @@ MediaWind(direction)
 Pause:: ; Close tab if existing otherwise close window (Three finger down)
     if (GetKeyState("Ctrl", "P")) ; Is Ctrl pressed?
     { ; Close active window group
-
         if (!isCoreApp())
         { ; active window is NO protected app
             closeWindowGroup()
