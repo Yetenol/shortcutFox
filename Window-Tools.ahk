@@ -6,7 +6,7 @@
 ; Last update: 2021-02-10
 
 /* Build command: (PowerShell)
-start "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" "/in source\WindowTools.ahk /out bin\WindowTools.exe /icon resources\WindowTools.ico"
+start "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" "/in Window-Tools.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico"
 */
 
 #Include, <utilities>
