@@ -82,69 +82,11 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
         killTarget := "Window"
     }
     else
-    { ; Close tab (if existing), otherwise close window
-        killTarget := "Window"
-        if (IsBrowserActive())
-        { ; A browser is active
-            killTarget := "Tab"
-        }
-        else if (WinActive("ahk_exe code.exe")) ; Visual Studio Code
-        { ; A tab bases program is active
-            killTarget := "Tab"
-        } 
-        else if (WinActive("ahk_exe AcroRd32.exe") && !WinActive("Adobe Acrobat Reader DC (32-bit)"))
-        { ; Adobe Acrobat Reader DC is active
-            SetTitleMatchMode, 3 ; Window Title must be exactly matched
-            if (!WinActive("Adobe Acrobat Reader DC (32-bit)"))
-            { ; Adobe Reader has no tab open
-                killTarget := "Tab"
-            }
-        }
-        else if (WinActive("ahk_exe bMC.exe"))
-        { ; Baramundi Managment Center
-            ; Is the active tab a client?
-            image := getFile("BMC Active client.png", [".", "resources"])
-            if (locateImageInWindow("ahk_exe bMC.exe", image))
-            { ; Found image! => Active tab is a client
-                killTarget := "Tab"
-            }
-            else
-            { ; Cannot find image! => No client is active
-                ; Is there an inactive client open?
-                image := getFile("BMC Inactive client.png", [".", "resources"])
-                if (clickImageInWindow("ahk_exe bMC.exe", image))
-                { ; Found image! => Switched to inactive client
-                    killTarget := "Tab"
-                }
-                else
-                { ; Cannot find image! => No clients are open
-                    ; Protected tab shoundn't be closed
-                    image := getFile("BMC Expand client.png", [".", "resources"])
-                    if (clickImageInWindow("ahk_exe bMC.exe", image))
-                    { ; Found image! => At least one client open
-                        killTarget := "none"
-                    }
-                    else
-                    { ; Cannot find image! => No client open
-                        killTarget := "none"
-                        toastQuestion("No more clients found!", "Do you want to exit?", 3, false, 0x4)
-                        IfMsgBox, Yes
-                        {
-                            killTarget := "Window"
-                        }
-                    }
-                }
-            }
-        }
-        else if (WinActive("ahk_exe gitkraken.exe"))
-        { ; GitKraken is active but no tab is open
-            image := getFile("GitKraken single empty tab.png", [".", "resources"])
-            if (!locateImageInWindow("ahk_exe gitkraken.exe", image))
-            { ; Cannot find image! => At least one tab open
-                killTarget := "Tab"
-            }
-        }
+    { 
+        closeTabOrApp() ; Close tab (if existing), otherwise close window
     }
+
+
     if (killTarget = "Window")
     { ; Close window
         Send, !{F4}
