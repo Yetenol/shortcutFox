@@ -178,3 +178,18 @@ IsMediaPlayerActive() { ; Is active window a media player?
     return (WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
         || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow")) ; PrimeVideo
 }
+
+isCoreApp() {
+    if (windowExe = ahk_exe "Explorer.EXE" && windowClass = "Shell_TrayWnd") ; Taskbar
+        || (windowExe = ahk_exe "Explorer.EXE" && windowClass = "WorkerW") ; Desktop
+        || (windowExe = ahk_exe "Explorer.EXE" && windowClass = "Progman") ; Desktop
+        || (windowExe = "ApplicationFrameHost.exe" && windowClass = "ApplicationFrameWindow") ; Windows Store Apps
+        || (windowExe = "Rainmeter.exe" && windowClass = "RainmeterMeterWindow")  ; Rainmeter widget
+    {
+        return true
+    } 
+    else 
+    { ; Valid window found
+        return false
+    }
+}
