@@ -65,50 +65,19 @@ MediaWind(direction)
 Pause:: ; Close tab if existing otherwise close window (Three finger down)
     if (GetKeyState("Ctrl", "P")) ; Is Ctrl pressed?
     { ; Close active window group
-        ; Retrive information about active window group
-        WinGet, windowExe, ProcessName, % "A"
-        WinGetClass, windowClass, % "A"
 
-        windowClosable := false
-
-        if (windowExe = ahk_exe "Explorer.EXE" && windowClass = "Shell_TrayWnd")
-        {} ; Taskbar
-        else if (windowExe = ahk_exe "Explorer.EXE" && windowClass = "WorkerW")
-        {} ; Desktop
-        else if (windowExe = ahk_exe "Explorer.EXE" && windowClass = "Progman")
-        {} ; Desktop
-        else if (windowExe = "ApplicationFrameHost.exe" && windowClass = "ApplicationFrameWindow")
-        {} ; Windows Store Apps
-        else if (windowExe = "Rainmeter.exe" && windowClass = "RainmeterMeterWindow") 
-        {} ; Rainmeter widget
-        else
-        { ; Valid window found
-            windowClosable := true
-        }
-
-        if (windowClosable)
-        {
-            ; Close all windows of that process
-
-            ; Get all candidates for windows of the same window group
-            GroupAdd, activeGroup, % "ahk_exe " windowExe " ahk_class " windowClass
-            WinGet, windowList, List, % "ahk_group activeGroup"
-
-            ; Double check all candidates
-            loop, % windowList    
-            {
-                ; Only close candidates of same ProcessName and WindowClass
-                WinClose, % "ahk_id " windowList%A_Index% " ahk_exe " windowExe " ahk_class " windowClass
-            }
+        if (!isCoreApp())
+        { ; active window is NO protected app
+            closeWindowGroup()
             killTarget := "WindowGroup" ; Prevent further kills
         }
         else 
-        {
+        { ; active window IS a protected app
             killTarget := "Window" ; Close active window
         }
 
     } 
-    else if (GetKeyState("Shift", "P"))
+    else if (GetKeyState("Shift", "P")) ; Is Shift pressed?
     { ; Close window
         killTarget := "Window"
     }

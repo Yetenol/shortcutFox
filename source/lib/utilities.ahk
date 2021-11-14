@@ -170,15 +170,18 @@ clickImageInWindow(window, imagePath) {
 }
 
 ; ==================== Window Lists: ====================
-IsBrowserActive() { ; Is the active window a browser?
+; Is the active window a browser?
+IsBrowserActive() {
     return WinActive("ahk_exe firefox.exe") || WinActive("ahk_exe msedge.exe") || WinActive("ahk_exe chrome.exe")
 }
 
-IsMediaPlayerActive() { ; Is active window a media player?
+; Is active window a media player?
+IsMediaPlayerActive() {
     return (WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
         || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow")) ; PrimeVideo
 }
 
+; Is active window a OS core app or a protected backgroup app?
 isCoreApp() {
     if (windowExe = ahk_exe "Explorer.EXE" && windowClass = "Shell_TrayWnd") ; Taskbar
         || (windowExe = ahk_exe "Explorer.EXE" && windowClass = "WorkerW") ; Desktop
@@ -191,5 +194,23 @@ isCoreApp() {
     else 
     { ; Valid window found
         return false
+    }
+}
+
+; Close all windows of that process
+closeWindowGroup() {
+    ; Retrive information about active window group
+    WinGet, windowExe, ProcessName, % "A"
+    WinGetClass, windowClass, % "A"
+
+    ; Get all candidates for windows of the same window group
+    GroupAdd, activeGroup, % "ahk_exe " windowExe " ahk_class " windowClass
+    WinGet, windowList, List, % "ahk_group activeGroup"
+
+    ; Double check all candidates
+    loop, % windowList
+    {
+        ; Only close candidates of same ProcessName and WindowClass
+        WinClose, % "ahk_id " windowList%A_Index% " ahk_exe " windowExe " ahk_class " windowClass
     }
 }
