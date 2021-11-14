@@ -1,10 +1,3 @@
-; Main control program to 
-; - managed keyboard shortcuts
-; - launches external programs
-
-; Author: Anton Pusch
-; Last update: 2021-02-10
-
 /* Build command: (PowerShell)
 start "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" "/in Window-Tools.ahk /out bin\Window-Tools.exe /icon resources\Window-Tools.ico"
 */
@@ -13,27 +6,17 @@ start "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" "/in Window-Tools.ahk 
 #SingleInstance, force ; Override existing instance when lauched again
 SetWorkingDir, % A_ScriptDir ; Ensures a consistent starting directory
 
-; ========================= Setup =========================
+; ========================= Setup Tray Menu =========================
 ; Design Tray Menu
 Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 Menu, Tray, Add ; Create a separator line.
 Menu, Tray, Add, Send Pause, SendPause ;
 Menu, Tray, Add, Send Ctrl+Pause, SendCtrlBreak ;
 
-; Setup kyeboard modifications
+; ========================= Setup Keyboard Modifications =========================
 SetNumLockState, AlwaysOn ; Always use digits on NumPad
 return
 ; ========================= End of Setup =========================
-
-; ==================== Window Lists: ====================
-BrowserActive() { ; Is the active window a browser?
-    return WinActive("ahk_exe firefox.exe") || WinActive("ahk_exe msedge.exe") || WinActive("ahk_exe chrome.exe")
-}
-
-MediaPlayerActive() { ; Is active window a media player?
-    return (WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
-        || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow")) ; PrimeVideo
-}
 
 ; ==================== Windows Media API ====================
 ; Enables remote media control for Netflix, PrimeVideo
@@ -41,7 +24,7 @@ MediaPlayerActive() { ; Is active window a media player?
 ; Play/Pause media (Netflix, PrimeVideo)
 Media_Play_Pause::
     media_is_winding := false ; stop media winding
-    if (MediaPlayerActive())
+    if (IsMediaPlayerActive())
     {
         Send, {Space}
     }
@@ -62,10 +45,10 @@ return
 MediaWind(direction) 
 {
     global media_is_winding
-    if (MediaPlayerActive()) 
+    if (IsMediaPlayerActive()) 
     {
         media_is_winding := !media_is_winding ; start/stop winding (stop kills over thread)
-        while (media_is_winding && MediaPlayerActive())
+        while (media_is_winding && IsMediaPlayerActive())
         {
             Send, % (direction="fast_forward") ? "{Right}" : "{Left}" ; forward media / rewind media
             Sleep, % WinActive("Netflix") ? WinActive("Amazon Prime Video for Windows") ? 1500 : 1000 : 1000
@@ -131,7 +114,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
     else
     { ; Close tab (if existing), otherwise close window
         killTarget := "Window"
-        if (BrowserActive())
+        if (IsBrowserActive())
         { ; A browser is active
             killTarget := "Tab"
         }
@@ -213,7 +196,7 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
             toastError("Cannot find Environment tab")
         }
     }
-    else if (BrowserActive() || WinActive("ahk_exe gitkraken.exe"))
+    else if (IsBrowserActive() || WinActive("ahk_exe gitkraken.exe"))
     { ; Browser(like) window is active
         Send, ^t ; Open new tab
     }

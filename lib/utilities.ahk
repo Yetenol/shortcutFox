@@ -168,3 +168,13 @@ clickImageInWindow(window, imagePath) {
         return true
     }
 }
+
+; ==================== Window Lists: ====================
+IsBrowserActive() { ; Is the active window a browser?
+    return WinActive("ahk_exe firefox.exe") || WinActive("ahk_exe msedge.exe") || WinActive("ahk_exe chrome.exe")
+}
+
+IsMediaPlayerActive() { ; Is active window a media player?
+    return (WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
+        || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow")) ; PrimeVideo
+}
