@@ -66,9 +66,8 @@ MediaWind(direction)
 Pause:: ; Close tab if existing otherwise close window (Three finger down)    
     if GetKeyState("Ctrl", "P") ; Is Ctrl pressed?
         && !isCoreApp()
-    { ; close active window group
+    { ; Close active window group
         closeWindowGroup()
-        return ; prevent further kills
     }
     else if !GetKeyState("Ctrl", "P") ; Nether Ctrl
         && !GetKeyState("Shift", "P") ; nor Shift is pressed?
@@ -76,26 +75,15 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
         switch isTabActive()
         {
         Case true:
-            killTarget := "Tab"
+            Send, ^w ; Close tab
         Case false:
-            killTarget := "Window"
-        default:
-            killTarget := "noTarget"
+            Send, !{F4} ; Close window
+        default: ; cannot detect correctly => require Shift or Ctrl to close
         }
     }
     else
-    { ; no key pressed or pretected core app
-        killTarget := "Window"
-    }
-
-
-    if (killTarget = "Window")
-    { ; Close window
-        Send, !{F4}
-    } 
-    else if (killTarget = "Tab")
-    { ; Close tab
-        Send, ^w
+    { ; No key is pressed or pretected core app
+        Send, !{F4} ; Close window
     }
 return
 

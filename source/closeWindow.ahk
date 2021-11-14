@@ -4,7 +4,7 @@ isTabActive() {
     if IsBrowserActive() ; A browser is active
         || WinActive("ahk_exe code.exe") ; Visual Studio Code
     { 
-        return true
+        return true ; Tab detected
     } 
     else if WinActive("ahk_exe AcroRd32.exe") ; Adobe Acrobat Reader DC is active
         && !WinActive("Adobe Acrobat Reader DC (32-bit)") ; No file is open
@@ -12,7 +12,7 @@ isTabActive() {
         SetTitleMatchMode, 3 ; Window Title must be exactly matched
         if (!WinActive("Adobe Acrobat Reader DC (32-bit)"))
         { ; Adobe Reader has no tab open
-            return true
+            return true ; Tab detected
         }
     }
     else if (WinActive("ahk_exe bMC.exe")) ; Baramundi Managment Center
@@ -21,7 +21,7 @@ isTabActive() {
         image := getFile("BMC Active client.png", [".", "resources"])
         if (locateImageInWindow("ahk_exe bMC.exe", image))
         { ; Found image! => Active tab is a client
-            return true
+            return true ; Tab detected
         }
         else
         { ; Cannot find image! => No client is active
@@ -29,7 +29,7 @@ isTabActive() {
             image := getFile("BMC Inactive client.png", [".", "resources"])
             if (clickImageInWindow("ahk_exe bMC.exe", image))
             { ; Found image! => Switched to inactive client
-                return true
+                return true ; Tab detected
             }
             else
             { ; Cannot find image! => No clients are open
@@ -37,15 +37,15 @@ isTabActive() {
                 image := getFile("BMC Expand client.png", [".", "resources"])
                 if (clickImageInWindow("ahk_exe bMC.exe", image))
                 { ; Found image! => At least one client open
-                    return "noTarget"
+                    return "noTarget" ; cannot detect correctly => require Shift or Ctrl to close
                 }
                 else
                 { ; Cannot find image! => No client open
-                    return "noTarget"
+                    return "noTarget" ; cannot detect correctly => require Shift or Ctrl to close
                     toastQuestion("No more clients found!", "Do you want to exit?", 3, false, 0x4)
                     IfMsgBox, Yes
                     {
-                        return false
+                        return false ; No tab detected
                     }
                 }
             }
@@ -56,11 +56,11 @@ isTabActive() {
         image := getFile("GitKraken single empty tab.png", [".", "resources"])
         if (!locateImageInWindow("ahk_exe gitkraken.exe", image))
         { ; Cannot find image! => At least one tab open
-            return true
+            return true ; Tab detected
         }
     }
     else {
-        return false
+        return false ; No tab detected
     }
 }
 
