@@ -24,8 +24,8 @@
 - add touchpad open gesture
     - Open new tab if current app supports it <br> otherwise open Action Center
 ### Window manipulation
-- `[Win + Numpad-]` pin current window to alwaysontop
-    - to unpin press `[Win + Shift + Numpad-]`
+- `[Win + End]` pin current window to alwaysontop
+    - to unpin press `[Win + Shift + End]`
 - 
 ### Patch script
 - `[Win + F5]` Restart StartMenu process

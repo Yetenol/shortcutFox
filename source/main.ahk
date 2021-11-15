@@ -138,12 +138,12 @@ return
 
 ; ==================== Window shortcuts ====================
 ; Pin active window always on top (Win + Numpad-)
-#NumpadSub::
+#End::
     Winset, Alwaysontop, On, A
 return
 
 ; Unpin active window always on top (Win + Shift + Numpad-)
-#+NumpadSub::
+#+End::
     Winset, Alwaysontop, Off, A
 return
 
