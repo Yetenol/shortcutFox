@@ -1,5 +1,8 @@
 # **Window Tools** ![GitHub last commit](https://img.shields.io/github/last-commit/yetenol/window-tools?color=white)
 
+[![Download script](https://img.shields.io/github/downloads/yetenol/Window-Tools/total.svg)](https://github.com/yetenol/Window-Tools/releases/latest/download/Export-UserProfile.ps1.bat)
+[![List releases](https://img.shields.io/github/release/yetenol/Window-Tools.svg)](https://github.com/yetenol/Window-Tools/releases)
+
 ## Build
 Powershell
 ```powershell
