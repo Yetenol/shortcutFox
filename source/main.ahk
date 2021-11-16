@@ -6,7 +6,7 @@ SplitPath, % A_ScriptDir,, projectDir ; Get this script's parent folder
 SetWorkingDir, % projectDir ; Ensures a consistent working directory (project root folder)
 
 ; ========================= Setup Tray Menu =========================
-Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
+; Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 Menu, Tray, Add ; Create a separator line.
 Menu, Tray, Add, % "Send Pause", SendPause
 Menu, Tray, Add, % "Send Ctrl+Pause", SendCtrlBreak
