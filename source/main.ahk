@@ -114,6 +114,7 @@ Pause:: ; Close tab if existing otherwise close window (Three finger down)
 return
 
 ; ===== Open gesture =====
++CtrlBreak::
 CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
     if (WinActive("ahk_exe bMC.exe"))
     { ; Baramundi Managment Center
@@ -124,13 +125,25 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
             toastError("Cannot find Environment tab")
         }
     }
-    else if (IsBrowserActive() || WinActive("ahk_exe gitkraken.exe"))
+    else if IsBrowserActive() 
+        || WinActive("ahk_exe gitkraken.exe")
     { ; Browser(like) window is active
         Send, ^t ; Open new tab
     }
+    else if WinActive("ahk_exe WindowsTerminal.exe")
+    {
+        Send, ^+t ; Open new tab
+    }
     else
     {
-        Send, #a ; Open action center
+        if GetKeyState("Shift", "P")
+        {
+            Send, #a ; Open quick settings
+        }
+        else
+        {
+            Send, #n ; Open action center
+        }
     }
 return
 

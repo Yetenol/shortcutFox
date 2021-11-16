@@ -5,7 +5,11 @@ isTabActive() {
         || WinActive("ahk_exe code.exe") ; Visual Studio Code
     { 
         return true ; Tab detected
-    } 
+    }
+    else if WinActive("ahk_exe WindowsTerminal.exe") ; Windows Terminal
+    {
+        return true ; Tab detected
+    }
     else if WinActive("ahk_exe AcroRd32.exe") ; Adobe Acrobat Reader DC is active
         && !WinActive("Adobe Acrobat Reader DC (32-bit)") ; No file is open
     { 
