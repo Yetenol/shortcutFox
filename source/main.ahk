@@ -1,47 +1,16 @@
 #Include, <utilities>
-#Include, windowCategories.ahk
 #Include, closeWindow.ahk
+#Include, trayMenu.ahk
+#Include, windowCategories.ahk
 #SingleInstance, force ; Override existing instance when lauched again
 SplitPath, % A_ScriptDir,, projectDir ; Get this script's parent folder
 SetWorkingDir, % projectDir ; Ensures a consistent working directory (project root folder)
-
-; ========================= Setup Tray Menu =========================
-; Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
-Menu, Tray, Add ; Create a separator line.
-Menu, Tray, Add, % "Send Pause", SendPause
-Menu, Tray, Add, % "Send Ctrl+Pause", SendCtrlBreak
-Menu, Tray, Add, % "Setup Hello Face", SetupHelloFace
-Menu, Tray, Add, % "Setup Hello Fingerprint" , SetupHelloFingerprint
-Menu, Tray, Add ; Create a separator line.
-Menu, Tray, Add, % "Connect bluetooth device", ConnectBluetoothDevice
-Menu, Tray, Add, % "Take Screenshot", TakeScreenshot
-Menu, Tray, Click, 1
-Menu, Tray, Default, % "Take Screenshot"
 
 
 ; ========================= Setup Keyboard Modifications =========================
 SetNumLockState, AlwaysOn ; Always use digits on NumPad
 return
 ; ========================= End of Setup =========================
-
-; ==================== Other Shortcuts ====================
-TakeScreenshot:
-    Send, {PrintScreen}
-return
-
-ConnectBluetoothDevice:
-    Run, explorer ms-settings:connecteddevices
-return
-
-SetupHelloFingerprint:
-    Run, explorer ms-settings:signinoptions-launchfingerprintenrollment	
-return
-
-SetupHelloFace:
-    Run, explorer ms-settings:signinoptions-launchfaceenrollment
-return
-
-
 
 ; ==================== Windows Media API ====================
 ; Enables remote media control for media apps like Netflix and PrimeVideo
