@@ -43,6 +43,8 @@ return
 ; ==================== Tray menu ====================
 SET_NO_DEFAULT:
     Menu, Tray, NoDefault
+    Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 ; cascading windows icon
+    ;Menu, Tray, Icon, % A_WinDir "\System32\imageres.dll", 174 ; Set a keyboard as tray icon
 return
 
 
@@ -56,10 +58,9 @@ SET_DEFAULT_TAKE_SCREENSHOT:
     Menu, Tray, Default, % "Take Screenshot"
 return
 
-; Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 SET_DEFAULT_CONNECT_BLUETOOTH_DEVICE:
     Menu, Tray, Default, % "Connect bluetooth device"
-    Menu, Tray, Icon, % A_WinDir "\system32\netshell.dll", 104
+    Menu, Tray, Icon, % A_WinDir "\System32\netshell.dll", 104 ; bluetooth icon
 return
 CONNECT_BLUETOOTH_DEVICE:
     Run, explorer ms-settings:connecteddevices
@@ -68,6 +69,8 @@ return
 
 SET_DEFAULT_SETUP_HELLO_FINGERPRINT:
     Menu, Tray, Default, % "Setup Hello Fingerprint"
+    ;Menu, Tray, Icon, % A_WinDir "system32\ddores.dll", 60 ; fingerprint scanner icon 
+    Menu, Tray, Icon, % A_WinDir "\System32\sensorscpl.dll", 11 ; fingerprint scanner icon 
 return
 SETUP_HELLO_FINGERPRINT:
     Run, explorer ms-settings:signinoptions-launchfingerprintenrollment	
@@ -76,6 +79,7 @@ return
 
 SET_DEFAULT_SETUP_HELLO_FACE:
     Menu, Tray, Default, % "Setup Hello Face"
+    Menu, Tray, Icon, % A_WinDir "\System32\ddores.dll", 87 ; face scanner icon
 return
 SETUP_HELLO_FACE:
     Run, explorer ms-settings:signinoptions-launchfaceenrollment
