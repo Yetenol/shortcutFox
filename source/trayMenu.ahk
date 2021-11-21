@@ -9,6 +9,7 @@ tray.Push({id: "LINE"}) ; Add a separator line.
 tray.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
 tray.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
 
+
 ; cascading windows icon
 
 ; ========================= Setup Tray Menu =========================
@@ -26,8 +27,9 @@ Menu, Tray, Add, % "Send keystroke...", :SEND_KEYSTROKE
 ; list all actions and link to their SET_DEFAULT_... label
 Menu, DEFAULT_ACTION, Add, % "None", SET_DEFAULT_NONE
 Menu, DEFAULT_ACTION, Add ; Add a separator line
-for _, action in tray
-    Menu, DEFAULT_ACTION, Add, % action[1], % "SET_DEFAULT_" action[2]
+for _, action in tray {
+    Menu, DEFAULT_ACTION, Add, % action["text"], menuHandler
+}
 Menu, Tray, Add, % "Set left click action...", :DEFAULT_ACTION
 
 ; add all the main action
@@ -40,7 +42,7 @@ Menu, Tray, Click, 1 ; just require a single click instead of a double click
 
 ;if hasTrayDefault()
 ;{ ; a default file was found
-;    Goto, % "SET_DEFAULT_" getTrayDefault()
+;    Goto, % "SET_DEFAULT_" loadTrayDefault()
 ;} else {
 ;    Goto, % "SET_DEFAULT_NONE"
 ;}
@@ -53,7 +55,7 @@ SET_DEFAULT_NONE:
     Menu, Tray, NoDefault
     Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 
     if hasTrayDefault() { ; only set config if initialized
-        setTrayDefault("NONE")
+        saveTrayDefault("NONE")
     }
 return
 
@@ -64,37 +66,37 @@ return
 SET_DEFAULT_TAKE_SCREENSHOT:
     Menu, Tray, Default, % "Take Screenshot"
     Menu, Tray, Icon, * ; reset to included snipping tool icon
-    setTrayDefault("TAKE_SCREENSHOT")
+    saveTrayDefault("TAKE_SCREENSHOT")
 return
 
 SET_DEFAULT_CALIBRATE_DIGITIZER:
     Menu, Tray, Default, % "Calibrate pen"
     Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 ; cascading windows icon
-    setTrayDefault("CALIBRATE_DIGITIZER")
+    saveTrayDefault("CALIBRATE_DIGITIZER")
 return
 
 SET_DEFAULT_CONNECT_BLUETOOTH_DEVICE:
     Menu, Tray, Default, % "Connect bluetooth device"
     Menu, Tray, Icon, % A_WinDir "\System32\netshell.dll", 104 ; bluetooth  *
-    setTrayDefault("CONNECT_BLUETOOTH_DEVICE")
+    saveTrayDefault("CONNECT_BLUETOOTH_DEVICE")
 return
 
 SET_DEFAULT_BLUETOOTH_FILE_TRANSFER:
     Menu, Tray, Default, % "Transfer files using Bluetooth"
     Menu, Tray, Icon, % A_WinDir "\System32\netshell.dll", 104 ; bluetooth  *
-    setTrayDefault("BLUETOOTH_FILE_TRANSFER")
+    saveTrayDefault("BLUETOOTH_FILE_TRANSFER")
 return
 
 SET_DEFAULT_SETUP_HELLO_FINGERPRINT:
     Menu, Tray, Default, % "Setup Hello Fingerprint"
     Menu, Tray, Icon, % A_WinDir "\System32\sensorscpl.dll", 11 ; fingerprint scanner icon 
-    setTrayDefault("SETUP_HELLO_FINGERPRINT")
+    saveTrayDefault("SETUP_HELLO_FINGERPRINT")
 return
 
 SET_DEFAULT_SETUP_HELLO_FACE:
     Menu, Tray, Default, % "Setup Hello Face"
     Menu, Tray, Icon, % A_WinDir "\System32\ddores.dll", 87 ; face scanner icon
-    setTrayDefault("SETUP_HELLO_FACE")
+    saveTrayDefault("SETUP_HELLO_FACE")
 return
 
 
@@ -107,3 +109,14 @@ return
 EXIT:
     ExitApp
 return
+
+; read trayDefault config
+; returns false if config isn't available
+menuHandler() {
+    toast(A_ThisMenuItem, A_ThisMenu)
+    ;for _, action in tray {
+    ;    if (action["id"] = id) {
+    ;        Menu, tray, Default, % action["text"]
+    ;    }
+    ;}
+}

@@ -6,7 +6,7 @@ hasTrayDefault() {
 
 ; read trayDefault config
 ; returns false if config isn't available
-getTrayDefault() {
+loadTrayDefault() {
     path := getConfigPath() "\trayDefault.txt"
     if FileExist(path) {
         FileRead, content, % path
@@ -16,7 +16,7 @@ getTrayDefault() {
     }
 }
 
-setTrayDefault(actionLabel) {
+saveTrayDefault(actionLabel) {
     path := getConfigPath() "\trayDefault.txt"
     FileDelete, % path
     FileAppend, % actionLabel, % path
