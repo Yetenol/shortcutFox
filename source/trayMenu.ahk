@@ -41,9 +41,10 @@ return
 
 
 applyTrayDefault() {
+    global actions
     if hasTrayDefault()
     { ; a config file was found
-        loadedId =: loadTrayDefault()
+        loadedId := loadTrayDefault()
         for _, item in actions {
             if (item["id"] = loadedId) {
                 Menu, Tray, Default, % item["text"]
