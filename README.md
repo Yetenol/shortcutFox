@@ -8,11 +8,15 @@
 - always use digits on NumPad (force enable NumLock)
 ### Tray Shortcuts
 - right click the tray icon:
-    - setup Windows Hello face
-    - setup Windows Hello fingerprint
-    - connect to bluetooth device
     - take screenshot
-- take screenshot by clicking on the tray icon (useful for convertibles)
+    - calibrate pen
+    - connect to a bluetooth device
+    - transfer files using bluetooth
+    - setup Windows Hello Face
+    - setup Windows Hello Fingerprint
+- left click the tray:
+    - execute the default action
+    - configurable through the tray menu `Set left click action`
 ### Media control
 - skip/rewind in Netflix/Primevideo using bluetooth speaker buttons
 - tested on JBL bluetooth speakers
