@@ -1,5 +1,6 @@
 #Include, <utilities>
 #Include, closeWindow.ahk
+#Include, io.ahk
 #Include, trayMenu.ahk
 #Include, windowCategories.ahk
 #SingleInstance, force ; Override existing instance when lauched again
