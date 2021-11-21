@@ -56,8 +56,10 @@ SET_DEFAULT_TAKE_SCREENSHOT:
     Menu, Tray, Default, % "Take Screenshot"
 return
 
+; Menu, Tray, Icon, % A_WinDir "\system32\imageres.dll", 174 ; Set a keyboard as tray icon
 SET_DEFAULT_CONNECT_BLUETOOTH_DEVICE:
     Menu, Tray, Default, % "Connect bluetooth device"
+    Menu, Tray, Icon, % A_WinDir "\system32\netshell.dll", 104
 return
 CONNECT_BLUETOOTH_DEVICE:
     Run, explorer ms-settings:connecteddevices
