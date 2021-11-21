@@ -1,16 +1,13 @@
 ; ========================= Main Tray Actions ========================= 
-tray := []
-tray.Push({id: "SETUP_HELLO_FACE", text: "Setup Hello Face", run: "explorer ms-settings:signinoptions-launchfaceenrollment", icon: A_WinDir "\System32\ddores.dll", iconIndex: 87})
-tray.Push({id: "SETUP_HELLO_FINGERPRINT", text: "Setup Hello Fingerprint", run: "explorer ms-settings:signinoptions-launchfingerprintenrollment", icon: A_WinDir "\System32\sensorscpl.dll", iconIndex: 99})
-tray.Push({id: "LINE"}) ; Add a separator line.
-tray.Push({id: "BLUETOOTH_FILE_TRANSFER", text: "Transfer files using Bluetooth", run: "fsquirt", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
-tray.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth device", run: "explorer ms-settings:connecteddevices", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
-tray.Push({id: "LINE"}) ; Add a separator line.
-tray.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
-tray.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
-
-
-; cascading windows icon
+actions := []
+actions.Push({id: "SETUP_HELLO_FACE", text: "Setup Hello Face", run: "explorer ms-settings:signinoptions-launchfaceenrollment", icon: A_WinDir "\System32\ddores.dll", iconIndex: 87})
+actions.Push({id: "SETUP_HELLO_FINGERPRINT", text: "Setup Hello Fingerprint", run: "explorer ms-settings:signinoptions-launchfingerprintenrollment", icon: A_WinDir "\System32\sensorscpl.dll", iconIndex: 99})
+actions.Push({id: "-----"}) ; Add a separator line.
+actions.Push({id: "BLUETOOTH_FILE_TRANSFER", text: "Transfer files using Bluetooth", run: "fsquirt", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
+actions.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth device", run: "explorer ms-settings:connecteddevices", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
+actions.Push({id: "-----"}) ; Add a separator line.
+actions.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
+actions.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
 
 ; ========================= Setup Tray Menu =========================
 ; move the standard script control item to its own submenu
@@ -25,39 +22,82 @@ Menu, SEND_KEYSTROKE, Add, % "Send Ctrl+Pause", SendCtrlBreak
 Menu, Tray, Add, % "Send keystroke...", :SEND_KEYSTROKE
 
 ; list all actions and link to their SET_DEFAULT_... label
-Menu, DEFAULT_ACTION, Add, % "None", SET_DEFAULT_NONE
-Menu, DEFAULT_ACTION, Add ; Add a separator line
-for _, action in tray {
-    Menu, DEFAULT_ACTION, Add, % action["text"], menuHandler
+Menu, SET_DEFAULT_ACTION, Add, % "None", clearDefault
+Menu, SET_DEFAULT_ACTION, Add ; Add a separator line
+for _, item in actions {
+    Menu, SET_DEFAULT_ACTION, Add, % item["text"], MENU_HANDLER
 }
-Menu, Tray, Add, % "Set left click action...", :DEFAULT_ACTION
+Menu, Tray, Add, % "Set left click action...", :SET_DEFAULT_ACTION
 
 ; add all the main action
 Menu, Tray, Add ; Add a separator line.
-for _, action in tray
-    Menu, Tray, Add, % action[1], % action[2]
+for _, action in actions
+    Menu, Tray, Add, % action["text"], MENU_HANDLER
 
 ; set action that runs when tray icon is left-clicked
 Menu, Tray, Click, 1 ; just require a single click instead of a double click
-
-;if hasTrayDefault()
-;{ ; a default file was found
-;    Goto, % "SET_DEFAULT_" loadTrayDefault()
-;} else {
-;    Goto, % "SET_DEFAULT_NONE"
-;}
+applyTrayDefault()
 return
 
+
+applyTrayDefault() {
+    if hasTrayDefault()
+    { ; a config file was found
+        loadedId =: loadTrayDefault()
+        for _, item in actions {
+            if (item["id"] = loadedId) {
+                Menu, Tray, Default, % item["text"]
+                return ; don't reset Icon
+            }
+        }
+        clearIcon()
+    } else {
+        clearIcon()
+    }
+}
 
 
 ; ==================== Tray menu ====================
-SET_DEFAULT_NONE:
+clearIcon() {
+    Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 ; cascading windows icon
+}
+
+
+clearDefault() {
+    clearIcon()
     Menu, Tray, NoDefault
-    Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 
-    if hasTrayDefault() { ; only set config if initialized
-        saveTrayDefault("NONE")
+    saveTrayDefault("NONE")
+}
+
+MENU_HANDLER:
+    if (A_ThisMenu = "Tray") {
+        for index, item in actions {
+            if (item["text"] = A_ThisMenuItem) {
+                if (item["send"]) {
+                    Send, % item["send"]
+                }
+                if (item["run"]) {
+                    Run, % item["run"]
+                }
+                Break ; already found the right action
+            }
+        }
+    } else if (A_ThisMenu = "SET_DEFAULT_ACTION") {
+        for _, item in actions {
+            if (item["text"] = A_ThisMenuItem) {
+                Menu, Tray, Default, % item["text"]
+                if (item["icon"]) {
+                    Menu, Tray, Icon, % item["icon"], % item["iconIndex"]
+                } else {
+                    clearIcon()
+                }
+                saveTrayDefault(item["id"])
+                Break
+            }
+        }   
     }
 return
+
 
 
 ; launch snipping tool as long as accessibility settings is enable
@@ -110,13 +150,3 @@ EXIT:
     ExitApp
 return
 
-; read trayDefault config
-; returns false if config isn't available
-menuHandler() {
-    toast(A_ThisMenuItem, A_ThisMenu)
-    ;for _, action in tray {
-    ;    if (action["id"] = id) {
-    ;        Menu, tray, Default, % action["text"]
-    ;    }
-    ;}
-}
