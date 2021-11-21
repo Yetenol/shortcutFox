@@ -1,4 +1,11 @@
-; returns false if file doesn't exist
+; is the config available?
+hasTrayDefault() {
+    path := getConfigPath() "\trayDefault.txt"
+    return FileExist(path)
+}
+
+; read trayDefault config
+; returns false if config isn't available
 getTrayDefault() {
     path := getConfigPath() "\trayDefault.txt"
     if FileExist(path) {
