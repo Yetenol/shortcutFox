@@ -3,7 +3,10 @@ trayActions := []
 trayActions.Push( Array("Setup Hello Face", "SETUP_HELLO_FACE") )
 trayActions.Push( Array("Setup Hello Fingerprint", "SETUP_HELLO_FINGERPRINT") )
 trayActions.Push( Array("", "") ) ; Add a separator line.
+trayActions.Push( Array("Transfer files using Bluetooth", "BLUETOOTH_FILE_TRANSFER") )
 trayActions.Push( Array("Connect bluetooth device", "CONNECT_BLUETOOTH_DEVICE") )
+trayActions.Push( Array("", "") ) ; Add a separator line.
+trayActions.Push( Array("Calibrate pen", "CALIBRATE_DIGITIZER") )
 trayActions.Push( Array("Take Screenshot", "TAKE_SCREENSHOT") )
 
 trayDefault :=  "TAKE_SCREENSHOT" ; set NONE for no default
@@ -70,6 +73,17 @@ SET_DEFAULT_TAKE_SCREENSHOT:
     setTrayDefault("TAKE_SCREENSHOT")
 return
 
+
+CALIBRATE_DIGITIZER:
+    Run, % "tabcal"
+return
+SET_DEFAULT_CALIBRATE_DIGITIZER:
+    Menu, Tray, Default, % "Calibrate pen"
+    Menu, Tray, Icon, % A_WinDir "\System32\SHELL32.dll", 99 ; cascading windows icon
+    setTrayDefault("CALIBRATE_DIGITIZER")
+return
+
+
 CONNECT_BLUETOOTH_DEVICE:
     Run, explorer ms-settings:connecteddevices
 return
@@ -77,6 +91,16 @@ SET_DEFAULT_CONNECT_BLUETOOTH_DEVICE:
     Menu, Tray, Default, % "Connect bluetooth device"
     Menu, Tray, Icon, % A_WinDir "\System32\netshell.dll", 104 ; bluetooth  *
     setTrayDefault("CONNECT_BLUETOOTH_DEVICE")
+return
+
+
+BLUETOOTH_FILE_TRANSFER:
+    Run, fsquirt
+return
+SET_DEFAULT_BLUETOOTH_FILE_TRANSFER:
+    Menu, Tray, Default, % "Transfer files using Bluetooth"
+    Menu, Tray, Icon, % A_WinDir "\System32\netshell.dll", 104 ; bluetooth  *
+    setTrayDefault("BLUETOOTH_FILE_TRANSFER")
 return
 
 
