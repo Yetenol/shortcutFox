@@ -1,11 +1,10 @@
+#SingleInstance, force ; Override existing instance when lauched again
 #Include, <utilities>
 #Include, closeWindow.ahk
 #Include, io.ahk
 #Include, trayMenu.ahk
 #Include, windowCategories.ahk
-#SingleInstance, force ; Override existing instance when lauched again
-SplitPath, % A_ScriptDir,, projectDir ; Get this script's parent folder
-SetWorkingDir, % projectDir ; Ensures a consistent working directory (project root folder)
+SetWorkingDir, % A_ScriptDir ; Ensures a consistent working directory (script folder)
 
 
 ; ========================= Setup Keyboard Modifications =========================

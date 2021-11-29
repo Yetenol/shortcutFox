@@ -42,12 +42,12 @@
     ```
 - navigate to protect directory
 - build using Powershell
-    ```powershell
-    $compilerPath = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
-    & $compilerPath /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
-    ```
+```powershell
+$compilerPath = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
+& $compilerPath /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
+```
 - or build using CMD
-    ```cmd
-    set compilerPath=%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe
-    "%compilerPath%" /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
-    ```
+```cmd
+set compilerPath=%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe
+"%compilerPath%" /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
+```
