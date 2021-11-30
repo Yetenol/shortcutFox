@@ -1,8 +1,7 @@
-CONFIG_PATH := A_AppData "\Window-Tools"
+CONFIG_PATH := A_AppData "\Window Tools"
 if not FileExist(CONFIG_PATH) {
     FileCreateDir, % CONFIG_PATH
 }
-
 
 ; is the config available?
 hasTrayDefault() {

@@ -54,14 +54,21 @@ return
 
 
 applyTrayDefault() {
-    global actions
+    global trayCategories
     if hasTrayDefault()
     { ; a config file was found
         loadedId := loadTrayDefault()
-        for _, item in actions {
-            if (item["id"] = loadedId) {
-                Menu, Tray, Default, % item["text"]
-                return ; don't reset Icon
+        for _, category in trayCategories {
+            for _, action in category["actions"] {
+                if (action["id"] = loadedId) {
+                    Menu, Tray, Default, % action["text"]
+                    if (action["icon"]) {
+                        Menu, Tray, Icon, % action["icon"], % action["iconIndex"]
+                    } else {
+                        clearIcon()
+                    }
+                    return ; break loop
+                }
             }
         }
         clearIcon()
@@ -85,28 +92,32 @@ clearDefault() {
 
 MENU_HANDLER:
     if (A_ThisMenu = "Tray") {
-        for index, item in actions {
-            if (item["text"] = A_ThisMenuItem) {
-                if (item["send"]) {
-                    Send, % item["send"]
+        for _, category in trayCategories {
+            for _, action in category["actions"] {
+                if (action["text"] = A_ThisMenuItem) {
+                    if (action["send"]) {
+                        Send, % action["send"]
+                    }
+                    if (action["run"]) {
+                        Run, % action["run"]
+                    }
+                    Break ; already found the right action
                 }
-                if (item["run"]) {
-                    Run, % item["run"]
-                }
-                Break ; already found the right action
             }
         }
     } else if (A_ThisMenu = "SET_DEFAULT_ACTION") {
-        for _, item in actions {
-            if (item["text"] = A_ThisMenuItem) {
-                Menu, Tray, Default, % item["text"]
-                if (item["icon"]) {
-                    Menu, Tray, Icon, % item["icon"], % item["iconIndex"]
-                } else {
-                    clearIcon()
+        for _, category in trayCategories {
+            for _, action in category["actions"] {
+                if (action["text"] = A_ThisMenuItem) {
+                    Menu, Tray, Default, % action["text"]
+                    if (action["icon"]) {
+                        Menu, Tray, Icon, % action["icon"], % action["iconIndex"]
+                    } else {
+                        clearIcon()
+                    }
+                    saveTrayDefault(action["id"])
+                    Break
                 }
-                saveTrayDefault(item["id"])
-                Break
             }
         }   
     }
