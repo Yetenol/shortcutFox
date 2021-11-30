@@ -1,13 +1,21 @@
 ; ========================= Main Tray Actions ========================= 
-actions := []
-actions.Push({id: "SETUP_HELLO_FACE", text: "Setup Hello Face", run: "explorer ms-settings:signinoptions-launchfaceenrollment", icon: A_WinDir "\System32\ddores.dll", iconIndex: 87})
-actions.Push({id: "SETUP_HELLO_FINGERPRINT", text: "Setup Hello Fingerprint", run: "explorer ms-settings:signinoptions-launchfingerprintenrollment", icon: A_WinDir "\System32\sensorscpl.dll", iconIndex: 11})
-actions.Push({id: "-----"}) ; Add a separator line.
-actions.Push({id: "BLUETOOTH_FILE_TRANSFER", text: "Transfer files using Bluetooth", run: "fsquirt", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
-actions.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth device", run: "explorer ms-settings:connecteddevices", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
-actions.Push({id: "-----"}) ; Add a separator line.
-actions.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
-actions.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
+actionsWindowsHello := []
+actionsWindowsHello.Push({id: "SETUP_HELLO_FACE", text: "Setup Hello Face", run: "explorer ms-settings:signinoptions-launchfaceenrollment", icon: A_WinDir "\System32\ddores.dll", iconIndex: 87})
+actionsWindowsHello.Push({id: "SETUP_HELLO_FINGERPRINT", text: "Setup Hello Fingerprint", run: "explorer ms-settings:signinoptions-launchfingerprintenrollment", icon: A_WinDir "\System32\sensorscpl.dll", iconIndex: 11})
+
+actionsBluetooth := []
+actionsBluetooth.Push({id: "BLUETOOTH_FILE_TRANSFER", text: "Transfer files using Bluetooth", run: "fsquirt", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
+actionsBluetooth.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth device", run: "explorer ms-settings:connecteddevices", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
+
+actionsConvertible := []
+actionsConvertible.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
+actionsConvertible.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
+
+trayCategories := []
+trayCategories.Push({id: "WINDOWS_HELLO", text: "Setup Windows Hello", actions: actionsWindowsHello})
+trayCategories.Push({id: "BLUETOOTH", text: "Bluetooth audio and file transfer", actions: actionsBluetooth})
+trayCategories.Push({id: "CONVERTIBLE", text: "Pen & touch screen utilities", actions: actionsConvertible})
+
 
 ; ========================= Setup Tray Menu =========================
 ; move the standard script control item to its own submenu
@@ -23,16 +31,21 @@ Menu, Tray, Add, % "Send keystroke...", :SEND_KEYSTROKE
 
 ; list all actions and link to their SET_DEFAULT_... label
 Menu, SET_DEFAULT_ACTION, Add, % "None", clearDefault
-Menu, SET_DEFAULT_ACTION, Add ; Add a separator line
-for _, item in actions {
-    Menu, SET_DEFAULT_ACTION, Add, % item["text"], MENU_HANDLER
+for _, category in trayCategories {
+    Menu, SET_DEFAULT_ACTION, Add ; Add a separator line.
+    for _, action in category["actions"] {
+        Menu, SET_DEFAULT_ACTION, Add, % action["text"], MENU_HANDLER
+    }
 }
 Menu, Tray, Add, % "Set left click action...", :SET_DEFAULT_ACTION
 
 ; add all the main action
-Menu, Tray, Add ; Add a separator line.
-for _, action in actions
-    Menu, Tray, Add, % action["text"], MENU_HANDLER
+for _, category in trayCategories {
+    Menu, Tray, Add ; Add a separator line.
+    for _, action in category["actions"] {
+        Menu, Tray, Add, % action["text"], MENU_HANDLER
+    }
+}
 
 ; set action that runs when tray icon is left-clicked
 Menu, Tray, Click, 1 ; just require a single click instead of a double click
