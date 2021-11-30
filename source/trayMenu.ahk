@@ -1,20 +1,21 @@
 ; ========================= Main Tray Actions ========================= 
+trayCategories := []
+
 actionsWindowsHello := []
 actionsWindowsHello.Push({id: "SETUP_HELLO_FACE", text: "Setup Hello Face", run: "explorer ms-settings:signinoptions-launchfaceenrollment", icon: A_WinDir "\System32\ddores.dll", iconIndex: 87})
 actionsWindowsHello.Push({id: "SETUP_HELLO_FINGERPRINT", text: "Setup Hello Fingerprint", run: "explorer ms-settings:signinoptions-launchfingerprintenrollment", icon: A_WinDir "\System32\sensorscpl.dll", iconIndex: 11})
+trayCategories.Push({id: "WINDOWS_HELLO", text: "Setup Windows Hello", actions: actionsWindowsHello})
 
 actionsBluetooth := []
 actionsBluetooth.Push({id: "BLUETOOTH_FILE_TRANSFER", text: "Transfer files using Bluetooth", run: "fsquirt", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
 actionsBluetooth.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth device", run: "explorer ms-settings:connecteddevices", icon: A_WinDir "\System32\netshell.dll", iconIndex: 104})
+trayCategories.Push({id: "BLUETOOTH", text: "Bluetooth audio and file transfer", actions: actionsBluetooth})
 
 actionsConvertible := []
 actionsConvertible.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
 actionsConvertible.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
-
-trayCategories := []
-trayCategories.Push({id: "WINDOWS_HELLO", text: "Setup Windows Hello", actions: actionsWindowsHello})
-trayCategories.Push({id: "BLUETOOTH", text: "Bluetooth audio and file transfer", actions: actionsBluetooth})
 trayCategories.Push({id: "CONVERTIBLE", text: "Pen & touch screen utilities", actions: actionsConvertible})
+
 
 
 ; ========================= Setup Tray Menu =========================
