@@ -35,6 +35,9 @@ for _, category in trayCategories {
     Menu, SET_DEFAULT_ACTION, Add ; Add a separator line.
     for _, action in category["actions"] {
         Menu, SET_DEFAULT_ACTION, Add, % action["text"], MENU_HANDLER
+        if (action["icon"]) {
+            Menu, SET_DEFAULT_ACTION, Icon, % action["text"], % action["icon"], % action["iconIndex"]
+        }
     }
 }
 Menu, Tray, Add, % "Set left click action...", :SET_DEFAULT_ACTION
@@ -44,6 +47,9 @@ for _, category in trayCategories {
     Menu, Tray, Add ; Add a separator line.
     for _, action in category["actions"] {
         Menu, Tray, Add, % action["text"], MENU_HANDLER
+        if (action["icon"]) {
+            Menu, Tray, Icon, % action["text"], % action["icon"], % action["iconIndex"]
+        }
     }
 }
 
