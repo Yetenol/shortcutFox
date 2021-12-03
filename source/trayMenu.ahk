@@ -12,10 +12,9 @@ actionsBluetooth.Push({id: "CONNECT_BLUETOOTH_DEVICE", text: "Connect bluetooth 
 trayCategories.Push({id: "BLUETOOTH", text: "Bluetooth audio and file transfer", actions: actionsBluetooth})
 
 actionsConvertible := []
-actionsConvertible.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal"})
+actionsConvertible.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal", icon: A_WinDir "\System32\ddores.dll", iconIndex: 27 })
 actionsConvertible.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
 trayCategories.Push({id: "CONVERTIBLE", text: "Pen & touch screen utilities", actions: actionsConvertible})
-
 
 
 ; ========================= Setup Tray Menu =========================
@@ -31,16 +30,7 @@ Menu, SEND_KEYSTROKE, Add, % "Send Ctrl+Pause", SendCtrlBreak
 Menu, Tray, Add, % "Send keystroke...", :SEND_KEYSTROKE
 
 ; list all actions and link to their SET_DEFAULT_... label
-Menu, SET_DEFAULT_ACTION, Add, % "None", clearDefault
-for _, category in trayCategories {
-    Menu, SET_DEFAULT_ACTION, Add ; Add a separator line.
-    for _, action in category["actions"] {
-        Menu, SET_DEFAULT_ACTION, Add, % action["text"], MENU_HANDLER
-        if (action["icon"]) {
-            Menu, SET_DEFAULT_ACTION, Icon, % action["text"], % action["icon"], % action["iconIndex"]
-        }
-    }
-}
+refreshSetDefaultAction(loadTrayDefault())
 Menu, Tray, Add, % "Set left click action...", :SET_DEFAULT_ACTION
 
 ; add all the main action
@@ -58,6 +48,26 @@ for _, category in trayCategories {
 Menu, Tray, Click, 1 ; just require a single click instead of a double click
 applyTrayDefault()
 return
+
+refreshSetDefaultAction(selection) {
+    global trayCategories
+    Menu, SET_DEFAULT_ACTION, Add,, ; Create submenu
+    Menu, SET_DEFAULT_ACTION, DeleteAll
+    Menu, SET_DEFAULT_ACTION, Add, % "None", clearDefault
+    if !selection {
+        Menu, SET_DEFAULT_ACTION, Icon, % "None", % A_WinDir "\System32\shell32.dll", 295
+    }
+    for _, category in trayCategories {
+        Menu, SET_DEFAULT_ACTION, Add ; Add a separator line.
+        for _, action in category["actions"] {
+            Menu, SET_DEFAULT_ACTION, Add, % action["text"], MENU_HANDLER
+            if (action["id"] = selection) {
+                Menu, SET_DEFAULT_ACTION, Icon, % action["text"], % A_WinDir "\System32\shell32.dll", 295
+            }
+        }
+    }
+}
+
 
 
 applyTrayDefault() {
@@ -95,6 +105,7 @@ clearDefault() {
     clearIcon()
     Menu, Tray, NoDefault
     saveTrayDefault("NONE")
+    refreshSetDefaultAction(0)
 }
 
 MENU_HANDLER:
@@ -123,6 +134,7 @@ MENU_HANDLER:
                         clearIcon()
                     }
                     saveTrayDefault(action["id"])
+                    refreshSetDefaultAction(action["id"])
                     Break
                 }
             }
