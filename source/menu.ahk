@@ -5,6 +5,11 @@ global TRAY_ITEMS
 class TrayMenu {
     tray := A_trayMenu
 
+    static TYPE := {
+        CATEGORY: 0,
+        SUBMENU: 1,
+    }
+
     __New() {
         this.tray.delete
         this.update()
