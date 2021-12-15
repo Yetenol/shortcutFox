@@ -4,7 +4,9 @@ This projects aims to learn the syntax of AutoHotkey v2
 and help to convert by other AutoHotkey projects.
 
 ## Build instructions
-- install depedency [AutoHotkey v2](https://www.autohotkey.com/v2/)
+- install depedencies
+    - [AutoHotkey v2](https://www.autohotkey.com/download/ahk-v2.zip)
+    - [ahk2exe Compiler](https://www.autohotkey.com/download/ahk.zip) _extract Compiler Folder_
 - navigate to protect directory
 - build using Powershell
 ```powershell
