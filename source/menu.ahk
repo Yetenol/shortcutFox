@@ -12,8 +12,23 @@ class TrayMenu {
 
     update() {
         for category in TRAY_ITEMS {
-            this.tray.add(category.text, handler)
+            this.seperator()
+            for action in category.actions {
+                this.tray.add(action.text, handler)
+
+                if (action.hasOwnProp("icon")) {
+                    if (action.hasOwnProp("iconIndex")) {
+                        this.tray.setIcon(action.text, action.icon, action.iconIndex)
+                    } else {
+                        this.tray.setIcon(action.text, action.icon)
+                    }
+                }
+            }
         }
+    }
+
+    seperator() { ; Create a seperator line
+        this.tray.add()
     }
 
 }
