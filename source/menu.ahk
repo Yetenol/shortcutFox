@@ -5,7 +5,7 @@ global TRAY_ITEMS
 class TrayMenu {
     tray := A_trayMenu
 
-    static TYPE := {
+    static TYPES := {
         CATEGORY: 0,
         SUBMENU: 1,
     }
@@ -17,15 +17,17 @@ class TrayMenu {
 
     update() {
         for category in TRAY_ITEMS {
-            this.seperator()
-            for action in category.actions {
-                this.tray.add(action.text, handler)
+            if (category.type = TrayMenu.TYPES.CATEGORY) {
+                this.seperator()
+                for action in category.actions {
+                    this.tray.add(action.text, handler)
 
-                if (action.hasOwnProp("icon")) {
-                    if (action.hasOwnProp("iconIndex")) {
-                        this.tray.setIcon(action.text, action.icon, action.iconIndex)
-                    } else {
-                        this.tray.setIcon(action.text, action.icon)
+                    if (action.hasOwnProp("icon")) {
+                        if (action.hasOwnProp("iconIndex")) {
+                            this.tray.setIcon(action.text, action.icon, action.iconIndex)
+                        } else {
+                            this.tray.setIcon(action.text, action.icon)
+                        }
                     }
                 }
             }

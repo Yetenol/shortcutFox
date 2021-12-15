@@ -1,7 +1,7 @@
 TRAY_ITEMS := 
 [
     {
-        type: TrayMenu.TYPE.CATEGORY,
+        type: TrayMenu.TYPES.CATEGORY,
         id: "WINDOWS_HELLO",
         text: "Setup Windows Hello",
         actions: 
@@ -23,7 +23,7 @@ TRAY_ITEMS :=
         ]
     },
     {
-        type: TrayMenu.TYPE.CATEGORY,
+        type: TrayMenu.TYPES.CATEGORY,
         id: "BLUETOOTH",
         text: "Bluetooth audio and file transfer",
         actions:
@@ -45,7 +45,7 @@ TRAY_ITEMS :=
         ]
     },
     {
-        type: TrayMenu.TYPE.CATEGORY,
+        type: TrayMenu.TYPES.CATEGORY,
         id: "CONVERTIBLE",
         text: "Pen & touch screen utilities",
         actions:
