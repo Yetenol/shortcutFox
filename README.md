@@ -12,5 +12,5 @@ and help to convert by other AutoHotkey projects.
 ```powershell
 $compiler = "$env:ProgramFiles\AutoHotkey 2.0\Compiler\Ahk2Exe.exe"
 $ahk2 = "$env:ProgramFiles\AutoHotkey 2.0\AutoHotkey64.exe"
-& $compiler /bin $ahk2 /in source/main.ahk /out bin\Window-Tools.exe
+& $compiler /bin $ahk2 /in source/main.ahk /out bin\Test-AHK2.exe
 ```
