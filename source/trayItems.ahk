@@ -2,27 +2,8 @@ TRAY_ITEMS :=
 [
     {
         type: TrayMenu.TYPES.SUBMENU,
-        id: "MANAGE_SCRIPT",
-        text: "Manage script",
-        actions:
-        [
-            {
-                type: TrayMenu.TYPES.SUBMENU,
-                id: "EXIT",
-                text: "Exit",
-                actions:
-                [
-                    {
-                        text: "2",
-                    }
-                ]
-            }
-        ]
-    },
-    {
-        type: TrayMenu.TYPES.SUBMENU,
         id: "SEND_KEYSTROKES",
-        text: "Send keystrokes",
+        text: "Send keystrokes...",
         actions:
         [
             {
