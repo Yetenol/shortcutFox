@@ -1,9 +1,12 @@
+SEND_KEYSTROKES := Menu()
+
 TRAY_ITEMS := 
 [
     {
         type: TrayMenu.TYPES.SUBMENU,
         id: "SEND_KEYSTROKES",
         text: "Send keystrokes...",
+        menu: SEND_KEYSTROKES,
         actions:
         [
             {

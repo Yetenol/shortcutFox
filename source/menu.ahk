@@ -36,10 +36,10 @@ class TrayMenu {
             }
 
         case TrayMenu.TYPES.SUBMENU:
-            submenu := this.tray
             for action in item.actions {
-                this.addItem(submenu, action)
+                this.addItem(item.menu, action)
             }
+            menu.add(item.text, item.menu)
 
         case TrayMenu.TYPES.LINE:
             this.addLine() ; add a seperator line
