@@ -19,28 +19,32 @@ class TrayMenu {
 
     update() {
         for item in TRAY_ITEMS {
-            if (!item.hasOwnProp("type") || item.type = TrayMenu.TYPES.ACTION) {
-                ; item is an action
-            } else if (item.type = TrayMenu.TYPES.GROUP) {
-                ; item is a group
-                this.addLine()
-                for action in item.actions {
-                    this.tray.add(action.text, handler)
+            this.addItem(item)
+        }
+    }
 
-                    if (action.hasOwnProp("icon")) {
-                        if (action.hasOwnProp("iconIndex")) {
-                            this.tray.setIcon(action.text, action.icon, action.iconIndex)
-                        } else {
-                            this.tray.setIcon(action.text, action.icon)
-                        }
+    addItem(item) {
+        type := (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION
+
+        switch type 
+        {
+        case TrayMenu.TYPES.GROUP:
+            this.addLine()
+            for action in item.actions {
+                this.tray.add(action.text, handler)
+
+                if (action.hasOwnProp("icon")) {
+                    if (action.hasOwnProp("iconIndex")) {
+                        this.tray.setIcon(action.text, action.icon, action.iconIndex)
+                    } else {
+                        this.tray.setIcon(action.text, action.icon)
                     }
                 }
-            } else if (item.type = TrayMenu.TYPES.SUBMENU) {
-                ; item is a submenu
-            } else if (item.type = TrayMenu.TYPES.LINE) {
-                ; item is a seperator line
-                this.addLine()
             }
+        case TrayMenu.TYPES.SUBMENU:
+        case TrayMenu.TYPES.LINE:
+            this.addLine() ; add a seperator line
+        default: ; item in an action
         }
     }
 
