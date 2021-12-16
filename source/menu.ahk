@@ -25,6 +25,9 @@ class TrayMenu {
         this.update()
     }
 
+    ; if type is omitted, set it to ACTION
+    getType(item) => (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION 
+
     update() {
         for item in TRAY_ITEMS {
             this.addItem(this.tray, item)
@@ -32,10 +35,7 @@ class TrayMenu {
     }
 
     addItem(menu, item) {
-        ; if type is omitted, set it to ACTION
-        type := (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION
-
-        switch type 
+        switch this.getType(item) ; if type is omitted, set it to ACTION
         {
         case TrayMenu.TYPES.GROUP:
             this.addLine()
