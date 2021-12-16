@@ -9,7 +9,7 @@ class TrayMenu {
         ACTION: 0,  ; Default: type can be omitted
         GROUP: 1,
         SUBMENU: 2,
-        SEPERATOR: 3,
+        LINE: 3,
     }
 
     __New() {
@@ -23,7 +23,7 @@ class TrayMenu {
                 ; item is an action
             } else if (item.type = TrayMenu.TYPES.GROUP) {
                 ; item is a group
-                this.seperator()
+                this.addLine()
                 for action in item.actions {
                     this.tray.add(action.text, handler)
 
@@ -37,11 +37,14 @@ class TrayMenu {
                 }
             } else if (item.type = TrayMenu.TYPES.SUBMENU) {
                 ; item is a submenu
+            } else if (item.type = TrayMenu.TYPES.LINE) {
+                ; item is a seperator line
+                this.addLine()
             }
         }
     }
 
-    seperator() { ; Create a seperator line
+    addLine() { ; Create a seperator line
         this.tray.add()
     }
 
