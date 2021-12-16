@@ -31,20 +31,23 @@ class TrayMenu {
         case TrayMenu.TYPES.GROUP:
             this.addLine()
             for action in item.actions {
-                this.tray.add(action.text, handler)
-
-                if (action.hasOwnProp("icon")) {
-                    if (action.hasOwnProp("iconIndex")) {
-                        this.tray.setIcon(action.text, action.icon, action.iconIndex)
-                    } else {
-                        this.tray.setIcon(action.text, action.icon)
-                    }
-                }
+                this.addItem(action)
             }
+
         case TrayMenu.TYPES.SUBMENU:
+
         case TrayMenu.TYPES.LINE:
             this.addLine() ; add a seperator line
+
         default: ; item in an action
+            this.tray.add(item.text, handler)
+            if (item.hasOwnProp("icon")) {
+                if (item.hasOwnProp("iconIndex")) {
+                    this.tray.setIcon(item.text, item.icon, item.iconIndex)
+                } else {
+                    this.tray.setIcon(item.text, item.icon)
+                }
+            }
         }
     }
 
