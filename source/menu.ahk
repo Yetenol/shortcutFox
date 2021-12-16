@@ -13,6 +13,14 @@ class TrayMenu {
     }
 
     __New() {
+        ; create submenu objects
+        for item in TRAY_ITEMS {
+            itemType := (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION
+            if (itemType = TrayMenu.TYPES.SUBMENU) {
+                item.menu := Menu()
+            }
+        }
+
         this.tray.delete
         this.update()
     }
