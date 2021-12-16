@@ -19,11 +19,12 @@ class TrayMenu {
 
     update() {
         for item in TRAY_ITEMS {
-            this.addItem(item)
+            this.addItem(this.tray, item)
         }
     }
 
-    addItem(item) {
+    addItem(menu, item) {
+        ; if type is omitted, set it to ACTION
         type := (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION
 
         switch type 
@@ -31,21 +32,25 @@ class TrayMenu {
         case TrayMenu.TYPES.GROUP:
             this.addLine()
             for action in item.actions {
-                this.addItem(action)
+                this.addItem(menu, action)
             }
 
         case TrayMenu.TYPES.SUBMENU:
+            submenu := this.tray
+            for action in item.actions {
+                this.addItem(submenu, action)
+            }
 
         case TrayMenu.TYPES.LINE:
             this.addLine() ; add a seperator line
 
         default: ; item in an action
-            this.tray.add(item.text, handler)
+            menu.add(item.text, handler)
             if (item.hasOwnProp("icon")) {
                 if (item.hasOwnProp("iconIndex")) {
-                    this.tray.setIcon(item.text, item.icon, item.iconIndex)
+                    menu.setIcon(item.text, item.icon, item.iconIndex)
                 } else {
-                    this.tray.setIcon(item.text, item.icon)
+                    menu.setIcon(item.text, item.icon)
                 }
             }
         }
