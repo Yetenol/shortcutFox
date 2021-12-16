@@ -8,7 +8,16 @@ isTabActive() {
     }
     else if WinActive("ahk_exe WindowsTerminal.exe") ; Windows Terminal
     {
-        return true ; Tab detected
+        Send, ^+w ; use special close hotkey
+        return "noTarget" ; kill nothing else
+    }
+    else if WinActive("ahk_exe powershell.exe") ; Windows Powershell
+        || WinActive("ahk_exe wsl.exe") ; Windows Subsystem for Linux
+        || WinActive("ahk_exe bash.exe") ; WSL Bash
+        || WinActive("ahk_exe ubuntu.exe") ; WSL Bash
+    {
+        WinClose, % "A"
+        return "noTarget"
     }
     else if WinActive("ahk_exe AcroRd32.exe") ; Adobe Acrobat Reader DC is active
         && !WinActive("Adobe Acrobat Reader DC (32-bit)") ; No file is open
