@@ -1,6 +1,26 @@
 TRAY_ITEMS := 
 [
     {
+        type: TrayMenu.TYPES.SUBMENU,
+        id: "SEND_KEYSTROKES",
+        text: "Send keystrokes...",
+        actions:
+        [
+            {
+                id: "SEND_PAUSE",
+                text: "Send Pause",
+                delay: 2000,
+                send: "{Pause}",
+            },
+            {
+                id: "SEND_CTRLBREAK",
+                text: "Send Ctrl + Pause",
+                delay: 2000,
+                send: "{CtrlBreak}",
+            },
+        ]
+    },
+    {
         type: TrayMenu.TYPES.CATEGORY,
         id: "WINDOWS_HELLO",
         text: "Setup Windows Hello",
@@ -64,5 +84,5 @@ TRAY_ITEMS :=
                 icon: "*",
             },
         ]
-    }
+    },
 ]
