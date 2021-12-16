@@ -6,8 +6,10 @@ class TrayMenu {
     tray := A_trayMenu
 
     static TYPES := {
-        CATEGORY: 0,
-        SUBMENU: 1,
+        ACTION: 0,  ; Default: type can be omitted
+        GROUP: 1,
+        SUBMENU: 2,
+        SEPERATOR: 3,
     }
 
     __New() {
@@ -16,10 +18,13 @@ class TrayMenu {
     }
 
     update() {
-        for category in TRAY_ITEMS {
-            if (category.type = TrayMenu.TYPES.CATEGORY) {
+        for item in TRAY_ITEMS {
+            if (!item.hasOwnProp("type") || item.type = TrayMenu.TYPES.ACTION) {
+                ; item is an action
+            } else if (item.type = TrayMenu.TYPES.GROUP) {
+                ; item is a group
                 this.seperator()
-                for action in category.actions {
+                for action in item.actions {
                     this.tray.add(action.text, handler)
 
                     if (action.hasOwnProp("icon")) {
@@ -30,6 +35,8 @@ class TrayMenu {
                         }
                     }
                 }
+            } else if (item.type = TrayMenu.TYPES.SUBMENU) {
+                ; item is a submenu
             }
         }
     }
