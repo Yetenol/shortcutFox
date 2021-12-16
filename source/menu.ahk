@@ -18,7 +18,6 @@ class TrayMenu {
             this.newSubmenuObject(item)
         }
 
-        this.tray.delete
         this.update()
     }
 
@@ -35,6 +34,7 @@ class TrayMenu {
     getType(item) => (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION 
 
     update() {
+        this.tray.delete
         for item in TRAY_ITEMS {
             this.addItem(this.tray, item)
         }
@@ -44,22 +44,36 @@ class TrayMenu {
         switch this.getType(item) ; if type is omitted, set it to ACTION
         {
         case TrayMenu.TYPES.GROUP:
-            this.addLine()
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            
+            ; recursively parse all subitems
             for action in item.actions {
                 this.addItem(menu, action)
             }
 
         case TrayMenu.TYPES.SUBMENU:
+            ; recursively parse all subitems
             for action in item.actions {
                 this.addItem(item.menu, action)
             }
+
+            ; attach and display the submenu for the traymenu
             menu.add(item.text, item.menu)
 
         case TrayMenu.TYPES.LINE:
-            this.addLine() ; add a seperator line
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
-        default: ; item in an action
+        default: ; item in a proper action
+            ; add a seperator line if requested previously
+            if (menu.hasOwnProp("doLine") && menu.doLine) {
+                menu.add() ; add a seperator line
+                menu.doLine := false
+            }
+
+            ; attach and display the entry for the traymenu
             menu.add(item.text, handler)
+
+            ; set the entry icon
             if (item.hasOwnProp("icon")) {
                 if (item.hasOwnProp("iconIndex")) {
                     menu.setIcon(item.text, item.icon, item.iconIndex)
@@ -68,10 +82,6 @@ class TrayMenu {
                 }
             }
         }
-    }
-
-    addLine() { ; Create a seperator line
-        this.tray.add()
     }
 
 }
