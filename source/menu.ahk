@@ -15,14 +15,20 @@ class TrayMenu {
     __New() {
         ; create submenu objects
         for item in TRAY_ITEMS {
-            itemType := (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION
-            if (itemType = TrayMenu.TYPES.SUBMENU) {
-                item.menu := Menu()
-            }
+            this.newSubmenuObject(item)
         }
 
         this.tray.delete
         this.update()
+    }
+
+    newSubmenuObject(item) {
+        if (this.getType(item) = TrayMenu.TYPES.SUBMENU) {
+            item.menu := Menu() ; Create a new submenu object
+            for action in item.actions {
+                this.newSubmenuObject(action)
+            }
+        }
     }
 
     ; if type is omitted, set it to ACTION
