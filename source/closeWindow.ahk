@@ -3,6 +3,7 @@
 isTabActive() {
     if IsBrowserActive() ; A browser is active
         || WinActive("ahk_exe code.exe") ; Visual Studio Code
+        || WinActive("ahk_exe gitkraken.exe")
     { 
         return true ; Tab detected
     }
@@ -62,14 +63,6 @@ isTabActive() {
                     }
                 }
             }
-        }
-    }
-    else if (WinActive("ahk_exe gitkraken.exe")) ; GitKraken is active but no tab is open
-    { 
-        image := getFile("GitKraken single empty tab.png", [".", "resources"])
-        if (!locateImageInWindow("ahk_exe gitkraken.exe", image))
-        { ; Cannot find image! => At least one tab open
-            return true ; Tab detected
         }
     }
     else {
