@@ -102,6 +102,10 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
     {
         Send, ^+t ; Open new tab
     }
+    else if WinActive("ahk_exe code.exe")
+    {
+        Send, ^n ; New file
+    }
     else
     {
         if GetKeyState("Shift", "P")
