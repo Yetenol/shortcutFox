@@ -95,7 +95,6 @@ CtrlBreak:: ; Open new tab / Open action center (Three finger tap)
         }
     }
     else if IsBrowserActive() 
-        || WinActive("ahk_exe gitkraken.exe")
     { ; Browser(like) window is active
         Send, ^t ; Open new tab
     }

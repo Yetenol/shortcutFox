@@ -3,7 +3,6 @@
 isTabActive() {
     if IsBrowserActive() ; A browser is active
         || WinActive("ahk_exe code.exe") ; Visual Studio Code
-        || WinActive("ahk_exe gitkraken.exe")
     { 
         return true ; Tab detected
     }
