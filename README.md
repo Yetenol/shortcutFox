@@ -10,7 +10,7 @@ and help to convert by other AutoHotkey projects.
 - navigate to protect directory
 - build using Powershell
 ```powershell
-$compiler = "$env:ProgramFiles\AutoHotkey 2.0\Compiler\Ahk2Exe.exe"
-$ahk2 = "$env:ProgramFiles\AutoHotkey 2.0\AutoHotkey64.exe"
+$compiler = "$env:ProgramFiles\AutoHotkey 2\Compiler\Ahk2Exe.exe"
+$ahk2 = "$env:ProgramFiles\AutoHotkey 2\AutoHotkey64.exe"
 & $compiler /bin $ahk2 /in source/main.ahk /out bin\Test-AHK2.exe
 ```
