@@ -61,12 +61,22 @@ class TrayMenu {
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
             { ; a maximum number of displayed child items before using a submenu is set
-                if (item.maxDisplay != -1 && true && item.content.Length > item.maxDisplay)
-                { ; too many child items => display a submenu
+                if (item.content is array)
+                { ; item's children aren't linked
+                    numberOfChildren := item.content.Length
+                }
+                else if (item.content is string)
+                { ; item's children are linked
+                    children := this.getChildren(item.content)
+                    numberOfChildren := children.Length
+                }
+
+                if (item.maxDisplay != -1 numberOfChildren > item.maxDisplay)
+                { ; too many children => display a submenu
                     return TrayMenu.TYPES.SUBMENU
                 }
                 else 
-                { ; not too many child items => display a group
+                { ; not too many children => display a group
                     return TrayMenu.TYPES.GROUP
                 }
             }
