@@ -99,7 +99,7 @@ TRAY_ITEMS :=
                         id: "TAKE_SCREENSHOT", 
                         text: "Take Screenshot", 
                         send: "{PrintScreen}", 
-                        icon: "*",
+                        icon: "ScreenSketch.ico",
                     },
                 ]
             },
