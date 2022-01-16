@@ -25,23 +25,24 @@ class TrayMenu {
 
     __New() {
         ; create submenu objects
-        for item in TRAY_ITEMS {
-            this.newSubmenuObject(item)
-        }
+        this.parseDefinition(TRAY_ITEMS)
 
         this.update()
     }
 
     /*****************************************************
-      load a tray item into the dynamic list object
-      @this: subelement of the dynamic list object
-      @param item: action, group, submenu or line to import
+        initialize Menu() objects for all submenus or groups
+        - to display a submenu, items must be attached to an existing menu object
+        - objects are stored inside the definition object
+      @param actionList[]: array of items
     */
-    newSubmenuObject(item) {
-        if (this.getType(item) = TrayMenu.TYPES.SUBMENU) {
-            item.menu := Menu() ; Create a new submenu object
-            for action in item.actions {
-                this.newSubmenuObject(action)
+    parseDefinition(actionList) {
+        for item in actionList
+        {
+            if (item.hasOwnProp("actions"))
+            { ; item is a submenu or group
+                item.menu := Menu() ; create a new submenu object
+                this.parseDefinition(item.actions)
             }
         }
     }
