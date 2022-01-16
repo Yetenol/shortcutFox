@@ -1,7 +1,6 @@
 TRAY_ITEMS := 
 [
     {
-        type: TrayMenu.TYPES.SUBMENU,
         id: "SEND_KEYSTROKES",
         text: "Send keystrokes...",
         maxDisplay: 0,
@@ -22,13 +21,11 @@ TRAY_ITEMS :=
         ]
     },
     {
-        type: TrayMenu.TYPES.GROUP,
         id: "MAIN_SHORTCUTS",
         text: "Main shortcuts",
         actions:
         [
             {
-                type: TrayMenu.TYPES.GROUP,
                 id: "WINDOWS_HELLO",
                 text: "Setup Windows Hello",
                 actions: 
@@ -50,7 +47,6 @@ TRAY_ITEMS :=
                 ]
             },
             {
-                type: TrayMenu.TYPES.GROUP,
                 id: "BLUETOOTH",
                 text: "Bluetooth audio and file transfer",
                 actions:
@@ -72,7 +68,6 @@ TRAY_ITEMS :=
                 ]
             },
             {
-                type: TrayMenu.TYPES.GROUP,
                 id: "CONVERTIBLE",
                 text: "Pen & touch screen utilities",
                 actions:
