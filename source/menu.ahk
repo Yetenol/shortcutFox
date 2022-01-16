@@ -109,7 +109,14 @@ class TrayMenu {
             
             if (item.content is string)
             { ; content is linked => recursively attach linked content
-
+                linkedContent := this.findItem(item.content)
+                if (linkedContent)
+                {
+                    for child in linkedContent
+                    {
+                        this.attachItem(menu, child, icon)
+                    }
+                } 
             }
             else if (item.content is array)
             { ; recursively attach all child items
@@ -165,6 +172,8 @@ class TrayMenu {
                 this.findItem(item.id, item)   
             }
         }
+
+        return false ; couldn't find item
     }
 
     /** Draw a seperator line if requested previously.
