@@ -115,7 +115,7 @@ class TrayMenu {
             ; attach and display the submenu to the traymenu or another submenu
             this.drawLine(menu)
             menu.add(item.text, item.menu)
-            this.isEmpty := false
+            menu.Count := (menu.hasOwnProp("Count")) ? menu.Count++ : 1 ; count the number of items in a menu
 
         case TrayMenu.TYPES.LINE:
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
@@ -124,8 +124,8 @@ class TrayMenu {
             ; attach and display the action to the traymenu or a submenu
             this.drawLine(menu)
             menu.add(item.text, handler)
+            menu.Count := (menu.hasOwnProp("Count")) ? menu.Count++ : 1 ; count the number of items in a menu
             this.drawIcon(menu, item, icon)
-            this.isEmpty := false
 
         }
     }
@@ -184,16 +184,16 @@ class TrayMenu {
         @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
     */
     drawLine(menu) {
-        if (this.isEmpty)
-        { ; don't add a seperator line into an empty traymenu
-            menu.doLine := false
-        }
-        else
-        {
+        if (menu.hasOwnProp("count") && menu.count > 0)
+        { ; menu is not empty
             if (menu.hasOwnProp("doLine") && menu.doLine) {
                 menu.add() ; add a seperator line
                 menu.doLine := false
             }
+        }
+        else
+        { ; menu is empty
+            menu.doLine := false
         }
     }
 
