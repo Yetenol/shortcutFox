@@ -200,26 +200,6 @@ class MenuManager {
         ;this.attachItem(this.trayMenu, item)
     }
 
-;    /** Clear the entire traymenu.
-;        @param {Menu} menu - traymenu or submenu to clear from
-;        @param {Object[]} parent - array of items to recursively search through
-;    */
-;    clear(menu, parent) {
-;        menu.delete()
-;        menu.isEmpty := true
-;
-;        if (parent is array)
-;        { ; parent contains children that are not linked
-;            for item in parent 
-;            {
-;                if (item.hasOwnProp("content"))
-;                { ; item contains children that are not linked
-;                    this.clear(item.menu, item.content)
-;                }
-;            }
-;        }
-;    }
-
 ;    /** Attach an item to the traymenu or a submenu.
 ;        @param {Menu} menu - traymenu or submenu to which is attached
 ;        @param {item} item - group, submenu or action to attach
