@@ -1,8 +1,8 @@
-#Include trayItems.ahk
+#Include TRAYMENU_LAYOUT.ahk
 
 global TRAY_ITEMS
 
-class TrayMenu {
+class MenuManager {
     tray := A_trayMenu ; Menu() object for the script's tray icon
     tray.name := "TRAYMENU"
     isEmpty := true
@@ -53,11 +53,11 @@ class TrayMenu {
     }
 
     /** Get the type of an item.
-        - returns a {TrayMenu.TYPES} value
+        - returns a {MenuManager.TYPES} value
         @param {Object} item - item of interest
      */
     getType(item) {
-        itemType := TrayMenu.TYPES.ACTION ; default is action
+        itemType := MenuManager.TYPES.ACTION ; default is action
 
         if (item.hasOwnProp("content"))
         { ; item is a group or submenu
@@ -65,7 +65,7 @@ class TrayMenu {
             { ; a maximum number of displayed child items before using a submenu is set                
                 if(item.maxDisplay = 0)
                 { ; force to display a submenu
-                    return TrayMenu.TYPES.SUBMENU
+                    return MenuManager.TYPES.SUBMENU
                 }
                 
                 if (item.content is array)
@@ -80,16 +80,16 @@ class TrayMenu {
 
                 if (item.maxDisplay != -1 && numberOfChildren > item.maxDisplay)
                 { ; too many children => display a submenu
-                    return TrayMenu.TYPES.SUBMENU
+                    return MenuManager.TYPES.SUBMENU
                 }
                 else 
                 { ; not too many children => display a group
-                    return TrayMenu.TYPES.GROUP
+                    return MenuManager.TYPES.GROUP
                 }
             }
             else
             { ; no maximun number of displayed child items before using a submenu is set => display group
-                return TrayMenu.TYPES.GROUP
+                return MenuManager.TYPES.GROUP
             }
         }
 
@@ -139,7 +139,7 @@ class TrayMenu {
 
         switch this.getType(item)
         {
-        case TrayMenu.TYPES.GROUP:           
+        case MenuManager.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             for child in this.getChildren(item.content)
             {
@@ -147,7 +147,7 @@ class TrayMenu {
             }
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
-        case TrayMenu.TYPES.SUBMENU:
+        case MenuManager.TYPES.SUBMENU:
             for child in this.getChildren(item.content)
             {
                 this.attachItem(item.menu, child, icon)
@@ -158,7 +158,7 @@ class TrayMenu {
             menu.add(item.text, item.menu)
             menu.isEmpty := false ; flag non-empty menus
 
-        case TrayMenu.TYPES.LINE:
+        case MenuManager.TYPES.LINE:
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         default: ; item in a proper action
