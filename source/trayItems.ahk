@@ -1,6 +1,22 @@
 TRAY_ITEMS := 
 [
     {
+        id: "MANAGE_SCRIPT",
+        text: "Manage script...",
+        maxDisplay: 0,
+        content:
+        [
+            {
+                id: "SUSPEND",
+                text: "Suspend",
+            },
+            {
+                id: "EXIT",
+                text: "Exit",
+            },
+        ]
+    },
+    {
         id: "SEND_KEYSTROKES",
         text: "Send keystrokes...",
         maxDisplay: 0,
