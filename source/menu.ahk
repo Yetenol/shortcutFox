@@ -190,6 +190,35 @@ class TrayMenu {
         return false ; couldn't find item
     }
 
+    /** Resolve the content information into an array of children
+        @param {object[]/string} content - array of items OR the id of a linked parent
+    */
+    getChildren(content) {
+        if (content is array)
+        { ; content isn't linked => recursively attach all child items
+            return content
+        }
+        else if (content is string)
+        { ; content is linked => recursively attach linked content' child items
+            linkedParent := this.findItem(content)
+            if (linkedParent)
+            { ; linked content was found
+                if (linkedParent.hasOwnProp("content"))
+                {
+                    return this.getChildren(linkedParent.content)
+                }
+                else
+                {
+                    throw "Linked parent doesn't contain children:`n" content
+                }
+            }
+            else
+            {
+                throw "Cannot find linked parent:`n" content
+            }
+        }
+    }
+
     /** Draw a seperator line if requested previously.
         @param {Menu} menu - traymenu or submenu to which is drawn
     */
