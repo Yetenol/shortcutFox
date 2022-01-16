@@ -11,13 +11,13 @@ class TrayMenu {
             - type can be omitted
         */
         GROUP: 1,
-        /*  - actions listed above each other
+        /*  - child items listed above each other
             - displays a line before and after the group
             - doesn't show title
         */
         SUBMENU: 2,
         /*  - display title as single item
-            - hovering over it expands a new menu with actions
+            - hovering over it expands a new menu with child item
         */
         LINE: 3, 
         ;   - draws a seperator line
@@ -39,10 +39,10 @@ class TrayMenu {
     parseDefinition(actionList) {
         for item in actionList
         {
-            if (item.hasOwnProp("actions"))
+            if (item.hasOwnProp("content"))
             { ; item is a submenu or group
                 item.menu := Menu() ; create a new submenu object
-                this.parseDefinition(item.actions)
+                this.parseDefinition(item.content) ; parse all children of the submenu or group
             }
         }
     }
@@ -50,21 +50,21 @@ class TrayMenu {
     getType(item) {
         itemType := TrayMenu.TYPES.ACTION ; default is action
 
-        if (item.hasOwnProp("actions"))
+        if (item.hasOwnProp("content"))
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
-            { ; a maximum number of displayed actions before using a submenu is set
-                if (item.actions.Length > item.maxDisplay)
-                { ; too many actions => display a submenu
+            { ; a maximum number of displayed child items before using a submenu is set
+                if (item.content.Length > item.maxDisplay)
+                { ; too many child items => display a submenu
                     return TrayMenu.TYPES.SUBMENU
                 }
                 else 
-                { ; not too many actions => display a group
+                { ; not too many child items => display a group
                     return TrayMenu.TYPES.GROUP
                 }
             }
             else
-            { ; no maximun number of displayed actions before using a submenu is set => display group
+            { ; no maximun number of displayed child items before using a submenu is set => display group
                 return TrayMenu.TYPES.GROUP
             }
         }
@@ -85,13 +85,13 @@ class TrayMenu {
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             
             ; recursively parse all subitems
-            for action in item.actions {
+            for action in item.content {
                 this.addItem(menu, action)
             }
 
         case TrayMenu.TYPES.SUBMENU:
             ; recursively parse all subitems
-            for action in item.actions {
+            for action in item.content {
                 this.addItem(item.menu, action)
             }
 

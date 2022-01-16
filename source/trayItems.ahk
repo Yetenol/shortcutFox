@@ -4,7 +4,7 @@ TRAY_ITEMS :=
         id: "SEND_KEYSTROKES",
         text: "Send keystrokes...",
         maxDisplay: 0,
-        actions:
+        content:
         [
             {
                 id: "SEND_PAUSE",
@@ -23,12 +23,12 @@ TRAY_ITEMS :=
     {
         id: "MAIN_SHORTCUTS",
         text: "Main shortcuts",
-        actions:
+        content:
         [
             {
                 id: "WINDOWS_HELLO",
                 text: "Setup Windows Hello",
-                actions: 
+                content: 
                 [
                     {
                         id: "SETUP_HELLO_FACE", 
@@ -49,7 +49,7 @@ TRAY_ITEMS :=
             {
                 id: "BLUETOOTH",
                 text: "Bluetooth audio and file transfer",
-                actions:
+                content:
                 [
                     {
                     id: "BLUETOOTH_FILE_TRANSFER", 
@@ -70,7 +70,7 @@ TRAY_ITEMS :=
             {
                 id: "CONVERTIBLE",
                 text: "Pen & touch screen utilities",
-                actions:
+                content:
                 [
                     {
                         id: "CALIBRATE_DIGITIZER", 
