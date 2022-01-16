@@ -164,12 +164,12 @@ class TrayMenu {
 
     /** return an item by id
         @param {string} id - id of the item of interest
-        @param {Object[]} [parent=TRAY_ITEMS] - array of items to recursively search through
+        @param {Object[]} [parent=traymenu] - array of items to recursively search through
     */
     findItem(id, parent:=false) {
         if (!parent)
-        { ; recursion start at the root of the definition
-            parent := TRAY_ITEMS
+        { ; recursion start in the traymenu
+            parent := this.tray
         }
 
         if (parent is array)
@@ -182,7 +182,7 @@ class TrayMenu {
                 }
                 else if (item.hasOwnProp("content") && item.content is array)
                 { ; item contains children that are not linked
-                    this.findItem(item.id, item.content)   
+                    this.findItem(item.id, item)   
                 }
             }
         }
