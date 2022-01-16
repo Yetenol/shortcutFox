@@ -71,7 +71,7 @@ class TrayMenu {
                     numberOfChildren := children.Length
                 }
 
-                if (item.maxDisplay != -1 numberOfChildren > item.maxDisplay)
+                if (item.maxDisplay != -1 && numberOfChildren > item.maxDisplay)
                 { ; too many children => display a submenu
                     return TrayMenu.TYPES.SUBMENU
                 }
