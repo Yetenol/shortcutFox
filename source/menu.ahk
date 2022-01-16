@@ -4,6 +4,7 @@ global TRAY_ITEMS
 
 class TrayMenu {
     tray := A_trayMenu ; Menu() object for the script's tray icon
+    isEmpty := true
 
     static TYPES := {
         ACTION: 0,
@@ -57,7 +58,7 @@ class TrayMenu {
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
             { ; a maximum number of displayed child items before using a submenu is set
-                if (item.content.Length > item.maxDisplay)
+                if (item.maxDisplay != -1 && item.content.Length > item.maxDisplay)
                 { ; too many child items => display a submenu
                     return TrayMenu.TYPES.SUBMENU
                 }
@@ -77,14 +78,21 @@ class TrayMenu {
     /** Rerender the entire traymenu.
     */
     update() {
-        this.tray.delete
+        this.clear()
         for item in TRAY_ITEMS {
             this.attachItem(this.tray, item)
         }
     }
 
+    /** Clear the entire traymenu.
+    */
+    clear() {
+        this.tray.delete
+        this.isEmpty := true
+    }
+
     /** Attach an item to the traymenu or a submenu.
-        @param {Menu} menu: tray-object or submenu-object created in parseDefinition()
+        @param {Menu} menu: traymenu or submenu created in parseDefinition()
     */
     attachItem(menu, item) {
         switch this.getType(item)
@@ -96,6 +104,8 @@ class TrayMenu {
             for child in item.content {
                 this.attachItem(menu, child)
             }
+        
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         case TrayMenu.TYPES.SUBMENU:
             ; recursively parse all child items
@@ -103,21 +113,19 @@ class TrayMenu {
                 this.attachItem(item.menu, child)
             }
 
-            ; attach and display the submenu to the traymenu
+            ; attach and display the submenu to the traymenu or another submenu
+            this.drawLine(menu)
             menu.add(item.text, item.menu)
+            this.isEmpty := false
 
         case TrayMenu.TYPES.LINE:
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         default: ; item in a proper action
-            ; add a seperator line if requested previously
-            if (menu.hasOwnProp("doLine") && menu.doLine) {
-                menu.add() ; add a seperator line
-                menu.doLine := false
-            }
-
-            ; attach and display the action to the traymenu or submenu
+            ; attach and display the action to the traymenu or a submenu
+            this.drawLine(menu)
             menu.add(item.text, handler)
+            this.isEmpty := false
 
             ; set the action icon
             if (item.hasOwnProp("icon")) {
@@ -126,6 +134,23 @@ class TrayMenu {
                 } else {
                     menu.setIcon(item.text, item.icon)
                 }
+            }
+        }
+    }
+
+    /** Draw a seperator line if requested previously.
+        @param {Menu} menu: traymenu or submenu created in parseDefinition()
+    */
+    drawLine(menu) {
+        if (this.isEmpty)
+        { ; don't add a seperator line into an empty traymenu
+            menu.doLine := false
+        }
+        else
+        {
+            if (menu.hasOwnProp("doLine") && menu.doLine) {
+                menu.add() ; add a seperator line
+                menu.doLine := false
             }
         }
     }
