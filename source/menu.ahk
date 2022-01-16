@@ -106,32 +106,11 @@ class TrayMenu {
         {
         case TrayMenu.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
-            
-            if (item.content is string)
-            { ; content is linked => recursively attach linked content
-                linkedContent := this.findItem(item.content)
-                if (linkedContent)
-                {
-                    for child in linkedContent
-                    {
-                        this.attachItem(menu, child, icon)
-                    }
-                } 
-            }
-            else if (item.content is array)
-            { ; recursively attach all child items
-                for child in item.content {
-                    this.attachItem(menu, child, icon)
-                }
-            }
-
+            this.attachContent(menu, item, icon)
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         case TrayMenu.TYPES.SUBMENU:
-            ; recursively parse all child items
-            for child in item.content {
-                this.attachItem(item.menu, child, icon)
-            }
+            this.attachContent(item.menu, item, icon)
 
             ; attach and display the submenu to the traymenu or another submenu
             this.drawLine(menu)
@@ -148,6 +127,31 @@ class TrayMenu {
             this.drawIcon(menu, item, icon)
             this.isEmpty := false
 
+        }
+    }
+
+    /** Attach all children to the traymenu or a submenu.
+        @param {Menu} menu: traymenu or submenu created in parseDefinition()
+        @param {item} item - group, submenu or action to attach
+        @param {string} [icon=false] - icon to inherit from parent group of submenu
+    */
+    attachContent(menu, item, icon) {
+        if (item.content is string)
+        { ; content is linked => recursively attach linked content
+            linkedContent := this.findItem(item.content)
+            if (linkedContent)
+            {
+                for child in linkedContent
+                {
+                    this.attachItem(menu, child, icon)
+                }
+            } 
+        }
+        else if (item.content is array)
+        { ; recursively attach all child items
+            for child in item.content {
+                this.attachItem(menu, child, icon)
+            }
         }
     }
 

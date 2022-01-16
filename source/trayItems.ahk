@@ -37,6 +37,11 @@ TRAY_ITEMS :=
         ]
     },
     {
+        id: "SET_DEFAULT_ACTION",
+        text: "Set left click action...",
+        ;content: "MAIN_SHORTCUTS",
+    },
+    {
         id: "MAIN_SHORTCUTS",
         text: "Main shortcuts",
         content:
