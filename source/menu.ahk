@@ -1,6 +1,6 @@
 #Include TRAYMENU_LAYOUT.ahk
 
-global TRAY_ITEMS
+global TRAYMENU_LAYOUT
 
 class MenuManager {
     tray := A_trayMenu ; Menu() object for the script's tray icon
@@ -28,7 +28,7 @@ class MenuManager {
     /** Constructor
     */
     __New() {
-        this.parseDefinition(TRAY_ITEMS)
+        this.parseDefinition(TRAYMENU_LAYOUT)
         this.update()
     }
 
@@ -98,8 +98,8 @@ class MenuManager {
     /** Rerender the entire traymenu.
     */
     update() {
-        this.clear(this.tray, TRAY_ITEMS)
-        for item in TRAY_ITEMS {
+        this.clear(this.tray, TRAYMENU_LAYOUT)
+        for item in TRAYMENU_LAYOUT {
             this.attachItem(this.tray, item)
         }
     }
@@ -173,12 +173,12 @@ class MenuManager {
 
     /** return an item by id
         @param {string} id - id of the item of interest
-        @param {Object[]} [parent=TRAY_ITEMS] - array of items to recursively search through
+        @param {Object[]} [parent=TRAYMENU_LAYOUT] - array of items to recursively search through
     */
     findItem(id, parent:=false) {
         if (!parent)
         { ; recursion start at the root of the definition
-            parent := TRAY_ITEMS
+            parent := TRAYMENU_LAYOUT
         }
 
         if (parent is array)

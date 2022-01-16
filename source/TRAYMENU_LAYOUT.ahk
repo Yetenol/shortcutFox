@@ -1,4 +1,4 @@
-TRAY_ITEMS := 
+TRAYMENU_LAYOUT := 
 [
     {
         id: "MANAGE_SCRIPT",
