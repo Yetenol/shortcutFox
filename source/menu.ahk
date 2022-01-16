@@ -38,30 +38,7 @@ class TrayMenu {
       @param item: action, group, submenu or line to import
     */
     newSubmenuObject(item) {
-        item.type := TrayMenu.TYPES.ACTION
-
-        if (item.hasOwnProp("actions"))
-        { ; item is a group or submenu
-            if (item.hasOwnProp("maxDisplay"))
-            { ; a maximum number of displayed actions before using a submenu is set
-                if (item.actions.Length > item.maxDisplay)
-                { ; too many actions => display a submenu
-                    item.type := TrayMenu.TYPES.SUBMENU
-                }
-                else 
-                { ; not too many actions => display a group
-                    item.type := TrayMenu.TYPES.GROUP
-                }
-            }
-            else
-            { ; no maximun number of displayed actions before using a submenu is set => display group
-                item.type := TrayMenu.TYPES.GROUP
-            }
-        }
-
-        switch (item.type)
-        {
-        case TrayMenu.TYPES.SUBMENU:
+        if (this.getType(item) = TrayMenu.TYPES.SUBMENU) {
             item.menu := Menu() ; Create a new submenu object
             for action in item.actions {
                 this.newSubmenuObject(action)
@@ -69,8 +46,29 @@ class TrayMenu {
         }
     }
 
-    ; if type is omitted, set it to ACTION
-    getType(item) => (item.hasOwnProp("type")) ? item.type : TrayMenu.TYPES.ACTION 
+    getType(item) {
+        itemType := TrayMenu.TYPES.ACTION ; default is action
+
+        if (item.hasOwnProp("actions"))
+        { ; item is a group or submenu
+            if (item.hasOwnProp("maxDisplay"))
+            { ; a maximum number of displayed actions before using a submenu is set
+                if (item.actions.Length > item.maxDisplay)
+                { ; too many actions => display a submenu
+                    return TrayMenu.TYPES.SUBMENU
+                }
+                else 
+                { ; not too many actions => display a group
+                    return TrayMenu.TYPES.GROUP
+                }
+            }
+            else
+            { ; no maximun number of displayed actions before using a submenu is set => display group
+                return TrayMenu.TYPES.GROUP
+            }
+        }
+
+    }
 
     update() {
         this.tray.delete
