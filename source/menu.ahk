@@ -6,6 +6,7 @@ class MenuManager {
     trayMenu := A_trayMenu ; Menu() object for the script's tray icon
     trayMenu.name := "TRAYMENU"
     isEmpty := true
+    LAYOUT := []
 
     static TYPES := {
         ACTION: 0,
@@ -27,8 +28,9 @@ class MenuManager {
 
     /** Constructor
     */
-    __New() {
-        this.parseDefinition(TRAYMENU_LAYOUT)
+    __New(layout) {
+        this.LAYOUT := layout
+        this.parseLayout(this.LAYOUT)
         this.update()
     }
 
@@ -37,7 +39,7 @@ class MenuManager {
         - objects are stored inside the definition object
         @param {Object[]} definition - array of items to recursively parse through
      */
-    parseDefinition(definition) {
+    parseLayout(definition) {
         if (definition is array)
         { ; definition contains children that are not linked
             for item in definition
@@ -46,7 +48,7 @@ class MenuManager {
                 { ; item is a submenu or group
                     item.menu := Menu() ; create a new submenu object
                     item.menu.name := item.id
-                    this.parseDefinition(item.content) ; parse all children of the submenu or group
+                    this.parseLayout(item.content) ; parse all children of the submenu or group
                 }
             }
         }
@@ -98,8 +100,8 @@ class MenuManager {
     /** Rerender the entire traymenu.
     */
     update() {
-        this.clear(this.trayMenu, TRAYMENU_LAYOUT)
-        for item in TRAYMENU_LAYOUT {
+        this.clear(this.trayMenu, this.LAYOUT)
+        for item in this.LAYOUT {
             this.attachItem(this.trayMenu, item)
         }
     }
@@ -173,12 +175,12 @@ class MenuManager {
 
     /** return an item by id
         @param {string} id - id of the item of interest
-        @param {Object[]} [parent=TRAYMENU_LAYOUT] - array of items to recursively search through
+        @param {Object[]} [parent=this.LAYOUT] - array of items to recursively search through
     */
     findItem(id, parent:=false) {
         if (!parent)
         { ; recursion start at the root of the definition
-            parent := TRAYMENU_LAYOUT
+            parent := this.LAYOUT
         }
 
         if (parent is array)
