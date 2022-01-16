@@ -34,10 +34,10 @@ class TrayMenu {
     /** Initialize {Menu} objects for all submenus or groups.
         - to display a submenu, items must be attached to an existing menu object
         - objects are stored inside the definition object
-        @param {Object[]} actionList - array of items
+        @param {Object[]} [parent] - array of items to recursively parse through
      */
-    parseDefinition(actionList) {
-        for item in actionList
+    parseDefinition(parent) {
+        for item in parent
         {
             if (item.hasOwnProp("content"))
             { ; item is a submenu or group
@@ -107,11 +107,17 @@ class TrayMenu {
         case TrayMenu.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             
-            ; recursively parse all child items
-            for child in item.content {
-                this.attachItem(menu, child, icon)
+            if (item.content is string)
+            { ; content is linked => recursively attach linked content
+
             }
-        
+            else if (item.content is array)
+            { ; recursively attach all child items
+                for child in item.content {
+                    this.attachItem(menu, child, icon)
+                }
+            }
+
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         case TrayMenu.TYPES.SUBMENU:
@@ -135,6 +141,29 @@ class TrayMenu {
             this.drawIcon(menu, item, icon)
             this.isEmpty := false
 
+        }
+    }
+
+    /** return an item by id
+        @param {string} id - id of the item of interest
+        @param {Object[]} [parent=traymenu] - array of items to recursively search through
+    */
+    findItem(id, parent:=false) {
+        if (!parent)
+        { ; recursion start in the traymenu
+            parent := this.tray
+        }
+
+        for item in parent
+        {
+            if (item.id = id) 
+            {
+                return item
+            }
+            else if (item.hasOwnProp("content") && item.content is array)
+            { ; item contains children that are not just linked
+                this.findItem(item.id, item)   
+            }
         }
     }
 
