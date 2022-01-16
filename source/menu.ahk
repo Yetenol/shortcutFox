@@ -34,15 +34,15 @@ class MenuManager {
         this.update()
     }
 
-    /** Initialize {Menu} objects for all submenus or groups.
-        - to display a submenu, items must be attached to an existing menu object
+    /** Read out layout definition and create necessary objects for all submenus or groups.
+        - to display a submenu, items must be attached to an existing {Menu} object
         - objects are stored inside the definition object
         @param {Object[]} definition - array of items to recursively parse through
      */
-    parseLayout(definition) {
-        if (definition is array)
-        { ; definition contains children that are not linked
-            for item in definition
+    parseLayout(layout) {
+        if (layout is array)
+        { ; layout contains children that are not linked
+            for item in layout
             {
                 if (item.hasOwnProp("content"))
                 { ; item is a submenu or group
