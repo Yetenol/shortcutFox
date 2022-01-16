@@ -78,21 +78,31 @@ class TrayMenu {
     /** Rerender the entire traymenu.
     */
     update() {
-        this.clear()
+        this.clear(this.tray, TRAY_ITEMS)
         for item in TRAY_ITEMS {
             this.attachItem(this.tray, item)
         }
     }
 
     /** Clear the entire traymenu.
+        @param {Menu} menu - traymenu or submenu to clear from
+        @param {Object[]} parent - array of items to recursively search through
     */
-    clear() {
-        this.tray.delete
-        this.isEmpty := true
+    clear(menu, parent) {
+        menu.delete()
+        menu.isEmpty := true
+
+        for item in parent
+        {
+            if (item.hasOwnProp("content") && item.content is array)
+            { ; item contains children that are not linked
+                this.clear(item.menu, item.content)
+            }
+        }
     }
 
     /** Attach an item to the traymenu or a submenu.
-        @param {Menu} menu: traymenu or submenu created in parseDefinition()
+        @param {Menu} menu - traymenu or submenu to which is attached
         @param {item} item - group, submenu or action to attach
         @param {string} [icon=false] - icon to inherit from parent group of submenu
     */
@@ -115,7 +125,7 @@ class TrayMenu {
             ; attach and display the submenu to the traymenu or another submenu
             this.drawLine(menu)
             menu.add(item.text, item.menu)
-            menu.Count := (menu.hasOwnProp("Count")) ? menu.Count++ : 1 ; count the number of items in a menu
+            menu.isEmpty := false ; flag non-empty menus
 
         case TrayMenu.TYPES.LINE:
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
@@ -124,14 +134,14 @@ class TrayMenu {
             ; attach and display the action to the traymenu or a submenu
             this.drawLine(menu)
             menu.add(item.text, handler)
-            menu.Count := (menu.hasOwnProp("Count")) ? menu.Count++ : 1 ; count the number of items in a menu
+            menu.isEmpty := false ; flag non-empty menus
             this.drawIcon(menu, item, icon)
 
         }
     }
 
     /** Attach all children to the traymenu or a submenu.
-        @param {Menu} menu: traymenu or submenu created in parseDefinition()
+        @param {Menu} menu - traymenu or submenu to which is attached
         @param {item} item - group, submenu or action to attach
         @param {string} [icon=false] - icon to inherit from parent group of submenu
     */
@@ -172,7 +182,7 @@ class TrayMenu {
                 return item
             }
             else if (item.hasOwnProp("content") && item.content is array)
-            { ; item contains children that are not just linked
+            { ; item contains children that are not linked
                 this.findItem(item.id, item)   
             }
         }
@@ -181,10 +191,10 @@ class TrayMenu {
     }
 
     /** Draw a seperator line if requested previously.
-        @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
+        @param {Menu} menu - traymenu or submenu to which is drawn
     */
     drawLine(menu) {
-        if (menu.hasOwnProp("count") && menu.count > 0)
+        if (menu.hasOwnProp("isEmpty") && !menu.isEmpty)
         { ; menu is not empty
             if (menu.hasOwnProp("doLine") && menu.doLine) {
                 menu.add() ; add a seperator line
@@ -198,7 +208,7 @@ class TrayMenu {
     }
 
     /** Display the correct icon for a submenu or action
-        @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
+        @param {Menu} menu - traymenu or submenu to which is drawn
         @param {Object} item - action or submenu to apply the icon to
         @param {string[]/string} icon - icon to be applied
     */
