@@ -63,19 +63,19 @@ TRAY_ITEMS :=
             {
                 id: "BLUETOOTH",
                 text: "Bluetooth audio and file transfer",
+                icon: [A_WinDir "\System32\netshell.dll", 104],
                 content:
                 [
                     {
                     id: "BLUETOOTH_FILE_TRANSFER", 
                     text: "Transfer files using Bluetooth", 
                     run: "fsquirt", 
-                    icon: [A_WinDir "\System32\netshell.dll", 104],
+                    
                     },
                     {
                         id: "CONNECT_BLUETOOTH_DEVICE", 
                         text: "Connect bluetooth device", 
                         run: "explorer ms-settings:connecteddevices", 
-                        icon: [A_WinDir "\System32\netshell.dll", 104],
                     },
                 ]
             },

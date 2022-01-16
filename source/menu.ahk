@@ -93,16 +93,23 @@ class TrayMenu {
 
     /** Attach an item to the traymenu or a submenu.
         @param {Menu} menu: traymenu or submenu created in parseDefinition()
+        @param {item} item - group, submenu or action to attach
+        @param {string} [icon=false] - icon to inherit from parent group of submenu
     */
-    attachItem(menu, item) {
+    attachItem(menu, item, icon := false) {
+        if (!icon && item.hasOwnProp("icon"))
+        { ; no icon to inherit but this item has it's own icon
+            icon := item.icon
+        }
+                
         switch this.getType(item)
         {
-        case TrayMenu.TYPES.GROUP:
+        case TrayMenu.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             
             ; recursively parse all child items
             for child in item.content {
-                this.attachItem(menu, child)
+                this.attachItem(menu, child, icon)
             }
         
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
@@ -110,7 +117,7 @@ class TrayMenu {
         case TrayMenu.TYPES.SUBMENU:
             ; recursively parse all child items
             for child in item.content {
-                this.attachItem(item.menu, child)
+                this.attachItem(item.menu, child, icon)
             }
 
             ; attach and display the submenu to the traymenu or another submenu
@@ -125,7 +132,7 @@ class TrayMenu {
             ; attach and display the action to the traymenu or a submenu
             this.drawLine(menu)
             menu.add(item.text, handler)
-            this.drawIcon(menu, item)
+            this.drawIcon(menu, item, icon)
             this.isEmpty := false
 
         }
@@ -151,31 +158,19 @@ class TrayMenu {
     /** Display the correct icon for a submenu or action
         @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
         @param {Object} item - action or submenu to apply the icon to
+        @param {string[]/string} icon - icon to be applied
     */
-    drawIcon(menu, item) {
-        if (menu.hasOwnProp("icon"))
-        { ; inherit the menu icon
-            icon := menu.icon
-        }
-        else if (item.hasOwnProp("icon"))
-        { ; use own icon
-            icon := item.icon
-        }
-        else
-        {
-            icon := false
-        }
-        
-        if (icon = "" || !icon)
-        { ; no icon is set
+    drawIcon(menu, item, icon) {
+        if (icon is array)
+        { ; icon contains a path and index
+            menu.setIcon(item.text, icon[1], icon[2]) 
         }
         else if(icon is string)
         { ; icon only contains a path
             menu.setIcon(item.text, icon)
         }
         else
-        { ; icon contains a path and index
-            menu.setIcon(item.text, icon[1], icon[2]) 
+        { ; no icon is set
         }
     }
 
