@@ -39,14 +39,9 @@ class TrayMenu {
     */
     newSubmenuObject(item) {
         itemType := TrayMenu.TYPES.ACTION
-        ; itemType := (item.hasOwnProp("type")) ? item.type : itemType
-
-        id := (item.hasOwnProp("id")) ? item.id : "#"
-        MsgBox("ID:`t" id "`nactions:`t" item.hasOwnProp("actions"))
 
         if (item.hasOwnProp("actions"))
         { ; item is a group or submenu
-            MsgBox item.id
             if (item.hasOwnProp("maxDisplay"))
             { ; a maximum number of displayed actions before using a submenu is set
                 if (item.actions.Length > item.maxDisplay)
