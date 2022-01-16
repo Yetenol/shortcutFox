@@ -37,12 +37,15 @@ class TrayMenu {
         @param {Object[]} [parent] - array of items to recursively parse through
      */
     parseDefinition(parent) {
-        for item in parent
-        {
-            if (item.hasOwnProp("content"))
-            { ; item is a submenu or group
-                item.menu := Menu() ; create a new submenu object
-                this.parseDefinition(item.content) ; parse all children of the submenu or group
+        if (parent is array)
+        { ; parent contains children that are not linked
+            for item in parent
+            {
+                if (item.hasOwnProp("content"))
+                { ; item is a submenu or group
+                    item.menu := Menu() ; create a new submenu object
+                    this.parseDefinition(item.content) ; parse all children of the submenu or group
+                }
             }
         }
     }
@@ -58,7 +61,7 @@ class TrayMenu {
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
             { ; a maximum number of displayed child items before using a submenu is set
-                if (item.maxDisplay != -1 && item.content.Length > item.maxDisplay)
+                if (item.maxDisplay != -1 && true && item.content.Length > item.maxDisplay)
                 { ; too many child items => display a submenu
                     return TrayMenu.TYPES.SUBMENU
                 }
@@ -92,11 +95,14 @@ class TrayMenu {
         menu.delete()
         menu.isEmpty := true
 
-        for item in parent
-        {
-            if (item.hasOwnProp("content") && item.content is array)
-            { ; item contains children that are not linked
-                this.clear(item.menu, item.content)
+        if (parent is array)
+        { ; parent contains children that are not linked
+            for item in parent 
+            {
+                if (item.hasOwnProp("content"))
+                { ; item contains children that are not linked
+                    this.clear(item.menu, item.content)
+                }
             }
         }
     }
@@ -175,15 +181,18 @@ class TrayMenu {
             parent := this.tray
         }
 
-        for item in parent
-        {
-            if (item.id = id) 
+        if (parent is array)
+        { ; parent contains children that are not linked
+            for item in parent
             {
-                return item
-            }
-            else if (item.hasOwnProp("content") && item.content is array)
-            { ; item contains children that are not linked
-                this.findItem(item.id, item)   
+                if (item.id = id) 
+                {
+                    return item
+                }
+                else if (item.hasOwnProp("content") && item.content is array)
+                { ; item contains children that are not linked
+                    this.findItem(item.id, item)   
+                }
             }
         }
 
