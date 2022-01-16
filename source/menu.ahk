@@ -125,21 +125,14 @@ class TrayMenu {
             ; attach and display the action to the traymenu or a submenu
             this.drawLine(menu)
             menu.add(item.text, handler)
+            this.drawIcon(menu, item)
             this.isEmpty := false
 
-            ; set the action icon
-            if (item.hasOwnProp("icon")) {
-                if (item.hasOwnProp("iconIndex")) {
-                    menu.setIcon(item.text, item.icon, item.iconIndex)
-                } else {
-                    menu.setIcon(item.text, item.icon)
-                }
-            }
         }
     }
 
     /** Draw a seperator line if requested previously.
-        @param {Menu} menu: traymenu or submenu created in parseDefinition()
+        @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
     */
     drawLine(menu) {
         if (this.isEmpty)
@@ -152,6 +145,37 @@ class TrayMenu {
                 menu.add() ; add a seperator line
                 menu.doLine := false
             }
+        }
+    }
+
+    /** Display the correct icon for a submenu or action
+        @param {Menu} menu - the traymenu or a submenu created in parseDefinition()
+        @param {Object} item - action or submenu to apply the icon to
+    */
+    drawIcon(menu, item) {
+        if (menu.hasOwnProp("icon"))
+        { ; inherit the menu icon
+            icon := menu.icon
+        }
+        else if (item.hasOwnProp("icon"))
+        { ; use own icon
+            icon := item.icon
+        }
+        else
+        {
+            icon := false
+        }
+        
+        if (icon = "" || !icon)
+        { ; no icon is set
+        }
+        else if(icon is string)
+        { ; icon only contains a path
+            menu.setIcon(item.text, icon)
+        }
+        else
+        { ; icon contains a path and index
+            menu.setIcon(item.text, icon[1], icon[2]) 
         }
     }
 
