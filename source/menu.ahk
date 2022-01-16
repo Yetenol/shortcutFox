@@ -3,8 +3,8 @@
 global TRAYMENU_LAYOUT
 
 class MenuManager {
-    tray := A_trayMenu ; Menu() object for the script's tray icon
-    tray.name := "TRAYMENU"
+    trayMenu := A_trayMenu ; Menu() object for the script's tray icon
+    trayMenu.name := "TRAYMENU"
     isEmpty := true
 
     static TYPES := {
@@ -98,9 +98,9 @@ class MenuManager {
     /** Rerender the entire traymenu.
     */
     update() {
-        this.clear(this.tray, TRAYMENU_LAYOUT)
+        this.clear(this.trayMenu, TRAYMENU_LAYOUT)
         for item in TRAYMENU_LAYOUT {
-            this.attachItem(this.tray, item)
+            this.attachItem(this.trayMenu, item)
         }
     }
 
