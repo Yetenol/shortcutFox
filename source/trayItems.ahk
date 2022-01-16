@@ -39,7 +39,7 @@ TRAY_ITEMS :=
     {
         id: "SET_DEFAULT_ACTION",
         text: "Set left click action...",
-        content: "MAIN_SHORTCUTS",
+        content: "WINDOWS_HELLO",
     },
     {
         id: "MAIN_SHORTCUTS",

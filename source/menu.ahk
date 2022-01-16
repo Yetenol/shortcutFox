@@ -182,7 +182,12 @@ class TrayMenu {
                 }
                 else if (item.hasOwnProp("content") && item.content is array)
                 { ; item contains children that are not linked
-                    this.findItem(item.id, item.content)   
+                    ;MsgBox("Search " item.id " for " id)
+                    item := this.findItem(id, item.content)
+                    if (item)
+                    { ; found the item
+                        return item
+                    }   
                 }
             }
         }
@@ -203,6 +208,7 @@ class TrayMenu {
             linkedParent := this.findItem(content)
             if (linkedParent)
             { ; linked content was found
+            MsgBox("Parent:`t" linkedParent.id "`nTarget:`t" content)
                 if (linkedParent.hasOwnProp("content"))
                 {
                     return this.getChildren(linkedParent.content)
