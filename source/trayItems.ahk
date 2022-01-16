@@ -40,7 +40,8 @@ TRAY_ITEMS :=
         id: "SET_DEFAULT_ACTION",
         text: "Set left click action...",
         maxDisplay: 0,
-        content: "BLUETOOTH",
+        ;icon: "*",
+        content: "MAIN_SHORTCUTS",
     },
     {
         id: "MAIN_SHORTCUTS",
