@@ -66,6 +66,7 @@ class MenuManager {
             { ; item is a symbolic link to another submenu or group
                 link := this.findItem(item)
                 layer.content[i] := link
+                debug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
 
             }
