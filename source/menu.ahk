@@ -38,7 +38,7 @@ class TrayMenu {
       @param item: action, group, submenu or line to import
     */
     newSubmenuObject(item) {
-        itemType := TrayMenu.TYPES.ACTION
+        item.type := TrayMenu.TYPES.ACTION
 
         if (item.hasOwnProp("actions"))
         { ; item is a group or submenu
@@ -46,20 +46,20 @@ class TrayMenu {
             { ; a maximum number of displayed actions before using a submenu is set
                 if (item.actions.Length > item.maxDisplay)
                 { ; too many actions => display a submenu
-                    itemType := TrayMenu.TYPES.SUBMENU
+                    item.type := TrayMenu.TYPES.SUBMENU
                 }
                 else 
                 { ; not too many actions => display a group
-                    itemType := TrayMenu.TYPES.GROUP
+                    item.type := TrayMenu.TYPES.GROUP
                 }
             }
             else
             { ; no maximun number of displayed actions before using a submenu is set => display group
-                itemType := TrayMenu.TYPES.GROUP
+                item.type := TrayMenu.TYPES.GROUP
             }
         }
 
-        switch (itemType)
+        switch (item.type)
         {
         case TrayMenu.TYPES.SUBMENU:
             item.menu := Menu() ; Create a new submenu object
