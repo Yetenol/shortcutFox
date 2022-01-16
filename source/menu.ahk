@@ -3,7 +3,7 @@
 global TRAY_ITEMS
 
 class TrayMenu {
-    tray := A_trayMenu
+    tray := A_trayMenu ; Menu() object for the script's tray icon
 
     static TYPES := {
         ACTION: 0,
@@ -23,19 +23,18 @@ class TrayMenu {
         ;   - draws a seperator line
     }
 
+    /** Constructor
+    */
     __New() {
-        ; create submenu objects
         this.parseDefinition(TRAY_ITEMS)
-
         this.update()
     }
 
-    /*****************************************************
-        initialize Menu() objects for all submenus or groups
+    /** Initialize {Menu} objects for all submenus or groups.
         - to display a submenu, items must be attached to an existing menu object
         - objects are stored inside the definition object
-      @param actionList[]: array of items
-    */
+        @param {Object[]} actionList - array of items
+     */
     parseDefinition(actionList) {
         for item in actionList
         {
@@ -47,6 +46,10 @@ class TrayMenu {
         }
     }
 
+    /** Get the type of an item.
+        - returns a {TrayMenu.TYPES} value
+        @param {Object} item - item of interest
+     */
     getType(item) {
         itemType := TrayMenu.TYPES.ACTION ; default is action
 
@@ -71,31 +74,36 @@ class TrayMenu {
 
     }
 
+    /** Rerender the entire traymenu.
+    */
     update() {
         this.tray.delete
         for item in TRAY_ITEMS {
-            this.addItem(this.tray, item)
+            this.attachItem(this.tray, item)
         }
     }
 
-    addItem(menu, item) {
-        switch this.getType(item) ; if type is omitted, set it to ACTION
+    /** Attach an item to the traymenu or a submenu.
+        @param {Menu} menu: tray-object or submenu-object created in parseDefinition()
+    */
+    attachItem(menu, item) {
+        switch this.getType(item)
         {
         case TrayMenu.TYPES.GROUP:
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             
-            ; recursively parse all subitems
+            ; recursively parse all child items
             for action in item.content {
-                this.addItem(menu, action)
+                this.attachItem(menu, action)
             }
 
         case TrayMenu.TYPES.SUBMENU:
-            ; recursively parse all subitems
+            ; recursively parse all child items
             for action in item.content {
-                this.addItem(item.menu, action)
+                this.attachItem(item.menu, action)
             }
 
-            ; attach and display the submenu for the traymenu
+            ; attach and display the submenu to the traymenu
             menu.add(item.text, item.menu)
 
         case TrayMenu.TYPES.LINE:
@@ -108,10 +116,10 @@ class TrayMenu {
                 menu.doLine := false
             }
 
-            ; attach and display the entry for the traymenu
+            ; attach and display the action to the traymenu or submenu
             menu.add(item.text, handler)
 
-            ; set the entry icon
+            ; set the action icon
             if (item.hasOwnProp("icon")) {
                 if (item.hasOwnProp("iconIndex")) {
                     menu.setIcon(item.text, item.icon, item.iconIndex)
