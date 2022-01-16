@@ -57,10 +57,12 @@ class MenuManager {
         ; debug("parseLayout", "layer:`t" layer.id)
         debug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
 
-        for item in layer.content
+        for index, item in layer.content
         {
             if (item is string)
             { ; item is a symbolic link to another submenu or group
+                link := this.findItem(item)
+                layer.content[index] := link
 
             }
             else if (item is object)
@@ -106,14 +108,37 @@ class MenuManager {
 
     }
 
-;    /** Rerender the entire traymenu.
-;    */
-;    update() {
-;        this.clear(this.trayMenu, this.LAYOUT)
-;        for item in this.LAYOUT {
-;            this.attachItem(this.trayMenu, item)
-;        }
-;    }
+    /** Clear the entire traymenu.
+        @param {Menu} menu - traymenu or submenu to clear from
+        @param {Object[]} parent - array of items to recursively search through
+    */
+    clear(layer:=false) {
+        if (!layer)
+        { ; start recursion at top level of layout definition
+            layer := this.LAYOUT    
+        }
+        layer.menu.delete()
+        layer.menu.isEmpty := true
+
+        for item in layer.content
+        {
+            if (item is object)
+            { ; item is a proper item
+                if (item.hasOwnProp("content"))
+                {
+                    this.clear(item)
+                }
+            }
+        }
+    }
+
+
+    /** Rerender the entire traymenu.
+    */
+    update() {
+        this.clear()
+        ;this.attachItem(this.trayMenu, item)
+    }
 
 ;    /** Clear the entire traymenu.
 ;        @param {Menu} menu - traymenu or submenu to clear from
@@ -194,13 +219,13 @@ class MenuManager {
 
         for item in layer.content
         {
-            if (item.id = id)
-            {
-                return item
-            }
-            else if (item is object)
+            if (item is object)
             { ; item is a proper item
-                if (item.hasOwnProp("content"))
+                if (item.id = id)
+                {
+                    return item
+                }
+                else if (item.hasOwnProp("content"))
                 {
                     item := this.findItem(id, item)
                     if (item)
@@ -208,7 +233,7 @@ class MenuManager {
                         return item
                     }
                 }
-            }
+            } 
         }
         return false ; couldn't find item
     }
