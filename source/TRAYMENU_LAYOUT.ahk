@@ -45,7 +45,11 @@ content:
         ;icon: "*",
         content: 
         [
-            "MAIN_SHORTCUTS",
+            {
+                id: "RESET_DEFAULT_ACTION",
+                text: "Reset",
+            },
+            ;"MAIN_SHORTCUTS",
         ]
     },
     {

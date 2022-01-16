@@ -8,3 +8,11 @@ SetWorkingDir(A_ScriptDir) ; Ensures a consistent working directory (script fold
 FileInstall("ScreenSketch.ico", "ScreenSketch.ico", true)
 
 tray := MenuManager(TRAYMENU_LAYOUT)
+
+return
+
+
+#f::
+{
+    tray.printAll()
+}

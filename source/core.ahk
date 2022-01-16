@@ -4,13 +4,18 @@ debug(lines*)
 {
     if (DO_DEBUG)
     {
-        text := ""
-
-        for line in lines
-        {
-            text := text line "`n"
-        }
-
-        MsgBox(text)
+        log(lines*)
     }
+}
+
+log(lines*)
+{
+    text := ""
+
+    for line in lines
+    {
+        text := text line "`n"
+    }
+
+    MsgBox(text)
 }

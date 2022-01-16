@@ -57,12 +57,16 @@ class MenuManager {
         ; debug("parseLayout", "layer:`t" layer.id)
         debug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
 
-        for index, item in layer.content
+        i := 1
+        while (i <= layer.content.Length)
         {
+            item := layer.content[i]
+
             if (item is string)
             { ; item is a symbolic link to another submenu or group
                 link := this.findItem(item)
-                layer.content[index] := link
+                layer.content[i] := link
+                i-- ; iterate through the newly pasted linked items as well
 
             }
             else if (item is object)
@@ -71,6 +75,61 @@ class MenuManager {
                 {
                     this.parseLayout(item)
                 }
+            }
+            i++
+        }
+    }
+
+    /** Print the current traymenu layout into a file
+        @param {string } filename - file to override
+        other param are recursion internal
+    */
+    printAll(filename:="traymenu.txt", layer:=false, layerIndex:=0, first:=false, last:=false) {
+        if (!layer)
+        { ; start recursion at top level of layout definition
+            if (fileExist(filename))
+            { ; only delete if it exists
+                fileDelete(filename)
+            }
+            layer := this.LAYOUT
+        }
+
+        indent := "" 
+        loop layerIndex
+        {
+            indent  := indent  " "
+        }
+
+
+        if (first && last)
+        {
+            draw := "└"
+        }
+        else if (first)
+        {
+            draw := "├"
+        }
+        else if (last)
+        {
+            draw := "└"
+        }
+        else
+        {
+            draw := "├"
+        }
+        
+        line := indent draw " " layer.id "`n"
+                
+        fileAppend(line, filename, "UTF-8")
+
+        if (layer.hasOwnProp("content"))
+        {
+            max := layer.content.Length
+            for i, item in layer.content
+            {
+                first := (i = 1)
+                last := (i = max)
+                this.printAll(filename, item, layerIndex + 1, first, last)
             }
         }
     }
