@@ -39,6 +39,7 @@ TRAY_ITEMS :=
     {
         id: "SET_DEFAULT_ACTION",
         text: "Set left click action...",
+        maxDisplay: 0,
         content: "WINDOWS_HELLO",
     },
     {

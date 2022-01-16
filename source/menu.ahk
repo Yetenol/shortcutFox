@@ -60,7 +60,7 @@ class TrayMenu {
         if (item.hasOwnProp("content"))
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
-            { ; a maximum number of displayed child items before using a submenu is set
+            { ; a maximum number of displayed child items before using a submenu is set                
                 if (item.content is array)
                 { ; item's children aren't linked
                     numberOfChildren := item.content.Length
@@ -127,7 +127,11 @@ class TrayMenu {
         { ; no icon to inherit but this item has it's own icon
             icon := item.icon
         }
-                
+        
+        if (item.id = "SET_DEFAULT_ACTION") {
+            MsgBox("SET_DEFAULT_ACTION`ntype:`t" this.getType(item) "`n#children:`t" (this.getChildren(item.content)).Length)
+        }
+
         switch this.getType(item)
         {
         case TrayMenu.TYPES.GROUP:           
