@@ -1,4 +1,6 @@
-TRAYMENU_LAYOUT := 
+TRAYMENU_LAYOUT := {
+id: "TRAYMENU",
+content:
 [
     {
         id: "MANAGE_SCRIPT",
@@ -41,7 +43,10 @@ TRAYMENU_LAYOUT :=
         text: "Set left click action...",
         maxDisplay: 0,
         ;icon: "*",
-        content: "MAIN_SHORTCUTS",
+        content: 
+        [
+            "MAIN_SHORTCUTS",
+        ]
     },
     {
         id: "MAIN_SHORTCUTS",
@@ -107,4 +112,4 @@ TRAYMENU_LAYOUT :=
             },
         ]
     }
-]
+]}
