@@ -63,6 +63,11 @@ class TrayMenu {
         { ; item is a group or submenu
             if (item.hasOwnProp("maxDisplay"))
             { ; a maximum number of displayed child items before using a submenu is set                
+                if(item.maxDisplay = 0)
+                { ; force to display a submenu
+                    return TrayMenu.TYPES.SUBMENU
+                }
+                
                 if (item.content is array)
                 { ; item's children aren't linked
                     numberOfChildren := item.content.Length
@@ -130,7 +135,7 @@ class TrayMenu {
             icon := item.icon
         }
         
-        MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
+        ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
 
         switch this.getType(item)
         {
@@ -214,7 +219,7 @@ class TrayMenu {
             { ; linked content was found
                 if (linkedParent.hasOwnProp("content"))
                 {
-                    MsgBox("Found parent`ntarget:`t" content "`nfound:`t" linkedParent.id)
+                    ; MsgBox("Found parent`ntarget:`t" content "`nfound:`t" linkedParent.id)
                     return this.getChildren(linkedParent.content)
                 }
                 else
