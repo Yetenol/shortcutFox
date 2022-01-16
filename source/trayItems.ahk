@@ -4,6 +4,7 @@ TRAY_ITEMS :=
         type: TrayMenu.TYPES.SUBMENU,
         id: "SEND_KEYSTROKES",
         text: "Send keystrokes...",
+        maxDisplay: 0,
         actions:
         [
             {

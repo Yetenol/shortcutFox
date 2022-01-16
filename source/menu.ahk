@@ -6,10 +6,21 @@ class TrayMenu {
     tray := A_trayMenu
 
     static TYPES := {
-        ACTION: 0,  ; Default: type can be omitted
+        ACTION: 0,
+        /*  - used as DEFAULT
+            - type can be omitted
+        */
         GROUP: 1,
+        /*  - actions listed above each other
+            - displays a line before and after the group
+            - doesn't show title
+        */
         SUBMENU: 2,
-        LINE: 3,
+        /*  - display title as single item
+            - hovering over it expands a new menu with actions
+        */
+        LINE: 3, 
+        ;   - draws a seperator line
     }
 
     __New() {
@@ -21,8 +32,41 @@ class TrayMenu {
         this.update()
     }
 
+    /*****************************************************
+      load a tray item into the dynamic list object
+      @this: subelement of the dynamic list object
+      @param item: action, group, submenu or line to import
+    */
     newSubmenuObject(item) {
-        if (this.getType(item) = TrayMenu.TYPES.SUBMENU) {
+        itemType := TrayMenu.TYPES.ACTION
+        ; itemType := (item.hasOwnProp("type")) ? item.type : itemType
+
+        if (this.hasOwnProp("actions"))
+        { ; item is a group or submenu
+            if (this.hasOwnProp("maxDisplay"))
+            { ; a maximum number of displayed actions before using a submenu is set
+                if (this.maxDisplay.Length > this.maxDisplay)
+                { ; too many actions => display a submenu
+                    itemType := TrayMenu.TYPES.SUBMENU
+                }
+                else 
+                { ; not too many actions => display a group
+                    itemType := TrayMenu.TYPES.GROUP
+                }
+            }
+            else
+            { ; no maximun number of displayed actions before using a submenu is set => display group
+                itemType := TrayMenu.TYPES.GROUP
+            }
+        }
+        else if (item.hasOwnProp("type"))
+        {
+            itemType := item.type
+        }
+
+        switch (itemType)
+        {
+        case TrayMenu.TYPES.SUBMENU:
             item.menu := Menu() ; Create a new submenu object
             for action in item.actions {
                 this.newSubmenuObject(action)
