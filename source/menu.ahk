@@ -93,14 +93,14 @@ class TrayMenu {
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             
             ; recursively parse all child items
-            for action in item.content {
-                this.attachItem(menu, action)
+            for child in item.content {
+                this.attachItem(menu, child)
             }
 
         case TrayMenu.TYPES.SUBMENU:
             ; recursively parse all child items
-            for action in item.content {
-                this.attachItem(item.menu, action)
+            for child in item.content {
+                this.attachItem(item.menu, child)
             }
 
             ; attach and display the submenu to the traymenu
