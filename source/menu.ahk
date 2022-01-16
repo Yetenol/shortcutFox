@@ -4,6 +4,7 @@ global TRAY_ITEMS
 
 class TrayMenu {
     tray := A_trayMenu ; Menu() object for the script's tray icon
+    tray.name := "TRAYMENU"
     isEmpty := true
 
     static TYPES := {
@@ -34,16 +35,17 @@ class TrayMenu {
     /** Initialize {Menu} objects for all submenus or groups.
         - to display a submenu, items must be attached to an existing menu object
         - objects are stored inside the definition object
-        @param {Object[]} [parent] - array of items to recursively parse through
+        @param {Object[]} definition - array of items to recursively parse through
      */
-    parseDefinition(parent) {
-        if (parent is array)
-        { ; parent contains children that are not linked
-            for item in parent
+    parseDefinition(definition) {
+        if (definition is array)
+        { ; definition contains children that are not linked
+            for item in definition
             {
                 if (item.hasOwnProp("content"))
                 { ; item is a submenu or group
                     item.menu := Menu() ; create a new submenu object
+                    item.menu.name := item.id
                     this.parseDefinition(item.content) ; parse all children of the submenu or group
                 }
             }
@@ -128,9 +130,7 @@ class TrayMenu {
             icon := item.icon
         }
         
-        if (item.id = "SET_DEFAULT_ACTION") {
-            MsgBox("SET_DEFAULT_ACTION`ntype:`t" this.getType(item) "`n#children:`t" (this.getChildren(item.content)).Length)
-        }
+        MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
 
         switch this.getType(item)
         {
@@ -212,9 +212,9 @@ class TrayMenu {
             linkedParent := this.findItem(content)
             if (linkedParent)
             { ; linked content was found
-            MsgBox("Parent:`t" linkedParent.id "`nTarget:`t" content)
                 if (linkedParent.hasOwnProp("content"))
                 {
+                    MsgBox("Found parent`ntarget:`t" content "`nfound:`t" linkedParent.id)
                     return this.getChildren(linkedParent.content)
                 }
                 else
