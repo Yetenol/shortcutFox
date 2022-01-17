@@ -32,7 +32,7 @@ class MenuManager {
     __New(layout) {
         this.LAYOUT := layout
         this.parseLayout(this.LAYOUT)
-        ;this.update()
+        this.update()
     }
 
     /** Read out layout definition and create necessary objects for all submenus or groups.
@@ -46,7 +46,8 @@ class MenuManager {
     {
         if (!layer)
         { ; start recursion at top level of layout definition
-            layer := this.LAYOUT    
+            layer := this.LAYOUT
+            layer.menu := this.trayMenu
         }
         else
         {
@@ -175,7 +176,7 @@ class MenuManager {
     clear(layer:=false) {
         if (!layer)
         { ; start recursion at top level of layout definition
-            layer := this.LAYOUT    
+            layer := this.LAYOUT
         }
         layer.menu.delete()
         layer.menu.isEmpty := true
@@ -197,55 +198,56 @@ class MenuManager {
     */
     update() {
         this.clear()
-        ;this.attachItem(this.trayMenu, item)
+        this.attachItem(this.trayMenu, this.LAYOUT)
     }
 
-;    /** Attach an item to the traymenu or a submenu.
-;        @param {Menu} menu - traymenu or submenu to which is attached
-;        @param {item} item - group, submenu or action to attach
-;        @param {string} [icon=false] - icon to inherit from parent group of submenu
-;    */
-;    attachItem(menu, item, icon := false) {
-;        if (!icon && item.hasOwnProp("icon"))
-;        { ; no icon to inherit but this item has it's own icon
-;            icon := item.icon
-;        }
-;        
-;        ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
-;
-;        switch this.getType(item)
-;        {
-;        case MenuManager.TYPES.GROUP:           
-;            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
-;            for child in this.getChildren(item.content)
-;            {
-;                this.attachItem(menu, child, icon)
-;            }
-;            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
-;
-;        case MenuManager.TYPES.SUBMENU:
-;            for child in this.getChildren(item.content)
-;            {
-;                this.attachItem(item.menu, child, icon)
-;            }
-;
-;            ; attach and display the submenu to the traymenu or another submenu
-;            this.drawLine(menu)
-;            menu.add(item.text, item.menu)
-;            menu.isEmpty := false ; flag non-empty menus
-;
-;        case MenuManager.TYPES.LINE:
-;            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
-;
-;        default: ; item in a proper action
-;            ; attach and display the action to the traymenu or a submenu
-;            this.drawLine(menu)
-;            menu.add(item.text, handler)
-;            menu.isEmpty := false ; flag non-empty menus
-;            this.drawIcon(menu, item, icon)
-;
-;        }
-;    }
+    /** Attach an item to the traymenu or a submenu.
+        @param {Menu} menu - traymenu or submenu to which is attached
+        @param {item} item - group, submenu or action to attach
+        @param {string} [icon=false] - icon to inherit from parent group of submenu
+    */
+    attachItem(menu, item, icon:=false) {
+        if (!icon && item.hasOwnProp("icon"))
+        { ; no icon to inherit but this item has it's own icon
+            icon := item.icon
+        }
+        
+        ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
+
+        switch this.getType(item)
+        {
+        case MenuManager.TYPES.GROUP:           
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            for child in item.content
+            {
+                this.attachItem(menu, child, icon)
+            }
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+
+        case MenuManager.TYPES.SUBMENU:
+            for child in item.content
+            {
+                this.attachItem(item.menu, child, icon)
+            }
+
+            ; attach and display the submenu to the traymenu or another submenu
+            this.drawLine(menu)
+            menu.add(item.text, item.menu)
+            menu.isEmpty := false ; flag non-empty menus
+
+        case MenuManager.TYPES.LINE:
+            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+
+        default: ; item in a proper action
+            ; attach and display the action to the traymenu or a submenu
+            this.drawLine(menu)
+            menu.add(item.text, handler)
+            menu.isEmpty := false ; flag non-empty menus
+            this.drawIcon(menu, item, icon)
+
+        }
+    }
+
 
     /** return an item by id
         @param {string} id - id of the item of interest
