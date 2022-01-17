@@ -39,8 +39,6 @@ class MenuManager {
         - objects are stored inside the definition object
         @param {Object[]} definition - array of items to recursively parse through
      */
-
-    ; layout contains children that are not linked
     parseLayout(layer:=false)
     {
         if (!layer)
@@ -232,6 +230,7 @@ class MenuManager {
             ; attach and display the submenu to the traymenu or another submenu
             this.drawLine(menu)
             menu.add(item.text, item.menu)
+            this.drawIcon(menu, item, icon)
             menu.isEmpty := false ; flag non-empty menus
 
         case MenuManager.TYPES.LINE:
@@ -241,8 +240,8 @@ class MenuManager {
             ; attach and display the action to the traymenu or a submenu
             this.drawLine(menu)
             menu.add(item.text, handler)
-            menu.isEmpty := false ; flag non-empty menus
             this.drawIcon(menu, item, icon)
+            menu.isEmpty := false ; flag non-empty menus
 
         }
     }
