@@ -16,3 +16,8 @@ return
 {
     tray.printAll()
 }
+
+#j::
+{
+    tray.update()
+}

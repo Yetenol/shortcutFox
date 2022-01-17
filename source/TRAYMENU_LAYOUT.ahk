@@ -47,7 +47,7 @@ content:
         [
             {
                 id: "RESET_DEFAULT_ACTION",
-                text: "Reset",
+                text: "None",
             },
             "MAIN_SHORTCUTS",
         ]
@@ -80,6 +80,7 @@ content:
                 id: "BLUETOOTH",
                 text: "Bluetooth audio and file transfer",
                 icon: [A_WinDir "\System32\netshell.dll", 104],
+                maxDisplay: 0,
                 content:
                 [
                     {
