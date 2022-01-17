@@ -4,7 +4,6 @@
 global TRAYMENU_LAYOUT
 
 class MenuManager {
-    trayMenu := A_trayMenu ; Menu() object for the script's tray icon
     LAYOUT := []
 
     isEmpty := true
@@ -31,7 +30,7 @@ class MenuManager {
     */
     __New(layout) {
         this.LAYOUT := layout
-        this.parseLayout(this.LAYOUT)
+        this.parseLayout()
         this.update()
     }
 
@@ -47,7 +46,7 @@ class MenuManager {
         if (!layer)
         { ; start recursion at top level of layout definition
             layer := this.LAYOUT
-            layer.menu := this.trayMenu
+            layer.menu := A_trayMenu
         }
         else
         {
@@ -198,7 +197,7 @@ class MenuManager {
     */
     update() {
         this.clear()
-        this.attachItem(this.trayMenu, this.LAYOUT)
+        this.attachItem(A_trayMenu, this.LAYOUT)
     }
 
     /** Attach an item to the traymenu or a submenu.
