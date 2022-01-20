@@ -4,8 +4,8 @@
 global TRAYMENU_LAYOUT
 
 class MenuManager {
-    LAYOUT := [] ; imported definition of the layout
-    traymenu := A_trayMenu
+    _LAYOUT := [] ; imported definition of the layout
+    _traymenu := A_trayMenu
 
     static TYPES :=
     { ; Enumeration for all types of items
@@ -27,22 +27,22 @@ class MenuManager {
     /** Constructor
     */
     __New(layout) {
-        this.LAYOUT := layout
-        this.parseLayout()
+        this._LAYOUT := layout
+        this._parseLayout()
         this.update()
     }
 
     /** Read out the layout definition and create necessary objects for all submenus or groups.
         - to display a submenu, items must be attached to an existing {Menu} object
         - resolve symbolic link into a copy of the referenced items
-        @param {Object[]} [layer=LAYOUT] - array of items to recursively parse through
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
      */
-    parseLayout(layer:=false)
+    _parseLayout(layer:=false)
     {
         if (!layer)
         { ; start recursion at top level of layout definition
-            layer := this.LAYOUT
-            layer.menu := this.traymenu
+            layer := this._LAYOUT
+            layer.menu := this._traymenu
         }
         else
         {
@@ -59,7 +59,7 @@ class MenuManager {
 
             if (item is string)
             { ; item is a symbolic link to another submenu or group
-                link := this.findItem(item)
+                link := this._findItem(item)
                 layer.content[i] := link
                 logIfDebug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
@@ -69,7 +69,7 @@ class MenuManager {
             { ; item is a proper item
                 if (item.hasOwnProp("content"))
                 {
-                    this.parseLayout(item)
+                    this._parseLayout(item)
                 }
             }
             i++
@@ -79,19 +79,19 @@ class MenuManager {
     /** Print the current traymenu layout into a file
         @param {string} [filename=traymenu.txt] - file to override
     recursion internal:
-        @param {Object[]} [layer=LAYOUT] - array of items to recursively iterate through
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively iterate through
         @param {int} [layerIndex=0] - position within the current layer
         @param {int} [first=false] - is it the first item of the current layer?
         @param {int} [last=false] - is it the last item of the current layer?
     */
-    printAll(filename:="traymenu.txt", layer:=false, layerIndex:=0, first:=false, last:=false) {
+    logAll(filename:="traymenu.txt", layer:=false, layerIndex:=0, first:=false, last:=false) {
         if (!layer)
         { ; start recursion at top level of layout definition
             if (fileExist(filename))
             { ; only delete if it exists
                 fileDelete(filename)
             }
-            layer := this.LAYOUT
+            layer := this._LAYOUT
         }
 
         indent := "" 
@@ -129,7 +129,7 @@ class MenuManager {
             {
                 first := (i = 1)
                 last := (i = max)
-                this.printAll(filename, item, layerIndex + 1, first, last)
+                this.logAll(filename, item, layerIndex + 1, first, last)
             }
         }
     }
@@ -138,7 +138,7 @@ class MenuManager {
         - returns a {MenuManager.TYPES} value
         @param {Object} item - item of interest
      */
-    getType(item) {
+    _getType(item) {
         itemType := MenuManager.TYPES.ACTION ; default is action
 
         if (item.hasOwnProp("content"))
@@ -168,12 +168,12 @@ class MenuManager {
     }
 
     /** Clear the entire traymenu.
-        @param {Object[]} [layer=LAYOUT] - array of items to recursively clear through
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively clear through
     */
     clear(layer:=false) {
         if (!layer)
         { ; start recursion at top level of layout definition
-            layer := this.LAYOUT
+            layer := this._LAYOUT
         }
         layer.menu.delete()
         layer.menu.isEmpty := true
@@ -195,7 +195,7 @@ class MenuManager {
     */
     update() {
         this.clear()
-        this.attachItem(this.traymenu, this.LAYOUT)
+        this._attachItem(this._traymenu, this._LAYOUT)
     }
 
     /** Attach an item to the traymenu or a submenu.
@@ -203,7 +203,7 @@ class MenuManager {
         @param {Object} item - group, submenu or action to attach
         @param {string} [icon=false] - icon to inherit from parent group of submenu
     */
-    attachItem(menu, item, icon:=false) {
+    _attachItem(menu, item, icon:=false) {
         if (!icon && item.hasOwnProp("icon"))
         { ; no icon to inherit but this item has it's own icon
             icon := item.icon
@@ -211,33 +211,33 @@ class MenuManager {
         
         ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
 
-        switch this.getType(item)
+        switch this._getType(item)
         {
         case MenuManager.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
             for child in item.content
             {
-                this.attachItem(menu, child, icon)
+                this._attachItem(menu, child, icon)
             }
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         case MenuManager.TYPES.SUBMENU:
             for child in item.content
             {
-                this.attachItem(item.menu, child, icon)
+                this._attachItem(item.menu, child, icon)
             }
 
             ; attach and display the submenu to the traymenu or another submenu
-            this.drawLine(menu)
+            this._drawLine(menu)
             menu.add(item.text, item.menu)
-            this.drawIcon(menu, item, icon)
+            this._drawIcon(menu, item, icon)
             menu.isEmpty := false ; flag non-empty menus
 
         default: ; item in a proper action
             ; attach and display the action to the traymenu or a submenu
-            this.drawLine(menu)
+            this._drawLine(menu)
             menu.add(item.text, handler)
-            this.drawIcon(menu, item, icon)
+            this._drawIcon(menu, item, icon)
             menu.isEmpty := false ; flag non-empty menus
 
         }
@@ -246,12 +246,12 @@ class MenuManager {
 
     /** return an item by id
         @param {string} id - id of the item of interest
-        @param {Object[]} [layer=LAYOUT] - array of items to recursively search through
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively search through
     */
-    findItem(id, layer:=false) {
+    _findItem(id, layer:=false) {
         if (!layer)
         { ; recursion starts at the root of the definition
-            layer := this.LAYOUT
+            layer := this._LAYOUT
         }
 
         for item in layer.content
@@ -264,7 +264,7 @@ class MenuManager {
                 }
                 else if (item.hasOwnProp("content"))
                 {
-                    item := this.findItem(id, item)
+                    item := this._findItem(id, item)
                     if (item)
                     { ; found a valid item
                         return item
@@ -279,7 +279,7 @@ class MenuManager {
     /** Draw a seperator line if requested previously.
         @param {Menu} menu - traymenu or submenu to which is drawn
     */
-    drawLine(menu) {
+    _drawLine(menu) {
         if (menu.hasOwnProp("isEmpty") && !menu.isEmpty)
         { ; menu is not empty
             if (menu.hasOwnProp("doLine") && menu.doLine) {
@@ -298,7 +298,7 @@ class MenuManager {
         @param {Object} item - action or submenu to apply the icon to
         @param {string[2]/string} icon - icon to be applied, path or [path, index]
     */
-    drawIcon(menu, item, icon) {
+    _drawIcon(menu, item, icon) {
         if (icon is array)
         { ; icon contains a path and index
             menu.setIcon(item.text, icon[1], icon[2]) 

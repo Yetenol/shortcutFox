@@ -14,7 +14,7 @@ return
 
 #f::
 {
-    tray.printAll()
+    tray.logAll()
 }
 
 #j::
