@@ -2,7 +2,7 @@
 #Include core.ahk
 
 class MenuManager {
-    _LAYOUT := [] ; imported definition of the layout
+    _LAYOUT := false ; imported definition of the layout
     _traymenu := A_trayMenu
 
     static TYPES :=
@@ -24,9 +24,9 @@ class MenuManager {
 
     /** Constructor
     */
-    __New(layout) {
+    __New(&layout) {
         this._LAYOUT := layout
-        this._parseLayout()
+        this._parseLayout(&layout)
         this.update()
     }
 
@@ -96,24 +96,17 @@ class MenuManager {
         }
     }
 
-    /** Create necessary {Menu} objects for all submenus or groups.
-        - to display a submenu, items must be attached to an existing {Menu} object
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
-     */
-    _parseLayout(recursionLayer:=false)
+
+    _parseLayout(&recursionLayer)
     {
-        if (!recursionLayer)
-        {
-            recursionLayer := this._LAYOUT
-        }
+        
         logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
         this._dissolveSymbolicLinks(&recursionLayer)
     }
 
-    _constructSubmenu(&recursionLayer:=false) {
-                 
-        recursionLayer.menu := (recursionLayer) ? Menu() : this._traymenu
+    _constructSubmenu(&recursionLayer) {
+        recursionLayer.menu := (recursionLayer.id = "TRAYMENU") ? this._traymenu : Menu()
         recursionLayer.menu.name := recursionLayer.id
     }
 
@@ -133,7 +126,7 @@ class MenuManager {
             {
                 if (this._isSubmenuOrGroup(item))
                 {
-                    this._parseLayout(item)
+                    this._parseLayout(&item)
                 }
             }
             i++
@@ -194,6 +187,7 @@ class MenuManager {
         { ; start recursion at top level of layout definition
             layer := this._LAYOUT
         }
+        ;logIfDebug("clear", "layer:`t" layer.id, "menu:`t" layer.menu.name)
         layer.menu.delete()
         layer.menu.isEmpty := true
 
