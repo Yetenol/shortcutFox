@@ -30,49 +30,13 @@ class MenuManager {
         this.update()
     }
 
-    /** Read out the layout definition and create necessary objects for all submenus or groups.
-        - to display a submenu, items must be attached to an existing {Menu} object
-        - resolve symbolic link into a copy of the referenced items
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
-     */
-    _parseLayout(layer:=false)
-    {
-        if (!layer)
-        { ; start recursion at top level of layout definition
-            layer := this._LAYOUT
-            layer.menu := this._traymenu
-        }
-        else
-        {
-            layer.menu := Menu() ; create a new submenu object
-        }
-        layer.menu.name := layer.id ; name the submenu object to differentiate then
-
-        logIfDebug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
-
-        i := 1
-        while (i <= layer.content.Length)
-        {
-            item := layer.content[i]
-
-            if (item is string)
-            { ; item is a symbolic link to another submenu or group
-                link := this._findItem(item)
-                layer.content[i] := link
-                logIfDebug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
-                i-- ; iterate through the newly pasted linked items as well
-
-            }
-            else if (item is object)
-            { ; item is a proper item
-                if (item.hasOwnProp("content"))
-                {
-                    this._parseLayout(item)
-                }
-            }
-            i++
-        }
+    /** Rerender the entire traymenu.
+    */
+    update() {
+        this.clear()
+        this._attachItem(this._traymenu, this._LAYOUT)
     }
+
 
     /** Print the current traymenu layout into a file
         @param {string} [filename=traymenu.txt] - file to override
@@ -132,6 +96,57 @@ class MenuManager {
         }
     }
 
+    /** Read out the layout definition and create necessary objects for all submenus or groups.
+        - to display a submenu, items must be attached to an existing {Menu} object
+        - resolve symbolic link into a copy of the referenced items
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
+     */
+    _parseLayout(layer:=false)
+    {
+        if (!layer)
+        { ; start recursion at top level of layout definition
+            layer := this._LAYOUT
+            layer.menu := this._traymenu
+        }
+        else
+        {
+            layer.menu := Menu() ; create a new submenu object
+        }
+        layer.menu.name := layer.id ; name the submenu object to differentiate then
+
+        logIfDebug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
+
+        i := 1
+        while (i <= layer.content.Length)
+        {
+            item := layer.content[i]
+
+            if (item is string)
+            { ; item is a symbolic link to another submenu or group
+                link := this._findItem(item)
+                layer.content[i] := link
+                logIfDebug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
+                i-- ; iterate through the newly pasted linked items as well
+
+            }
+            else if (item is object)
+            { ; item is a proper item
+                if (item.hasOwnProp("content"))
+                {
+                    this._parseLayout(item)
+                }
+            }
+            i++
+        }
+    }
+
+
+
+
+
+
+
+
     /** Get the type of an item.
         - returns a {MenuManager.TYPES} value
         @param {Object} item - item of interest
@@ -189,12 +204,6 @@ class MenuManager {
     }
 
 
-    /** Rerender the entire traymenu.
-    */
-    update() {
-        this.clear()
-        this._attachItem(this._traymenu, this._LAYOUT)
-    }
 
     /** Attach an item to the traymenu or a submenu.
         @param {Menu} menu - traymenu or submenu to which is attached
