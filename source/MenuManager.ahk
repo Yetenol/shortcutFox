@@ -100,22 +100,21 @@ class MenuManager {
         - to display a submenu, items must be attached to an existing {Menu} object
         @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
      */
-    _parseLayout(layer:=false)
+    _parseLayout(recursionLayer:=false)
     {
-        if (!layer)
-        { ; start recursion at top level of layout definition
-            layer := this._LAYOUT
-            layer.menu := this._traymenu
-        }
-        else
+        if (!recursionLayer)
         {
-            layer.menu := Menu() ; create a new submenu object
+            recursionLayer := this._LAYOUT
         }
-        layer.menu.name := layer.id ; name the submenu object to differentiate then
+        logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
+        this._constructSubmenu(&recursionLayer)
+        this._dissolveSymbolicLinks(&recursionLayer)
+    }
 
-        logIfDebug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
-
-        this._dissolveSymbolicLinks(&layer)
+    _constructSubmenu(&recursionLayer:=false) {
+                 
+        recursionLayer.menu := (recursionLayer) ? Menu() : this._traymenu
+        recursionLayer.menu.name := recursionLayer.id
     }
 
 
@@ -128,7 +127,6 @@ class MenuManager {
             if (this._isSymbolicLink(item))
             {
                 this._pasteReferencedContent(&item, &recursionLayer, i)
-                logIfDebug("linked content", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
             }
             else if (this._isValidItem(item))
@@ -146,7 +144,7 @@ class MenuManager {
     _isSymbolicLink(item) => item is string
 
     _isValidItem(item) => (item is object) && item.hasOwnProp("id")
-    
+
     _isSubmenuOrGroup(item) => item.hasOwnProp("content")
 
     _pasteReferencedContent(&item, &destinationLayer, itemPosition) {
