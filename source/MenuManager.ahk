@@ -145,38 +145,25 @@ class MenuManager {
     }
 
 
+    _getItemType(item) {
+        if (this._isSubmenuOrGroup(item))
+        {
+            return (this._doesMeetMaxDisplay(&item)) ? MenuManager.TYPES.GROUP : MenuManager.TYPES.SUBMENU
+        }
+        else
+        {
+            return MenuManager.TYPES.ACTION
+        }
+    }
 
-    /** Get the type of an item.
-        - returns a {MenuManager.TYPES} value
-        @param {Object} item - item of interest
-     */
-    _getType(item) {
-        itemType := MenuManager.TYPES.ACTION ; default is action
 
-        if (item.hasOwnProp("content"))
-        { ; item is a group or submenu
-            if (item.hasOwnProp("maxDisplay"))
-            { ; a maximum number of displayed child items before using a submenu is set                
-                if(item.maxDisplay = 0)
-                { ; force to display a submenu
-                    return MenuManager.TYPES.SUBMENU
-                }
-
-                if (item.maxDisplay != -1 && item.content.Length > item.maxDisplay)
-                { ; too many children => display a submenu
-                    return MenuManager.TYPES.SUBMENU
-                }
-                else 
-                { ; not too many children => display a group
-                    return MenuManager.TYPES.GROUP
-                }
-            }
-            else
-            { ; no maximun number of displayed child items before using a submenu is set => display group
-                return MenuManager.TYPES.GROUP
-            }
+    _doesMeetMaxDisplay(&item) {
+        if (!item.hasOwnProp("maxDisplay"))
+        { ; no maximun number of displayed child items before using a submenu is set => display group
+            return true
         }
 
+        return item.maxDisplay && (item.maxDisplay = -1 || item.content.Length <= item.maxDisplay)
     }
 
     /** Clear the entire traymenu.
@@ -218,7 +205,7 @@ class MenuManager {
         
         ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
 
-        switch this._getType(item)
+        switch this._getItemType(item)
         {
         case MenuManager.TYPES.GROUP:           
             menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
