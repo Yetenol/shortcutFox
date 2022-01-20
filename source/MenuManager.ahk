@@ -119,26 +119,21 @@ class MenuManager {
     }
 
 
-    /** Recursively replace all symbolic links with a copy of their referenced content.
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
-     */
-    _dissolveSymbolicLinks(&layer) {
+    _dissolveSymbolicLinks(&recursionLayer) {
         i := 1
-        while (i <= layer.content.Length)
+        while (i <= recursionLayer.content.Length) ; Content length changed
         {
-            item := layer.content[i]
+            item := recursionLayer.content[i]
 
             if (this._isSymbolicLink(item))
             {
-                ;link := this._findItem(item)
-                ;layer.content[i] := link
-                this._pasteReferencedContent(&item, &layer, i)
-                logIfDebug("linked content", "layer:`t" layer.id, "content:`t" layer.content.Length)
+                this._pasteReferencedContent(&item, &recursionLayer, i)
+                logIfDebug("linked content", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
             }
             else if (this._isValidItem(item))
             {
-                if (item.hasOwnProp("content"))
+                if (this._isSubmenuOrGroup(item))
                 {
                     this._parseLayout(item)
                 }
@@ -148,18 +143,14 @@ class MenuManager {
     }
 
 
-    _isSymbolicLink(item) {
-        return item is string
-    }
+    _isSymbolicLink(item) => item is string
 
-    _isValidItem(item) {
-        return (item is object) && item.hasOwnProp("id")
-    }
+    _isValidItem(item) => (item is object) && item.hasOwnProp("id")
+    
+    _isSubmenuOrGroup(item) => item.hasOwnProp("content")
 
-    _pasteReferencedContent(&item, &layer, i) {
-        referencedItem := this._findItem(item)
-        logIfDebug("pasteReferencedContent", "item:`t" item, "link:`t" referencedItem.id)
-        layer.content[i] := referencedItem
+    _pasteReferencedContent(&item, &destinationLayer, itemPosition) {
+        destinationLayer.content[itemPosition] := this._findItem(item)
     }
 
 
