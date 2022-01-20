@@ -37,6 +37,23 @@ class MenuManager {
         this._attachItem(this._traymenu, this._LAYOUT)
     }
 
+    clear(recursionLayer:=false) {
+        if (!recursionLayer)
+        { 
+            recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
+        }
+        recursionLayer.menu.delete()
+        recursionLayer.menu.isEmpty := true
+
+        for item in recursionLayer.content
+        {
+            if (this._isSubmenuOrGroup(&item))
+            {
+                this.clear(item)
+            }
+        }
+    }
+
 
     /** Print the current traymenu layout into a file
         @param {string} [filename=traymenu.txt] - file to override
@@ -150,24 +167,6 @@ class MenuManager {
         else
         {
             return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
-        }
-    }
-
-
-    clear(recursionLayer:=false) {
-        if (!recursionLayer)
-        { 
-            recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
-        }
-        recursionLayer.menu.delete()
-        recursionLayer.menu.isEmpty := true
-
-        for item in recursionLayer.content
-        {
-            if (this._isSubmenuOrGroup(&item))
-            {
-                this.clear(item)
-            }
         }
     }
 
