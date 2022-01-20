@@ -96,9 +96,8 @@ class MenuManager {
         }
     }
 
-    /** Read out the layout definition and create necessary objects for all submenus or groups.
+    /** Create necessary {Menu} objects for all submenus or groups.
         - to display a submenu, items must be attached to an existing {Menu} object
-        - resolve symbolic link into a copy of the referenced items
         @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
      */
     _parseLayout(layer:=false)
@@ -116,21 +115,27 @@ class MenuManager {
 
         logIfDebug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
 
+        this._dissolveSymbolicLinks(&layer)
+    }
+
+
+    /** Recursively replace all symbolic links with a copy of their referenced content.
+        @param {Object[]} [layer=_LAYOUT] - array of items to recursively parse through
+     */
+    _dissolveSymbolicLinks(&layer) {
         i := 1
         while (i <= layer.content.Length)
         {
             item := layer.content[i]
 
-            if (item is string)
-            { ; item is a symbolic link to another submenu or group
-                link := this._findItem(item)
-                layer.content[i] := link
-                logIfDebug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
+            if (this._isSymbolicLink(item))
+            {
+                this._pasteReferencedContent(item, &(layer.content[i]))
+                logIfDebug("linked content", "layer:`t" layer.id, "content:`t" layer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
-
             }
-            else if (item is object)
-            { ; item is a proper item
+            else if (this._isValidItem(item))
+            {
                 if (item.hasOwnProp("content"))
                 {
                     this._parseLayout(item)
@@ -141,9 +146,17 @@ class MenuManager {
     }
 
 
+    _isSymbolicLink(item) {
+        return item is string
+    }
 
+    _isValidItem(item) {
+        return (item is object) && item.hasOwnProp("id")
+    }
 
-
+    _pasteReferencedContent(item, &destination) {
+        destination := this._findItem(item)
+    }
 
 
 
