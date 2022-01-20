@@ -98,8 +98,7 @@ class MenuManager {
 
 
     _parseLayout(&recursionLayer)
-    {
-        
+    { 
         logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
         this._dissolveSymbolicLinks(&recursionLayer)
@@ -122,12 +121,9 @@ class MenuManager {
                 this._pasteReferencedContent(&item, &recursionLayer, i)
                 i-- ; iterate through the newly pasted linked items as well
             }
-            else if (this._isValidItem(item))
+            else if (this._isSubmenuOrGroup(item))
             {
-                if (this._isSubmenuOrGroup(item))
-                {
-                    this._parseLayout(&item)
-                }
+                this._parseLayout(&item)
             }
             i++
         }
@@ -138,13 +134,13 @@ class MenuManager {
 
     _isValidItem(item) => (item is object) && item.hasOwnProp("id")
 
-    _isSubmenuOrGroup(item) => item.hasOwnProp("content")
+    _isSubmenuOrGroup(item) => this._isValidItem(item) && item.hasOwnProp("content")
 
     _pasteReferencedContent(&item, &destinationLayer, itemPosition) {
         destinationLayer.content[itemPosition] := this._findItem(item)
     }
 
-
+ 
     _getItemType(item) {
         if (this._isSubmenuOrGroup(item))
         {
@@ -182,21 +178,17 @@ class MenuManager {
 
     clear(recursionLayer:=false) {
         if (!recursionLayer)
-        { ; start recursion at top level of layout definition
-            recursionLayer := this._LAYOUT
+        { 
+            recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
         }
-        ;logIfDebug("clear", "layer:`t" recursionLayer.id, "menu:`t" recursionLayer.menu.name)
         recursionLayer.menu.delete()
         recursionLayer.menu.isEmpty := true
 
         for item in recursionLayer.content
         {
-            if (item is object)
-            { ; item is a proper item
-                if (item.hasOwnProp("content"))
-                {
-                    this.clear(item)
-                }
+            if (this._isSubmenuOrGroup(&item))
+            {
+                this.clear(item)
             }
         }
     }
