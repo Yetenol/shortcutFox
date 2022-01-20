@@ -111,21 +111,17 @@ class MenuManager {
 
 
     _dissolveSymbolicLinks(&recursionLayer) {
-        i := 1
-        while (i <= recursionLayer.content.Length) ; Content length changed
+        for position, item in recursionLayer.content
         {
-            item := recursionLayer.content[i]
-
             if (this._isSymbolicLink(item))
             {
-                this._pasteReferencedContent(&item, &recursionLayer, i)
-                i-- ; iterate through the newly pasted linked items as well
+                this._pasteReferencedContent(&item, &recursionLayer, position)
+                position-- ; iterate through the newly pasted items as well
             }
             else if (this._isSubmenuOrGroup(item))
             {
                 this._parseLayout(&item)
             }
-            i++
         }
     }
 
