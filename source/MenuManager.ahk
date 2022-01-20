@@ -1,8 +1,6 @@
 #Include TRAYMENU_LAYOUT.ahk
 #Include core.ahk
 
-global TRAYMENU_LAYOUT
-
 class MenuManager {
     _LAYOUT := [] ; imported definition of the layout
     _traymenu := A_trayMenu
