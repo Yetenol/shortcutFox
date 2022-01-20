@@ -140,25 +140,7 @@ class MenuManager {
         destinationLayer.content[itemPosition] := this._findItem(item)
     }
 
- 
-    _getItemType(item) {
-        if (this._isSubmenuOrGroup(item))
-        {
-            if (this._doesMeetMaxDisplay(&item))
-            {
-                return MenuManager.TYPES.GROUP
-            }
-            else
-            {
-                return MenuManager.TYPES.SUBMENU
-            }
-        }
-        else
-        {
-            return MenuManager.TYPES.ACTION
-        }
-    }
-
+    _getItemType(item) => (this._isSubmenuOrGroup(item)) ? (this._doesMeetMaxDisplay(&item)) ? MenuManager.TYPES.GROUP : MenuManager.TYPES.SUBMENU : MenuManager.TYPES.ACTION
 
     _doesMeetMaxDisplay(&item) {
         if (!item.hasOwnProp("maxDisplay"))
