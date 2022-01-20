@@ -50,8 +50,7 @@ class MenuManager {
         }
         layer.menu.name := layer.id ; name the submenu object to differentiate then
 
-        ; debug("parseLayout", "layer:`t" layer.id)
-        debug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
+        logIfDebug("parseLayout", "layer:`t" layer.id, "content:`t" layer.content.Length)
 
         i := 1
         while (i <= layer.content.Length)
@@ -62,7 +61,7 @@ class MenuManager {
             { ; item is a symbolic link to another submenu or group
                 link := this.findItem(item)
                 layer.content[i] := link
-                debug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
+                logIfDebug("linked parent", "layer:`t" layer.id, "content:`t" layer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
 
             }

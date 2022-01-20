@@ -1,6 +1,6 @@
 #Include config.ahk
 
-debug(lines*)
+logIfDebug(lines*)
 {
     if (DO_DEBUG)
     {
