@@ -41,19 +41,19 @@ class MenuManager {
     /** Print the current traymenu layout into a file
         @param {string} [filename=traymenu.txt] - file to override
     recursion internal:
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively iterate through
-        @param {int} [layerIndex=0] - position within the current layer
-        @param {int} [first=false] - is it the first item of the current layer?
-        @param {int} [last=false] - is it the last item of the current layer?
+        @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively iterate through
+        @param {int} [layerIndex=0] - position within the current recursionLayer
+        @param {int} [first=false] - is it the first item of the current recursionLayer?
+        @param {int} [last=false] - is it the last item of the current recursionLayer?
     */
-    logAll(filename:="traymenu.txt", layer:=false, layerIndex:=0, first:=false, last:=false) {
-        if (!layer)
+    logAll(filename:="traymenu.txt", recursionLayer:=false, layerIndex:=0, first:=false, last:=false) {
+        if (!recursionLayer)
         { ; start recursion at top level of layout definition
             if (fileExist(filename))
             { ; only delete if it exists
                 fileDelete(filename)
             }
-            layer := this._LAYOUT
+            recursionLayer := this._LAYOUT
         }
 
         indent := "" 
@@ -80,14 +80,14 @@ class MenuManager {
             draw := "├"
         }
         
-        line := indent draw " " layer.id "`n"
+        line := indent draw " " recursionLayer.id "`n"
                 
         fileAppend(line, filename, "UTF-8")
 
-        if (layer.hasOwnProp("content"))
+        if (recursionLayer.hasOwnProp("content"))
         {
-            max := layer.content.Length
-            for i, item in layer.content
+            max := recursionLayer.content.Length
+            for i, item in recursionLayer.content
             {
                 first := (i = 1)
                 last := (i = max)
@@ -180,18 +180,18 @@ class MenuManager {
     }
 
     /** Clear the entire traymenu.
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively clear through
+        @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively clear through
     */
-    clear(layer:=false) {
-        if (!layer)
+    clear(recursionLayer:=false) {
+        if (!recursionLayer)
         { ; start recursion at top level of layout definition
-            layer := this._LAYOUT
+            recursionLayer := this._LAYOUT
         }
-        ;logIfDebug("clear", "layer:`t" layer.id, "menu:`t" layer.menu.name)
-        layer.menu.delete()
-        layer.menu.isEmpty := true
+        ;logIfDebug("clear", "layer:`t" recursionLayer.id, "menu:`t" recursionLayer.menu.name)
+        recursionLayer.menu.delete()
+        recursionLayer.menu.isEmpty := true
 
-        for item in layer.content
+        for item in recursionLayer.content
         {
             if (item is object)
             { ; item is a proper item
@@ -253,15 +253,15 @@ class MenuManager {
 
     /** return an item by id
         @param {string} id - id of the item of interest
-        @param {Object[]} [layer=_LAYOUT] - array of items to recursively search through
+        @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively search through
     */
-    _findItem(id, layer:=false) {
-        if (!layer)
+    _findItem(id, recursionLayer:=false) {
+        if (!recursionLayer)
         { ; recursion starts at the root of the definition
-            layer := this._LAYOUT
+            recursionLayer := this._LAYOUT
         }
 
-        for item in layer.content
+        for item in recursionLayer.content
         {
             if (item is object)
             { ; item is a proper item
