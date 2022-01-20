@@ -5,7 +5,7 @@ SetWorkingDir(A_ScriptDir) ; Ensures a consistent working directory (script fold
 #Include MenuManager.ahk
 #Include core.ahk
 
-FileInstall("ScreenSketch.ico", "ScreenSketch.ico", true)
+fileInstall("ScreenSketch.ico", "ScreenSketch.ico", true)
 
 tray := MenuManager(TRAYMENU_LAYOUT)
 
