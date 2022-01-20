@@ -130,7 +130,7 @@ class MenuManager {
 
             if (this._isSymbolicLink(item))
             {
-                this._pasteReferencedContent(item, &(layer.content[i]))
+                this._pasteReferencedContent(&item)
                 logIfDebug("linked content", "layer:`t" layer.id, "content:`t" layer.content.Length)
                 i-- ; iterate through the newly pasted linked items as well
             }
@@ -154,8 +154,9 @@ class MenuManager {
         return (item is object) && item.hasOwnProp("id")
     }
 
-    _pasteReferencedContent(item, &destination) {
-        destination := this._findItem(item)
+    _pasteReferencedContent(&item) {
+        referencedItem := this._findItem(item)
+        logIfDebug("pasteReferencedContent", "item:`t" item, "link:`t" referencedItem.id)
     }
 
 
