@@ -148,7 +148,14 @@ class MenuManager {
     _getItemType(item) {
         if (this._isSubmenuOrGroup(item))
         {
-            return (this._doesMeetMaxDisplay(&item)) ? MenuManager.TYPES.GROUP : MenuManager.TYPES.SUBMENU
+            if (this._doesMeetMaxDisplay(&item))
+            {
+                return MenuManager.TYPES.GROUP
+            }
+            else
+            {
+                return MenuManager.TYPES.SUBMENU
+            }
         }
         else
         {
@@ -162,13 +169,17 @@ class MenuManager {
         { ; no maximun number of displayed child items before using a submenu is set => display group
             return true
         }
-
-        return item.maxDisplay && (item.maxDisplay = -1 || item.content.Length <= item.maxDisplay)
+        else if (item.maxDisplay = 0)
+        {
+            return false
+        }
+        else
+        {
+            return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
+        }
     }
 
-    /** Clear the entire traymenu.
-        @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively clear through
-    */
+
     clear(recursionLayer:=false) {
         if (!recursionLayer)
         { ; start recursion at top level of layout definition
