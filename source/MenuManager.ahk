@@ -202,7 +202,7 @@ class MenuManager {
         if (!isSet(clickhandler)) {
             clickhandler := item.menu
         }
-        this._drawSeperatorIfRequested(menu)
+        this._drawSeperatorIfRequested(&menu)
         menu.add(item.text, clickhandler)
         this._drawIcon(menu, item, icon)
         menu.isEmpty := false	; flag non-empty menus
@@ -226,7 +226,7 @@ class MenuManager {
         return false	; couldn't find item
     }
 
-    _drawSeperatorIfRequested(menu) {
+    _drawSeperatorIfRequested(&menu) {
         if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {	; menu is not empty
             if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
                 menu.add()	; add a seperator line
