@@ -5,8 +5,7 @@ class MenuManager {
     _LAYOUT := false ; imported definition of the layout
     _traymenu := A_trayMenu
 
-    static TYPES :=
-    { ; Enumeration for all types of items
+    static TYPES := { ; Enumeration for all types of items
         ACTION: 0,
         /*  - used as DEFAULT
             - type can be omitted
@@ -38,17 +37,14 @@ class MenuManager {
     }
 
     clear(recursionLayer:=unset) {
-        if (!isSet(recursionLayer))
-        { 
+        if (!isSet(recursionLayer)) {
             recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
         }
         recursionLayer.menu.delete()
         recursionLayer.menu.isEmpty := true
 
-        for item in recursionLayer.content
-        {
-            if (this._isSubmenuOrGroup(&item))
-            {
+        for item in recursionLayer.content {
+            if (this._isSubmenuOrGroup(&item)) {
                 this.clear(item)
             }
         }
@@ -64,36 +60,26 @@ class MenuManager {
         @param {int} [last=false] - is it the last item of the current recursionLayer?
     */
     logAll(filename:="traymenu.txt", recursionLayer:=unset, layerIndex:=0, first:=false, last:=false) {
-        if (!isSet(recursionLayer))
-        { ; start recursion at top level of layout definition
-            if (fileExist(filename))
-            { ; only delete if it exists
+        if (!isSet(recursionLayer)) {
+            recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
+            if (fileExist(filename)) {
                 fileDelete(filename)
             }
-            recursionLayer := this._LAYOUT
         }
 
         indent := "" 
-        loop layerIndex
-        {
+        loop layerIndex {
             indent  := indent  " "
         }
 
 
-        if (first && last)
-        {
+        if (first && last) {
             draw := "└"
-        }
-        else if (first)
-        {
+        } else if (first) {
             draw := "├"
-        }
-        else if (last)
-        {
+        } else if (last) {
             draw := "└"
-        }
-        else
-        {
+        } else {
             draw := "├"
         }
         
@@ -101,11 +87,9 @@ class MenuManager {
                 
         fileAppend(line, filename, "UTF-8")
 
-        if (recursionLayer.hasOwnProp("content"))
-        {
+        if (recursionLayer.hasOwnProp("content")) {
             max := recursionLayer.content.Length
-            for i, item in recursionLayer.content
-            {
+            for i, item in recursionLayer.content {
                 first := (i = 1)
                 last := (i = max)
                 this.logAll(filename, item, layerIndex + 1, first, last)
@@ -114,15 +98,12 @@ class MenuManager {
     }
 
 
-    _parseLayout(&recursionLayer)
-    { 
+    _parseLayout(&recursionLayer) {
         logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
-        for position, item in recursionLayer.content
-        {
+        for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
-            if (this._isSubmenuOrGroup(item))
-            {
+            if (this._isSubmenuOrGroup(item)) {
                 this._parseLayout(&item)
             }
         }
@@ -135,8 +116,7 @@ class MenuManager {
 
 
     _dissolveSymbolicLinks(&item, &destinationLayer, position) {
-        if (this._isSymbolicLink(item))
-        {
+        if (this._isSymbolicLink(item)) {
             this._pasteReferencedContent(&item, &destinationLayer, position)
         }
     }
@@ -153,38 +133,25 @@ class MenuManager {
     }
 
     _getItemType(item) {
-        if (this._isSubmenuOrGroup(item))
-        {
-            if (this._doesMeetMaxDisplay(&item))
-            {
+        if (this._isSubmenuOrGroup(item)) {
+            if (this._doesMeetMaxDisplay(&item)) {
                 return MenuManager.TYPES.GROUP
-            }
-            else
-            {
+            } else {
                 return MenuManager.TYPES.SUBMENU
             }
-        }
-        else if (this._isValidItem(item))
-        {
+        } else if (this._isValidItem(item)) {
             return MenuManager.TYPES.ACTION
-        }
-        else
-        {
+        } else {
             return false
         }
     }
 
     _doesMeetMaxDisplay(&item) {
-        if (!item.hasOwnProp("maxDisplay"))
-        { ; no maximun number of displayed child items before using a submenu is set => display group
+        if (!item.hasOwnProp("maxDisplay")) {
             return true
-        }
-        else if (item.maxDisplay = 0)
-        {
+        } else if (item.maxDisplay = 0) {
             return false
-        }
-        else
-        {
+        } else {
             return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
         }
     }
@@ -198,12 +165,9 @@ class MenuManager {
             recursionMenu := this._traymenu
         }
 
-        if (!inheritIcon && item.hasOwnProp("icon"))
-        {
+        if (!inheritIcon && item.hasOwnProp("icon")) {
             icon := item.icon
-        }
-        else
-        {
+        } else {
             icon := inheritIcon
         }
         
@@ -226,15 +190,12 @@ class MenuManager {
     }
 
     _attachChildren(&item, &inheritIcon, &destinationMenu:=unset) {
-        if (!isSet(destinationMenu))
-        {
+        if (!isSet(destinationMenu)) {
             destinationMenu := item.menu
         }
         
-        if (this._isSubmenuOrGroup(item))
-        {
-            for child in item.content
-                {
+        if (this._isSubmenuOrGroup(item)) {
+            for child in item.content {
                     this._attachItem(&child, &destinationMenu, &inheritIcon)
                 }
         }
@@ -255,39 +216,30 @@ class MenuManager {
 
 
     _findItem(id, &recursionLayer:=unset) {
-        if (!isSet(recursionLayer))
-        { ; recursion starts at the root of the definition
-            recursionLayer := this._LAYOUT
+        if (!isSet(recursionLayer)) {
+            recursionLayer := this._LAYOUT ; recursion starts at the root of the definition
         }
 
-        for item in recursionLayer.content
-        {
-            if (this._isValidItem(item) && item.id = id)
-            {
+        for item in recursionLayer.content {
+            if (this._isValidItem(item) && item.id = id) {
                 return item
-            }
-            else if (this._isSubmenuOrGroup(item))
-            {
+            } else if (this._isSubmenuOrGroup(item)) {
                 referencedItem := this._findItem(id, &item)
-                if (referencedItem)
-                {
+                if (referencedItem) {
                     return referencedItem
                 }
-            } 
+            }
         }
         return false ; couldn't find item
     }
 
     _drawSeperatorIfRequested(menu) {
-        if (menu.hasOwnProp("isEmpty") && !menu.isEmpty)
-        { ; menu is not empty
+        if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) { ; menu is not empty
             if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
                 menu.add() ; add a seperator line
                 menu.requestSeperator := false
             }
-        }
-        else
-        { ; menu is empty
+        } else { ; menu is empty
             menu.requestSeperator := false
         }
     }
@@ -298,16 +250,11 @@ class MenuManager {
         @param {string[2]/string} icon - icon to be applied, path or [path, index]
     */
     _drawIcon(menu, item, icon) {
-        if (icon is array)
-        { ; icon contains a path and index
+        if (icon is array) { ; icon contains a path and index
             menu.setIcon(item.text, icon[1], icon[2]) 
-        }
-        else if(icon is string)
-        { ; icon only contains a path
+        } else if(icon is string) { ; icon only contains a path
             menu.setIcon(item.text, icon)
-        }
-        else
-        { ; no icon is set
+        } else { ; no icon is set
         }
     }
 
