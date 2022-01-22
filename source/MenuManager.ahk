@@ -198,9 +198,9 @@ class MenuManager {
         switch this._getItemType(item)
         {
         case MenuManager.TYPES.GROUP:           
-            recursionMenu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            recursionMenu.requestSeperator := true ; remember to add a seperator line before the next item on this submenu level
             this._attachChildren(&item, &icon, &recursionMenu)
-            recursionMenu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            recursionMenu.requestSeperator := true ; remember to add a seperator line before the next item on this submenu level
 
         case MenuManager.TYPES.SUBMENU:
             this._attachChildren(&item, &icon)
@@ -210,7 +210,7 @@ class MenuManager {
 
         default: ; item in a proper action
             ; attach and display the action to the traymenu or a submenu
-            this._drawLine(recursionMenu)
+            this._drawSeperatorIfRequested(recursionMenu)
             recursionMenu.add(item.text, handler)
             this._drawIcon(recursionMenu, item, icon)
             recursionMenu.isEmpty := false ; flag non-empty menus
@@ -241,7 +241,7 @@ class MenuManager {
             clickhandler := item.menu
         }
         ; attach and display the submenu to the traymenu or another submenu
-        this._drawLine(menu)
+        this._drawSeperatorIfRequested(menu)
         menu.add(item.text, clickhandler)
         this._drawIcon(menu, item, icon)
         menu.isEmpty := false ; flag non-empty menus
@@ -283,17 +283,17 @@ class MenuManager {
     /** Draw a seperator line if requested previously.
         @param {Menu} menu - traymenu or submenu to which is drawn
     */
-    _drawLine(menu) {
+    _drawSeperatorIfRequested(menu) {
         if (menu.hasOwnProp("isEmpty") && !menu.isEmpty)
         { ; menu is not empty
-            if (menu.hasOwnProp("doLine") && menu.doLine) {
+            if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
                 menu.add() ; add a seperator line
-                menu.doLine := false
+                menu.requestSeperator := false
             }
         }
         else
         { ; menu is empty
-            menu.doLine := false
+            menu.requestSeperator := false
         }
     }
 
