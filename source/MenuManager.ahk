@@ -191,10 +191,10 @@ class MenuManager {
 
 
     _attachItem(&item:=unset, &recursionMenu:=unset, &inheritIcon:=false) {
-        if (!isSet(item)) {
+        if (!isSet(item)) { ; recursion starts at the root of the definition
             item := this._LAYOUT
         }
-        if (!isSet(recursionMenu)) {
+        if (!isSet(recursionMenu)) { ; recursion starts at the root of the definition
             recursionMenu := this._traymenu
         }
 
@@ -254,11 +254,7 @@ class MenuManager {
     }
 
 
-    /** return an item by id
-        @param {string} id - id of the item of interest
-        @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively search through
-    */
-    _findItem(id, recursionLayer:=unset) {
+    _findItem(id, &recursionLayer:=unset) {
         if (!isSet(recursionLayer))
         { ; recursion starts at the root of the definition
             recursionLayer := this._LAYOUT
@@ -266,19 +262,16 @@ class MenuManager {
 
         for item in recursionLayer.content
         {
-            if (item is object)
-            { ; item is a proper item
-                if (item.id = id)
+            if (this._isValidItem(item) && item.id = id)
+            {
+                return item
+            }
+            else if (this._isSubmenuOrGroup(item))
+            {
+                referencedItem := this._findItem(id, &item)
+                if (referencedItem)
                 {
-                    return item
-                }
-                else if (item.hasOwnProp("content"))
-                {
-                    item := this._findItem(id, item)
-                    if (item)
-                    { ; found a valid item
-                        return item
-                    }
+                    return referencedItem
                 }
             } 
         }
