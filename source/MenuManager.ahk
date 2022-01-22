@@ -37,8 +37,8 @@ class MenuManager {
         this._attachItem()
     }
 
-    clear(recursionLayer:=false) {
-        if (!recursionLayer)
+    clear(recursionLayer:=unset) {
+        if (!isSet(recursionLayer))
         { 
             recursionLayer := this._LAYOUT ; start recursion at top level of layout definition
         }
@@ -63,8 +63,8 @@ class MenuManager {
         @param {int} [first=false] - is it the first item of the current recursionLayer?
         @param {int} [last=false] - is it the last item of the current recursionLayer?
     */
-    logAll(filename:="traymenu.txt", recursionLayer:=false, layerIndex:=0, first:=false, last:=false) {
-        if (!recursionLayer)
+    logAll(filename:="traymenu.txt", recursionLayer:=unset, layerIndex:=0, first:=false, last:=false) {
+        if (!isSet(recursionLayer))
         { ; start recursion at top level of layout definition
             if (fileExist(filename))
             { ; only delete if it exists
@@ -190,11 +190,11 @@ class MenuManager {
     }
 
 
-    _attachItem(&item:=false, &recursionMenu:=false, &inheritIcon:=false) {
-        if (!item) {
+    _attachItem(&item:=unset, &recursionMenu:=unset, &inheritIcon:=false) {
+        if (!isSet(item)) {
             item := this._LAYOUT
         }
-        if (!recursionMenu) {
+        if (!isSet(recursionMenu)) {
             recursionMenu := this._traymenu
         }
 
@@ -217,16 +217,16 @@ class MenuManager {
             recursionMenu.requestSeperator := true ; remember to add a seperator line before the next item on this submenu level
 
         case MenuManager.TYPES.SUBMENU:
-            this._attachChildren(&item, &icon)
-            this._drawItem(&item, &icon, &recursionMenu)
+            this._attachChildren(&item, &icon, )
+            this._drawItem(&item, &icon, &recursionMenu, )
 
         case MenuManager.TYPES.ACTION:
             this._drawItem(&item, &icon, &recursionMenu, handler)
         }
     }
 
-    _attachChildren(&item, &inheritIcon, &destinationMenu:=false) {
-        if (!destinationMenu)
+    _attachChildren(&item, &inheritIcon, &destinationMenu:=unset) {
+        if (!isSet(destinationMenu))
         {
             destinationMenu := item.menu
         }
@@ -240,11 +240,11 @@ class MenuManager {
         }
     }
 
-    _drawItem(&item, &icon, &menu:=false, clickhandler:=false) {
-        if (!menu) {
+    _drawItem(&item, &icon, &menu:=unset, clickhandler:=unset) {
+        if (!isSet(menu)) {
             menu := item.menu
         }
-        if (!clickhandler) {
+        if (!isSet(clickhandler)) {
             clickhandler := item.menu
         }
         this._drawSeperatorIfRequested(menu)
@@ -258,8 +258,8 @@ class MenuManager {
         @param {string} id - id of the item of interest
         @param {Object[]} [recursionLayer=_LAYOUT] - array of items to recursively search through
     */
-    _findItem(id, recursionLayer:=false) {
-        if (!recursionLayer)
+    _findItem(id, recursionLayer:=unset) {
+        if (!isSet(recursionLayer))
         { ; recursion starts at the root of the definition
             recursionLayer := this._LAYOUT
         }
