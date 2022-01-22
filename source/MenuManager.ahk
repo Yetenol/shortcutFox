@@ -204,7 +204,7 @@ class MenuManager {
         }
         this._drawSeperatorIfRequested(&menu)
         menu.add(item.text, clickhandler)
-        this._drawIcon(menu, item, icon)
+        this._drawIcon(&item, &icon, &menu)
         menu.isEmpty := false	; flag non-empty menus
     }
 
@@ -242,12 +242,11 @@ class MenuManager {
      * @param {Object} item - action or submenu to apply the icon to
      * @param {string[2]/string} icon - icon to be applied, path or [path, index]
      */
-    _drawIcon(menu, item, icon) {
+    _drawIcon(&item, &icon, &menu) {
         if (icon is array) {	; icon contains a path and index
             menu.setIcon(item.text, icon[1], icon[2])
         } else if (icon is string) {	; icon only contains a path
             menu.setIcon(item.text, icon)
-        } else {	; no icon is set
         }
     }
 
