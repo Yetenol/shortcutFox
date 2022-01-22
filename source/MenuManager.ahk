@@ -34,7 +34,7 @@ class MenuManager {
     */
     update() {
         this.clear()
-        this._attachItem(this._traymenu, this._LAYOUT)
+        this._attachItem()
     }
 
     clear(recursionLayer:=false) {
@@ -176,10 +176,21 @@ class MenuManager {
         @param {Object} item - group, submenu or action to attach
         @param {string} [icon=false] - icon to inherit from parent group of submenu
     */
-    _attachItem(menu, item, icon:=false) {
-        if (!icon && item.hasOwnProp("icon"))
-        { ; no icon to inherit but this item has it's own icon
+    _attachItem(&item:=false, &recursionMenu:=false, &inheritIcon:=false) {
+        if (!item) {
+            item := this._LAYOUT
+        }
+        if (!recursionMenu) {
+            recursionMenu := this._traymenu
+        }
+
+        if (!inheritIcon && item.hasOwnProp("icon"))
+        {
             icon := item.icon
+        }
+        else
+        {
+            icon := inheritIcon
         }
         
         ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
@@ -187,33 +198,53 @@ class MenuManager {
         switch this._getItemType(item)
         {
         case MenuManager.TYPES.GROUP:           
-            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
-            for child in item.content
-            {
-                this._attachItem(menu, child, icon)
-            }
-            menu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            recursionMenu.doLine := true ; remember to add a seperator line before the next item on this submenu level
+            this._attachChildren(&item, &icon, &recursionMenu)
+            recursionMenu.doLine := true ; remember to add a seperator line before the next item on this submenu level
 
         case MenuManager.TYPES.SUBMENU:
-            for child in item.content
-            {
-                this._attachItem(item.menu, child, icon)
-            }
+            this._attachChildren(&item, &icon)
+            this._drawItem(&item, &icon, &recursionMenu)
 
-            ; attach and display the submenu to the traymenu or another submenu
-            this._drawLine(menu)
-            menu.add(item.text, item.menu)
-            this._drawIcon(menu, item, icon)
-            menu.isEmpty := false ; flag non-empty menus
+            
 
         default: ; item in a proper action
             ; attach and display the action to the traymenu or a submenu
-            this._drawLine(menu)
-            menu.add(item.text, handler)
-            this._drawIcon(menu, item, icon)
-            menu.isEmpty := false ; flag non-empty menus
+            this._drawLine(recursionMenu)
+            recursionMenu.add(item.text, handler)
+            this._drawIcon(recursionMenu, item, icon)
+            recursionMenu.isEmpty := false ; flag non-empty menus
 
         }
+    }
+
+    _attachChildren(&item, &inheritIcon, &destinationMenu:=false) {
+        if (!destinationMenu)
+        {
+            destinationMenu := item.menu
+        }
+        
+        if (this._isSubmenuOrGroup(item))
+        {
+            for child in item.content
+                {
+                    this._attachItem(&child, &destinationMenu, &inheritIcon)
+                }
+        }
+    }
+
+    _drawItem(&item, &icon, &menu:=false, &clickhandler:=false) {
+        if (!menu) {
+            menu := item.menu
+        }
+        if (!clickhandler) {
+            clickhandler := item.menu
+        }
+        ; attach and display the submenu to the traymenu or another submenu
+        this._drawLine(menu)
+        menu.add(item.text, clickhandler)
+        this._drawIcon(menu, item, icon)
+        menu.isEmpty := false ; flag non-empty menus
     }
 
 
