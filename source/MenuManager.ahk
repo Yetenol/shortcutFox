@@ -170,12 +170,6 @@ class MenuManager {
     }
 
 
-
-    /** Attach an item to the traymenu or a submenu.
-        @param {Menu} menu - traymenu or submenu to which is attached
-        @param {Object} item - group, submenu or action to attach
-        @param {string} [icon=false] - icon to inherit from parent group of submenu
-    */
     _attachItem(&item:=false, &recursionMenu:=false, &inheritIcon:=false) {
         if (!item) {
             item := this._LAYOUT
@@ -206,15 +200,8 @@ class MenuManager {
             this._attachChildren(&item, &icon)
             this._drawItem(&item, &icon, &recursionMenu)
 
-            
-
-        default: ; item in a proper action
-            ; attach and display the action to the traymenu or a submenu
-            this._drawSeperatorIfRequested(recursionMenu)
-            recursionMenu.add(item.text, handler)
-            this._drawIcon(recursionMenu, item, icon)
-            recursionMenu.isEmpty := false ; flag non-empty menus
-
+        case MenuManager.TYPES.ACTION:
+            this._drawItem(&item, &icon, &recursionMenu, handler)
         }
     }
 
@@ -233,14 +220,13 @@ class MenuManager {
         }
     }
 
-    _drawItem(&item, &icon, &menu:=false, &clickhandler:=false) {
+    _drawItem(&item, &icon, &menu:=false, clickhandler:=false) {
         if (!menu) {
             menu := item.menu
         }
         if (!clickhandler) {
             clickhandler := item.menu
         }
-        ; attach and display the submenu to the traymenu or another submenu
         this._drawSeperatorIfRequested(menu)
         menu.add(item.text, clickhandler)
         this._drawIcon(menu, item, icon)
@@ -279,10 +265,6 @@ class MenuManager {
         return false ; couldn't find item
     }
 
-
-    /** Draw a seperator line if requested previously.
-        @param {Menu} menu - traymenu or submenu to which is drawn
-    */
     _drawSeperatorIfRequested(menu) {
         if (menu.hasOwnProp("isEmpty") && !menu.isEmpty)
         { ; menu is not empty
