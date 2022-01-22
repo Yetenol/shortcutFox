@@ -118,7 +118,14 @@ class MenuManager {
     { 
         logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
-        this._dissolveSymbolicLinks(&recursionLayer)
+        for position, item in recursionLayer.content
+        {
+            this._dissolveSymbolicLinks(&item, &recursionLayer, position)
+            if (this._isSubmenuOrGroup(item))
+            {
+                this._parseLayout(&item)
+            }
+        }
     }
 
     _constructSubmenu(&recursionLayer) {
@@ -127,18 +134,10 @@ class MenuManager {
     }
 
 
-    _dissolveSymbolicLinks(&recursionLayer) {
-        for position, item in recursionLayer.content
+    _dissolveSymbolicLinks(&item, &destinationLayer, position) {
+        if (this._isSymbolicLink(item))
         {
-            if (this._isSymbolicLink(item))
-            {
-                this._pasteReferencedContent(&item, &recursionLayer, position)
-                position-- ; iterate through the newly pasted items as well
-            }
-            else if (this._isSubmenuOrGroup(item))
-            {
-                this._parseLayout(&item)
-            }
+            this._pasteReferencedContent(&item, &destinationLayer, position)
         }
     }
 
