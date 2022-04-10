@@ -3,6 +3,8 @@ if not FileExist(CONFIG_PATH) {
     FileCreateDir, % CONFIG_PATH
 }
 
+startupShortcut := A_AppData "\Microsoft\Windows\Start Menu\Programs\Startup\shortcutFox.lnk"
+
 ; is the config available?
 hasTrayDefault() {
     global CONFIG_PATH
@@ -29,3 +31,18 @@ saveTrayDefault(actionLabel) {
     FileDelete, % path
     FileAppend, % actionLabel, % path
 }
+
+getRunAtStartup() {
+    global startupShortcut
+    return FileExist(startupShortcut)
+}
+
+toggleRunAtStartup() {
+    global startupShortcut
+    if (getRunAtStartup()) {
+        FileDelete, % startupShortcut
+    } else {
+        FileCreateShortcut, % A_ScriptFullPath, % startupShortcut
+    }
+}
+
