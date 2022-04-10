@@ -147,12 +147,14 @@ return
 return
 
 
-; Open KeePass (Win + Insert) deutsch: (Win + Insert) 
-#Insert::
-    if (FileExist(A_ProgramFiles "\KeePass Password Safe 2\KeePass.exe")) {
-        Run, % A_ProgramFiles "\KeePass Password Safe 2\KeePass.exe"
-    } else if (FileExist("C:\Program Files (x86)\KeePass2x\KeePass.exe")) {
-        Run, % "C:\Program Files (x86)\KeePass2x\KeePass.exe"
+; Open KeePass (Win + Shift + V)
+#+V::
+    if (FileExist(A_ProgramFiles "\KeeWeb\KeeWeb.exe")) {
+        if (WinExist("ahk_exe KeeWeb.exe")) {
+            WinActivate, % "ahk_exe KeeWeb.exe"
+        } else {
+            Run, % A_ProgramFiles "\KeeWeb\KeeWeb.exe"
+        }
     }
 return
 
