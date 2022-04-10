@@ -21,6 +21,7 @@ trayCategories.Push({id: "CONVERTIBLE", text: "Pen & touch screen utilities", ac
 
 ; ========================= Setup Tray Menu =========================
 ; move the standard script control item to its own submenu
+Menu, Tray, Tip, % "shortcutFox"
 Menu, Tray, NoStandard
 Menu, MANAGE_SCRIPT, Add, % "Run at startup", TOGGLE_RUN_AT_STARTUP
 Menu, MANAGE_SCRIPT, Icon, % "Run at startup", % (getRunAtStartup()) ? A_WinDir "\System32\shell32.dll" : "", % (getRunAtStartup()) ? 295 : ""
