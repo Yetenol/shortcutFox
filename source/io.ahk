@@ -1,4 +1,4 @@
-CONFIG_PATH := A_AppData "\Window Tools"
+CONFIG_PATH := A_AppData "\shortcutFox"
 if not FileExist(CONFIG_PATH) {
     FileCreateDir, % CONFIG_PATH
 }

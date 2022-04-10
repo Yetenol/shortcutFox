@@ -1,7 +1,7 @@
-# **Window Tools** ![GitHub last commit](https://img.shields.io/github/last-commit/yetenol/window-tools?color=white)
+# **shortcutFox** ![GitHub last commit](https://img.shields.io/github/last-commit/yetenol/window-tools?color=white)
 
-[![Download script](https://img.shields.io/github/downloads/yetenol/Window-Tools/total.svg)](https://github.com/yetenol/Window-Tools/releases/latest/download/Window-Tools.exe)
-[![List releases](https://img.shields.io/github/release/yetenol/Window-Tools.svg)](https://github.com/yetenol/Window-Tools/releases)
+[![Download script](https://img.shields.io/github/downloads/yetenol/shortcutFox/total.svg)](https://github.com/yetenol/shortcutFox/releases/latest/download/shortcutFox.exe)
+[![List releases](https://img.shields.io/github/release/yetenol/shortcutFox.svg)](https://github.com/yetenol/shortcutFox/releases)
 
 ## Features
 ### Keyboard modifications
@@ -44,10 +44,10 @@
 - build using Powershell
 ```powershell
 $compilerPath = "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe"
-& $compilerPath /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
+& $compilerPath /in source/main.ahk /out bin\shortcutFox.exe /icon resources\ScreenSketch.ico
 ```
 - or build using CMD
 ```cmd
 set compilerPath=%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe
-"%compilerPath%" /in source/main.ahk /out bin\Window-Tools.exe /icon resources\ScreenSketch.ico
+"%compilerPath%" /in source/main.ahk /out bin\shortcutFox.exe /icon resources\ScreenSketch.ico
 ```
