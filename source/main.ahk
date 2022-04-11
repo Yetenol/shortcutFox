@@ -147,13 +147,13 @@ return
 return
 
 
-; Open KeePass (Win + Shift + V)
+; Open KeeWeb (Win + Shift + V)
 #+V::
-    if (FileExist(A_ProgramFiles "\KeeWeb\KeeWeb.exe")) {
+    if (FileExist("C:\Program Files\KeeWeb\KeeWeb.exe")) {
         if (WinExist("ahk_exe KeeWeb.exe")) {
             WinActivate, % "ahk_exe KeeWeb.exe"
         } else {
-            Run, % A_ProgramFiles "\KeeWeb\KeeWeb.exe"
+            Run, % "C:\Program Files\KeeWeb\KeeWeb.exe"
         }
     }
 return
