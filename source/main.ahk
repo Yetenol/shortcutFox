@@ -122,14 +122,20 @@ return
 
 
 ; ==================== Window shortcuts ====================
-; Pin active window always on top (Win + Numpad-)
-#End::
-    Winset, Alwaysontop, On, A
-return
-
-; Unpin active window always on top (Win + Shift + Numpad-)
-#+End::
-    Winset, Alwaysontop, Off, A
+; Toogle active window always on top (Win + Ctrl + T)
+#^t::
+    Winset, Alwaysontop, Toggle, A
+    mousegetpos, x, y, A
+    WinGet, ExStyle, ExStyle, A
+    if (ExStyle & 0x8) {
+        ExStyle := "AlwaysOnTop"
+        SoundPlay, % A_WinDir "\Media\Speech On.wav"
+    }
+    else {
+        ExStyle := "Not AlwaysOnTop"
+        SoundPlay, % A_WinDir "\Media\Speech Sleep.wav"
+    }
+    tooltip, %exstyle%, % x + 5, % y + 5
 return
 
 ; Restart StartMenu process (Win + F5)
