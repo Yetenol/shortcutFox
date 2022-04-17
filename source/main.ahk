@@ -125,17 +125,15 @@ return
 ; Toogle active window always on top (Win + Ctrl + T)
 #^t::
     Winset, Alwaysontop, Toggle, A
-    mousegetpos, x, y, A
     WinGet, ExStyle, ExStyle, A
-    if (ExStyle & 0x8) {
-        ExStyle := "AlwaysOnTop"
+    if (ExStyle & 0x8) { ; is AlwaysOnTop disabled?
         SoundPlay, % A_WinDir "\Media\Speech On.wav"
+        outlineWindow()
     }
     else {
-        ExStyle := "Not AlwaysOnTop"
         SoundPlay, % A_WinDir "\Media\Speech Sleep.wav"
+        clearOutline()
     }
-    tooltip, %exstyle%, % x + 5, % y + 5
 return
 
 ; Restart StartMenu process (Win + F5)
@@ -225,3 +223,37 @@ SendCtrlBreak:
     Sleep, 2000
     Send, % "{CtrlBreak}"
 return
+
+
+outlineWindow() {
+    thickness = 5
+	WinGetTitle, title, A
+	WinGetPos, x, y, w, h, A
+	Gui, +Lastfound +AlwaysOnTop +Toolwindow
+	iw := w + 4
+	ih := h + 4
+	;w := w + 8
+	;h := h + 8
+	;x := x - thickness
+	;y := y - thickness
+    topLeft     :=  "0-0"
+    topRight    := w "-0"
+    bottomLeft  :=  "0-" h
+    bottomRight := w "-" h
+    innerTopLeft     := thickness "-" thickness
+    innerTopRight    := iw "-" thickness
+    innerBottomLeft  := thickness "-" ih
+    innerBottomRight := iw "-" ih
+	Gui, Color, FF0000
+	Gui, -Caption
+	;WinSet, Region, 0-0 %w%-0 %w%-%h% 0-%h% 0-0 %thickness%-%thickness% %iw%-%thickness% %iw%-%ih% %thickness%-%ih% %thickness%-%thickness%
+	OuterLine := topLeft " " topRight " " bottomRight " " bottomLeft " " topLeft
+    InnerLine := innerTopLeft " " innerTopRight " " innerBottomRight " " innerBottomLeft " " innerTopLeft
+    Region := OuterLine " " InnerLine
+    WinSet, Region, % Region
+	Gui, Show, w%w% h%h% x%x% y%y% NoActivate, Table awaiting Action
+}
+
+clearOutline() {
+    Gui, Destroy
+}
