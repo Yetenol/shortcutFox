@@ -226,34 +226,45 @@ return
 
 
 outlineWindow() {
-    thickness = 5
-	WinGetTitle, title, A
-	WinGetPos, x, y, w, h, A
 	Gui, +Lastfound +AlwaysOnTop +Toolwindow
-	iw := w + 4
-	ih := h + 4
-	;w := w + 8
-	;h := h + 8
-	;x := x - thickness
-	;y := y - thickness
-    topLeft     :=  "0-0"
-    topRight    := w "-0"
-    bottomLeft  :=  "0-" h
-    bottomRight := w "-" h
-    innerTopLeft     := thickness "-" thickness
-    innerTopRight    := iw "-" thickness
-    innerBottomLeft  := thickness "-" ih
-    innerBottomRight := iw "-" ih
-	Gui, Color, FF0000
+	Gui, Color, % readAccentColor()
 	Gui, -Caption
-	;WinSet, Region, 0-0 %w%-0 %w%-%h% 0-%h% 0-0 %thickness%-%thickness% %iw%-%thickness% %iw%-%ih% %thickness%-%ih% %thickness%-%thickness%
-	OuterLine := topLeft " " topRight " " bottomRight " " bottomLeft " " topLeft
-    InnerLine := innerTopLeft " " innerTopRight " " innerBottomRight " " innerBottomLeft " " innerTopLeft
-    Region := OuterLine " " InnerLine
-    WinSet, Region, % Region
-	Gui, Show, w%w% h%h% x%x% y%y% NoActivate, Table awaiting Action
+
+    thickness = 5 ; frame line thickness
+	WinGetPos, x, y, width, height, A
+    
+    ; correct window position
+    x += 4 ; left to right
+    y -= 4 ; top to bottom
+    width -= 8
+    
+    ; define outer frame points
+    outerTopLeft     :=  "0-0"
+    outerTopRight    := width "-0"
+    outerBottomLeft  :=  "0-" height
+    outerBottomRight := width "-" height
+    
+    ; define inner frame points
+    innerTopLeft     := thickness "-" thickness
+    innerTopRight    := (width - thickness) "-" thickness
+    innerBottomLeft  := thickness "-" (height - thickness)
+    innerBottomRight := (width - thickness) "-" (height - thickness)
+	
+    ; draw frame
+    framePointsOutside := outerTopLeft " " outerTopRight " " outerBottomRight " " outerBottomLeft " " outerTopLeft
+    framePointsInside := innerTopLeft " " innerTopRight " " innerBottomRight " " innerBottomLeft " " innerTopLeft
+    frame := framePointsOutside " " framePointsInside
+    WinSet, Region, % frame
+	Gui, Show, % "w" width " h" height " x" x " y" y " NoActivate", % "AlwaysOnTop Outline"
 }
 
 clearOutline() {
     Gui, Destroy
+}
+
+readAccentColor() {
+    RegRead, accentRgb, HKCU\SOFTWARE\Microsoft\Windows\DWM, ColorizationColor
+    VarSetCapacity(accentHex, 17 << !!A_IsUnicode, 0)
+    DllCall("Shlwapi.dll\wnsprintf", "Str", accentHex, "Int", 17, "Str", "%016I64X", "UInt64", accentRgb, "Int")
+    return SubStr(accentHex, StrLen(accentHex) - 6 + 1)
 }
