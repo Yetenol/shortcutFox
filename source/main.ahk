@@ -124,19 +124,24 @@ return
 ; ==================== Window shortcuts ====================
 ; Toogle active window always on top (Win + Ctrl + T)
 #^t::
-    oldState := isAlwaysOnTop("A")
-    Winset, Alwaysontop, Toggle, A
-    state := isAlwaysOnTop("A")
+    if (wasAlwaysOnTop := isAlwaysOnTop("A")) {
+        clearOutline()
+    } else {
+        outlineWindow()
+    }
 
-    if (state != oldState) {
-        if (state) {
+    Winset, Alwaysontop, Toggle, A
+
+    isAlwaysOnTop := isAlwaysOnTop("A")
+    toggledSuccessfully := (isAlwaysOnTop != wasAlwaysOnTop)
+    if (toggledSuccessfully) {
+        if (isAlwaysOnTop) {
             SoundPlay, % A_WinDir "\Media\Speech On.wav"
-            outlineWindow()
-        }
-        else {
+        } else {
             SoundPlay, % A_WinDir "\Media\Speech Sleep.wav"
-            clearOutline()
         }
+    } else {
+        clearOutline()
     }
 return
 
@@ -230,17 +235,21 @@ return
 
 
 outlineWindow() {
+    OUTLINE_THICKNESS = 4 ; frame line thickness
+
 	Gui, +Lastfound +AlwaysOnTop +Toolwindow
 	Gui, Color, % readAccentColor()
 	Gui, -Caption
 
-    thickness = 5 ; frame line thickness
+    ; get parameters
 	WinGetPos, x, y, width, height, A
-    
+    thickness := 2*OUTLINE_THICKNESS
+
     ; correct window position
-    x += 4 ; left to right
-    y -= 4 ; top to bottom
-    width -= 8
+    x := x + 8 - thickness/2 ; left to right
+    y := y + 1 - thickness/2 ; top to bottom
+    width := width - 16 + thickness
+    height := height - 9 + thickness
     
     ; define outer frame points
     outerTopLeft     :=  "0-0"
