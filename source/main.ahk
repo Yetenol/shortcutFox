@@ -124,15 +124,19 @@ return
 ; ==================== Window shortcuts ====================
 ; Toogle active window always on top (Win + Ctrl + T)
 #^t::
+    oldState := isAlwaysOnTop("A")
     Winset, Alwaysontop, Toggle, A
-    WinGet, ExStyle, ExStyle, A
-    if (ExStyle & 0x8) { ; is AlwaysOnTop disabled?
-        SoundPlay, % A_WinDir "\Media\Speech On.wav"
-        outlineWindow()
-    }
-    else {
-        SoundPlay, % A_WinDir "\Media\Speech Sleep.wav"
-        clearOutline()
+    state := isAlwaysOnTop("A")
+
+    if (state != oldState) {
+        if (state) {
+            SoundPlay, % A_WinDir "\Media\Speech On.wav"
+            outlineWindow()
+        }
+        else {
+            SoundPlay, % A_WinDir "\Media\Speech Sleep.wav"
+            clearOutline()
+        }
     }
 return
 
@@ -267,4 +271,9 @@ readAccentColor() {
     VarSetCapacity(accentHex, 17 << !!A_IsUnicode, 0)
     DllCall("Shlwapi.dll\wnsprintf", "Str", accentHex, "Int", 17, "Str", "%016I64X", "UInt64", accentRgb, "Int")
     return SubStr(accentHex, StrLen(accentHex) - 6 + 1)
+}
+
+isAlwaysOnTop(window) {
+    WinGet, ExStyle, ExStyle, % window
+    return (ExStyle & 0x8)
 }
