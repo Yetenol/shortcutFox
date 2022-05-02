@@ -2,13 +2,15 @@
 ; ==================== Window Lists: ====================
 ; Is the active window a browser?
 IsBrowserActive() {
-    return WinActive("ahk_exe firefox.exe") || WinActive("ahk_exe msedge.exe") || WinActive("ahk_exe chrome.exe")
+    return WinActive("ahk_exe firefox.exe")
+        || WinActive("ahk_exe msedge.exe") 
+        || WinActive("ahk_exe chrome.exe")
 }
 
 ; Is active window a media player?
 IsMediaPlayerActive() {
-    return (WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
-        || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow")) ; PrimeVideo
+    return WinActive("Netflix ahk_class ApplicationFrameWindow") ;  Netflix
+        || WinActive("Amazon Prime Video for Windows ahk_class ApplicationFrameWindow") ; PrimeVideo
 }
 
 ; Is active window a OS core app or a protected backgroup app?
