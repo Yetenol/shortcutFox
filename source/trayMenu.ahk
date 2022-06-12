@@ -15,7 +15,7 @@ trayCategories.Push({id: "BLUETOOTH", text: "Bluetooth audio and file transfer",
 
 actionsConvertible := []
 actionsConvertible.Push({id: "CALIBRATE_DIGITIZER", text: "Calibrate pen", run: "tabcal", icon: A_WinDir "\System32\ddores.dll", iconIndex: 27 })
-actionsConvertible.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "{PrintScreen}", icon: "*"})
+actionsConvertible.Push({id: "TAKE_SCREENSHOT", text: "Take Screenshot", send: "#+s", icon: "*"})
 trayCategories.Push({id: "CONVERTIBLE", text: "Pen & touch screen utilities", actions: actionsConvertible})
 
 
@@ -148,9 +148,7 @@ MENU_HANDLER:
 return
 
 
-; launch snipping tool as long as accessibility settings is enable
-; no enable set setting open ms-settings:easeofaccess-keyboard
-; add enable `Use the PrtScn button to open screen snipping`
+; launch snipping tool
 SET_DEFAULT_TAKE_SCREENSHOT:
     Menu, Tray, Default, % "Take Screenshot"
     Menu, Tray, Icon, * ; reset to included snipping tool icon
