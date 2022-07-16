@@ -4,6 +4,7 @@ isTabActive() {
     if IsBrowserActive() ; A browser is active
         || WinActive("ahk_exe code.exe") ; Visual Studio Code
         || WinActive("ahk_exe idea64.exe") ; IntelliJ IDEA
+        || WinActive("ahk_exe Obsidian.exe") ; Obsidian
     { 
         return true ; Tab detected
     }
