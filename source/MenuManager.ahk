@@ -26,14 +26,16 @@ class MenuManager {
      */
     update() {
         this.clear()	;
-        this._attachItem()
+        rootItem := this._LAYOUT
+        this._attachItem(&rootItem)
     }
 
     /**
      * Unrender all submenus including the root menu.
      */
     clear() {
-        this._clearChildren(this._LAYOUT)
+        rootItem := this._LAYOUT
+        this._clearChildren(rootItem)
     }
 
     /** 
@@ -202,9 +204,6 @@ class MenuManager {
      * @param inheritIcon Inherited icon from the parent level
      */
     _attachItem(&item := unset, &inheritIcon := false, &recursionMenu := unset) {
-        if (!isSet(item)) {	; recursion starts at the root of the definition
-            item := this._LAYOUT
-        }
         if (!isSet(recursionMenu)) {	; recursion starts at the root of the definition
             recursionMenu := this._traymenu
         }
