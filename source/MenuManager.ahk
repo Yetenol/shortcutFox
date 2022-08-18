@@ -12,7 +12,8 @@ class MenuManager {
         }
 
     /** 
-     * Constructor and draw menu.
+     * Build the traymenu.
+     * @param layout nested object that defined the structure of the traymenu
      */
     __New(&layout) {
         this._LAYOUT := layout
