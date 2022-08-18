@@ -120,7 +120,11 @@ class MenuManager {
      * @param layer Layout level whose menu is to be created
      */
     _constructSubmenu(&layer) {
-        layer.menu := (layer.id = "TRAYMENU") ? this._traymenu : Menu()
+        if (layer.id = "TRAYMENU") {
+            layer.menu := this._traymenu
+        } else {
+            layer.menu := Menu()
+        }
         layer.menu.name := layer.id
     }
 
@@ -301,6 +305,10 @@ class MenuManager {
     _findMenu(path, &recursionLayer := unset) {
         if (!isSet(recursionLayer)) {
             recursionLayer := this._LAYOUT	; recursion starts at the root of the definition
+        }
+
+        if (recursionLayer.HasOwnProp(menu) && recursionLayer.menu.name = path) {
+            return item
         }
 
         for item in recursionLayer.content {
