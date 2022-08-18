@@ -89,7 +89,7 @@ class MenuManager {
      */
     _clearChildren(parent) {
         parent.menu.delete()
-        parent.menu.isEmpty := true
+        parent.DeleteProp(menu)
 
         for item in parent.content {
             if (this._isSubmenuOrGroup(&item)) {
@@ -294,6 +294,51 @@ class MenuManager {
     }
 
     /**
+     * Find a menu by its path.
+     * @param path Target's id
+     * @param recursionLayer INTERNAL - Layout level to recursively search through
+     */
+    _findMenu(path, &recursionLayer := unset) {
+        if (!isSet(recursionLayer)) {
+            recursionLayer := this._LAYOUT	; recursion starts at the root of the definition
+        }
+
+        for item in recursionLayer.content {
+            if (this._isValidItem(item) && item.HasOwnProp(menu) && item.menu.name = path) {
+                return item
+            } else if (this._isSubmenuOrGroup(item)) {
+                referencedItem := this._findItem(path, &item)
+                if (referencedItem) {
+                    return referencedItem
+                }
+            }
+        }
+        return false	; couldn't find item
+    }
+
+    /**
+     * Find an item by its text.
+     * @param text Target's text
+     * @param recursionLayer INTERNAL - Layout level to recursively search through
+     */
+    _findText(text, &recursionLayer := unset) {
+        if (!isSet(recursionLayer)) {
+            recursionLayer := this._LAYOUT	; recursion starts at the root of the definition
+        }
+        for item in recursionLayer.content {
+            if (this._isValidItem(item) && item.text = text) {
+                return item
+            } else if (this._isSubmenuOrGroup(item)) {
+                item := this._findItem(text, &item)
+                if (item) {
+                    return item
+                }
+            }
+        }
+        return false	; couldn't find item
+    }
+
+    /**
      * Draw a seperator line if this has been requested beforehand.
      * @param menu Menu to examine
      */
@@ -332,4 +377,8 @@ class MenuManager {
  */
 handler(itemName, itemPosition, menu) {
     log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
+    menu := tray._findMenu(menu.name)
+    if (!menu) {
+        throw TargetError("Cannot find menu of clicked item")
+    }
 }
