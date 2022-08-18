@@ -5,21 +5,11 @@ class MenuManager {
     _LAYOUT := false	; imported definition of the layout
     _traymenu := A_trayMenu
 
-    static TYPES := {	; Enumeration for all types of items
-        ACTION: 0,
-        /*  - used as DEFAULT
-        - type can be omitted
-         */
-        GROUP: 1,
-        /*  - child items listed above each other
-        - displays a line before and after the group
-        - doesn't show title
-         */
-        SUBMENU: 2,
-        /*  - display title as single item
-        - hovering over it expands a new menu with child item
-         */
-    }
+    static ITEM_TYPES := {	; Enumeration for all types of items
+            ACTION: 0,	; run command or send keystrokes, used as DEFAULT
+            GROUP: 1,	; list of child items seperated by horizontal lines, ignores title
+            SUBMENU: 2,	; single title item that expands to a new submenu
+        }
 
     /** 
      * Constructor and draw menu.
@@ -34,26 +24,15 @@ class MenuManager {
      * Rerender the entire menu.
      */
     update() {
-        this.clear()
+        this.clear()	;
         this._attachItem()
     }
 
     /**
-     * Deletes all menu entries.
-     * @param recursionLayer INTERNAL - Definition layer to recursively parse through
+     * Unrender all submenus including the root menu.
      */
-    clear(recursionLayer := unset) {
-        if (!isSet(recursionLayer)) {
-            recursionLayer := this._LAYOUT	; start recursion at top level of layout definition
-        }
-        recursionLayer.menu.delete()
-        recursionLayer.menu.isEmpty := true
-
-        for item in recursionLayer.content {
-            if (this._isSubmenuOrGroup(&item)) {
-                this.clear(item)
-            }
-        }
+    clear() {
+        this._clearChildren(this._LAYOUT)
     }
 
     /** 
@@ -97,6 +76,21 @@ class MenuManager {
                 first := (i = 1)
                 last := (i = max)
                 this.logAll(filename, item, layerIndex + 1, first, last)
+            }
+        }
+    }
+
+    /**
+     * Unrender all menu entries.
+     * @param parent an item in the layout to recursively clear through
+     */
+    _clearChildren(parent) {
+        parent.menu.delete()
+        parent.menu.isEmpty := true
+
+        for item in parent.content {
+            if (this._isSubmenuOrGroup(&item)) {
+                this._clearChildren(item)
             }
         }
     }
@@ -168,17 +162,17 @@ class MenuManager {
     /**
      * Return get type of an item
      * @param item Action, submenu or group to examine
-     * @returns ({MenuManager.TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
+     * @returns ({MenuManager.ITEM_TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
      */
     _getItemType(item) {
         if (this._isSubmenuOrGroup(item)) {
             if (this._doesMeetMaxDisplay(&item)) {
-                return MenuManager.TYPES.GROUP
+                return MenuManager.ITEM_TYPES.GROUP
             } else {
-                return MenuManager.TYPES.SUBMENU
+                return MenuManager.ITEM_TYPES.SUBMENU
             }
         } else if (this._isValidItem(item)) {
-            return MenuManager.TYPES.ACTION
+            return MenuManager.ITEM_TYPES.ACTION
         } else {
             return false
         }
@@ -224,16 +218,16 @@ class MenuManager {
 
         switch this._getItemType(item)
         {
-            case MenuManager.TYPES.GROUP:
+            case MenuManager.ITEM_TYPES.GROUP:
                 recursionMenu.requestSeperator := true	; remember to add a seperator line before the next item on this submenu level
                 this._attachChildren(&item, &icon, &recursionMenu)
                 recursionMenu.requestSeperator := true	; remember to add a seperator line before the next item on this submenu level
 
-            case MenuManager.TYPES.SUBMENU:
+            case MenuManager.ITEM_TYPES.SUBMENU:
                 this._attachChildren(&item, &icon, )
                 this._drawItem(&item, &icon, &recursionMenu, )
 
-            case MenuManager.TYPES.ACTION:
+            case MenuManager.ITEM_TYPES.ACTION:
                 this._drawItem(&item, &icon, &recursionMenu, handler)
         }
     }
@@ -318,7 +312,7 @@ class MenuManager {
      * Draw the specified icon into a submenu or action
      * @param item Item to draw into
      * @param icon path or [path, index] to apply
-     * @param menu - traymenu or submenu to which is drawn
+     * @param menu traymenu or submenu to which is drawn
      */
     _drawIcon(&item, &icon, &menu) {
         if (icon is array) {	; icon contains a path and index
