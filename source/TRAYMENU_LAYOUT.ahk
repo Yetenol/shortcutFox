@@ -97,6 +97,19 @@ TRAYMENU_LAYOUT := {
                                 ]
                         },
                         {
+                            id: "UPDATES",
+                            text: "Application updates",
+                            content:
+                                [
+                                    {
+                                        id: "WINGET_UPDATE",
+                                        text: "Update all applications",
+                                        run: "powershell Start-Process -Verb RunAs wt '-p " " PowerShell " " powershell winget upgrade --all'",
+                                        icon: [A_WinDir "\System32\shell32.dll", 239],
+                                    },
+                                ]
+                        },
+                        {
                             id: "CONVERTIBLE",
                             text: "Pen & touch screen utilities",
                             content:
