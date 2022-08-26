@@ -336,12 +336,21 @@ class MenuManager {
  * @param menu Entry's submenu or traymenu
  */
 handler(itemName, itemPosition, menu) {
-    log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
+    logIfDebug("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
     action := findAction(&menu, itemName)
     if (action = false) {
         throw TargetError("Cannot find clicked item")
     }
-    log("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
+    logIfDebug("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
+    if (action.hasOwnProp("delay")) {
+        Sleep action.delay
+    }
+    if (action.hasOwnProp(send)) {
+        Send action.send
+    }
+    if (action.hasOwnProp("run")) {
+        Run action.run
+    }
 }
 
 /**
@@ -350,7 +359,6 @@ handler(itemName, itemPosition, menu) {
  * @param text Name of the clicked item
  */
 findAction(&menu, text) {
-    log("findAction() " text)
     if (!menu.hasOwnProp("content")) {
         throw TargetError("Invalid menu! Doesn't have content")
     }
