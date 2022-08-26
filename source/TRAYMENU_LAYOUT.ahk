@@ -41,7 +41,7 @@ TRAYMENU_LAYOUT := {
             {
                 id: "SET_DEFAULT_ACTION",
                 text: "Set left click action...",
-                maxDisplay: 0,	
+                maxDisplay: 0,
                 icon: "*",
                 content:
                     [
@@ -110,7 +110,7 @@ TRAYMENU_LAYOUT := {
                                     {
                                         id: "TAKE_SCREENSHOT",
                                         text: "Take Screenshot",
-                                        send: "{PrintScreen}",
+                                        send: "#+s",
                                         icon: "ScreenSketch.ico",
                                     },
                                 ]

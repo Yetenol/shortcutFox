@@ -345,7 +345,7 @@ handler(itemName, itemPosition, menu) {
     if (action.hasOwnProp("delay")) {
         Sleep action.delay
     }
-    if (action.hasOwnProp(send)) {
+    if (action.hasOwnProp("send")) {
         Send action.send
     }
     if (action.hasOwnProp("run")) {
