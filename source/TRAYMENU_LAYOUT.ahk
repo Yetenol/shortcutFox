@@ -41,7 +41,8 @@ TRAYMENU_LAYOUT := {
             {
                 id: "SET_DEFAULT_ACTION",
                 text: "Set left click action...",
-                maxDisplay: 0,	;icon: "*",
+                maxDisplay: 0,	
+                icon: "*",
                 content:
                     [
                         {
