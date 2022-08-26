@@ -126,6 +126,7 @@ class MenuManager {
             layer.menu := Menu()
         }
         layer.menu.name := layer.id
+        layer.menu.content := layer.content
     }
 
     /**
@@ -336,8 +337,34 @@ class MenuManager {
  */
 handler(itemName, itemPosition, menu) {
     log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
-    menu := tray._findMenu(menu.name)
-    if (!menu) {
-        throw TargetError("Cannot find menu of clicked item")
+    action := findAction(&menu, itemName)
+    if (action = false) {
+        throw TargetError("Cannot find clicked item")
     }
+    log("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
+}
+
+/**
+ * Find the corresponding action for the clicked item
+ * @param menu Menu where the click took place
+ * @param text Name of the clicked item
+ */
+findAction(&menu, text) {
+    log("findAction() " text)
+    if (!menu.hasOwnProp("content")) {
+        throw TargetError("Invalid menu! Doesn't have content")
+    }
+
+    for item in menu.content {
+        if (item.hasOwnProp("text") && item.text = text) {
+            return item
+        }
+        if (item.hasOwnProp("content")) {
+            action := findAction(&item, text)
+            if (action != false) {
+                return action
+            }
+        }
+    }
+    return false	; couldn't find item
 }
