@@ -10,13 +10,3 @@ fileInstall("ScreenSketch.ico", "ScreenSketch.ico", true)
 tray := MenuManager(&TRAYMENU_LAYOUT)
 
 return
-
-#f::
-{
-    tray.logAll()
-}
-
-#j::
-{
-    tray.update()
-}
