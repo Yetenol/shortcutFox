@@ -95,10 +95,16 @@ TRAYMENU_LAYOUT := {
                                             [{
                                                 id: "WINGET_UPDATE",
                                                 text: "Update all applications",
-                                                run: A_WorkingDir "\..\modules\upgradeAllClearDesktop.ps1.bat",
+                                                run: A_WorkingDir "\..\modules\wingetUpdateAll.ps1.bat",
                                                 icon: [A_WinDir "\System32\shell32.dll", 239],
                                             },
-                                        ]
+                                                {
+                                                    id: "GIT_UPDATE",
+                                                    text: "Update all repositories",
+                                                    run: A_WorkingDir "\..\modules\gitUpdateAll.ps1.bat",
+                                                    icon: [A_WinDir "\System32\shell32.dll", 239],
+                                                },
+                                            ]
                                     },
                                         {
                                             id: "CONVERTIBLE",
