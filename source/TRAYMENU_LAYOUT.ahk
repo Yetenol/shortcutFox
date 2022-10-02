@@ -95,13 +95,13 @@ TRAYMENU_LAYOUT := {
                                             [{
                                                 id: "WINGET_UPDATE",
                                                 text: "Update all applications",
-                                                run: A_WorkingDir "\..\scripts\wingetUpdateAll.ps1.bat",
+                                                run: "wingetUpdateAll.ps1.bat",
                                                 icon: [A_WinDir "\System32\shell32.dll", 239],
                                             },
                                                 {
                                                     id: "GIT_UPDATE",
                                                     text: "Update all repositories",
-                                                    run: A_WorkingDir "\..\scripts\gitUpdateAll.ps1.bat",
+                                                    run: "gitUpdateAll.ps1.bat",
                                                     icon: [A_WinDir "\System32\shell32.dll", 239],
                                                 },
                                             ]
