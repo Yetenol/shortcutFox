@@ -95,13 +95,13 @@ TRAYMENU_LAYOUT := {
                                             [{
                                                 id: "WINGET_UPDATE",
                                                 text: "Update all applications",
-                                                run: "wingetUpdateAll.ps1.bat",
+                                                run: "scripts\wingetUpdateAll.ps1.bat",
                                                 icon: [A_WinDir "\System32\shell32.dll", 239],
                                             },
                                                 {
                                                     id: "GIT_UPDATE",
                                                     text: "Update all repositories",
-                                                    run: "gitUpdateAll.ps1.bat",
+                                                    run: "scripts\gitUpdateAll.ps1.bat",
                                                     icon: [A_WinDir "\System32\shell32.dll", 239],
                                                 },
                                             ]
@@ -120,7 +120,7 @@ TRAYMENU_LAYOUT := {
                                                         id: "TAKE_SCREENSHOT",
                                                         text: "Take Screenshot",
                                                         send: "#+s",
-                                                        icon: "ScreenSketch.ico",
+                                                        icon: "icons\ScreenSketch.ico",
                                                     },
                                                 ]
                                         },

@@ -5,10 +5,22 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 #Include MenuManager.ahk
 #Include core.ahk
 
-fileInstall("..\resources\ScreenSketch.ico", "ScreenSketch.ico", true)
-fileInstall("..\scripts\gitUpdateAll.ps1.bat", "gitUpdateAll.ps1.bat", true)
-fileInstall("..\scripts\wingetUpdateAll.ps1.bat", "wingetUpdateAll.ps1.bat", true)
+; Install icons
+if (DirExist("icons")) {
+    DirDelete "icons", true
+}
+DirCreate "icons"
+FileInstall("..\icons\ScreenSketch.ico", "icons\ScreenSketch.ico")
 
+; Install scripts
+if (DirExist("scripts")) {
+    DirDelete "scripts", true
+}
+DirCreate "scripts"
+FileInstall("..\scripts\gitUpdateAll.ps1.bat", "scripts\gitUpdateAll.ps1.bat")
+FileInstall("..\scripts\wingetUpdateAll.ps1.bat", "scripts\wingetUpdateAll.ps1.bat")
+
+; Construct tray menu
 tray := MenuManager(&TRAYMENU_LAYOUT)
 
 return
