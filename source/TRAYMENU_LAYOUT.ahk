@@ -7,13 +7,18 @@ TRAYMENU_LAYOUT := {
             maxDisplay: 0,
             content:
                 [{
-                    id: "SUSPEND",
-                    text: "Suspend",
+                    id: "RUN_AT_STARTUP",
+                    text: "Run at startup",
+                    interactive: "switch",
                 },
                     {
-                        id: "EXIT",
-                        text: "Exit",
+                        id: "SUSPEND",
+                        text: "Suspend",
                     },
+                        {
+                            id: "EXIT",
+                            text: "Exit",
+                        },
                 ]
         },
             {
@@ -40,6 +45,7 @@ TRAYMENU_LAYOUT := {
                     text: "Set left click action...",
                     maxDisplay: 0,
                     icon: "*",
+                    interactive: "choice",
                     content:
                         [{
                             id: "RESET_DEFAULT_ACTION",
