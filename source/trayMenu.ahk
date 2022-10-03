@@ -1,5 +1,6 @@
 #Include trayLayout.ahk
 #Include core.ahk
+#Include io.ahk
 
 class MenuManager {
     static ITEM_TYPES := {    ; Enumeration for all types of items
@@ -286,6 +287,11 @@ _drawSeperatorIfRequested(&menu) {
  * @param menu traymenu or submenu to which is drawn
  */
 _drawIcon(&item, &icon, &menu) {
+    if (item.HasOwnProp("interactive") && item.interactive = "switch") {
+        ; if (readSetting(item.id)) {
+        ; menu.Check(item.text)
+        ; }
+    }
     if (icon is array) {    ; icon contains a path and index
         menu.setIcon(item.text, icon[1], icon[2])
     } else if (icon is string) {    ; icon only contains a path
@@ -317,6 +323,10 @@ handler(itemName, itemPosition, menu) {
     }
     if (action.hasOwnProp("run")) {
         Run action.run
+    }
+    if (action.HasOwnProp("interactive") && action.interactive = "switch") {
+        menu.ToggleCheck(itemName)
+        toggleSetting(action.id)
     }
 }
 

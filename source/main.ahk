@@ -4,6 +4,7 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 
 #Include trayMenu.ahk
 #Include core.ahk
+#Include io.ahk
 
 ; Prepare resource folders
 resourceFolders := "icons,scripts"

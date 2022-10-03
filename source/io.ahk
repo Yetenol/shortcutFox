@@ -1,40 +1,36 @@
-readSetting(id) {
-
-}
-
 startupShortcut := A_AppData "\Microsoft\Windows\Start Menu\Programs\Startup\shortcutFox.lnk"
 
-CONFIG_PATH := A_AppData "\shortcutFox"
-if not FileExist(CONFIG_PATH) {
-    FileCreateDir, CONFIG_PATH
-}
+CONFIG_FILE := A_AppData "\shortcutFox\settings.ini"
+CONFIG_SECTION := "Settings"
+; if (!DirExist(CONFIG_FILE)) {
+; DirCreate CONFIG_FILE
+; }
 
 
 ; is the config available?
 hasSetting(id) {
-    global CONFIG_PATH
-    path := CONFIG_PATH "\" id ".ini"
-    return FileExist(path)
+    global CONFIG_FILE
+    value := IniRead(CONFIG_FILE, CONFIG_SECTION, id, "NON_PRESENT")
+    return value == "NON_PRESENT"
 }
 
 ; read trayDefault config
 ; returns false if config isn't available
 readSetting(id) {
-    path := _getSettingPath(id)
-    if (FileExist(path)) {
-        return FileRead(path)
-    } else {
+    value := IniRead(CONFIG_FILE, CONFIG_SECTION, id, "NON_PRESENT")
+    if (value ~= "1|yes|true|and|on") {
+        return true
+    } else if (value ~= "0|no|false|off") {
         return false
+    } else {
+        return value
     }
 }
 
-writeSetting(id) {
-    path := _getSettingPath(id)
-    FileDelete path
-    FileAppend id, path
+writeSetting(id, value) {
+    IniWrite(value, CONFIG_FILE, CONFIG_SECTION, id)
 }
 
-_getSettingPath(id) {
-    global CONFIG_PATH
-    return CONFIG_PATH "\" id ".ini"
+toggleSetting(id) {
+    writeSetting(id, !readSetting(id))
 }
