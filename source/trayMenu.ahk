@@ -78,11 +78,14 @@ class MenuManager {
      * Unrender all menu entries.
      * @param parent an item in the layout to recursively clear through
      */
-    _clearChildren(parent) {
-        global menus
-        while menus.Has(0) {
-            submenu := menus.Pop()
-            submenu.Delete()
+    _clearChildren(&parent) {
+        parent.menu.delete() ; remove all custom menu item
+        parent.DeleteProp(menu) ; 
+
+        for item in parent.content {
+            if (this._isSubmenuOrGroup(&item)) {
+                this._clearChildren(&item)
+            }
         }
     }
     /**
