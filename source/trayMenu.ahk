@@ -1,8 +1,6 @@
 #Include trayLayout.ahk
 #Include core.ahk
 
-menus := []
-
 class MenuManager {
     static ITEM_TYPES := {    ; Enumeration for all types of items
         ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
@@ -109,10 +107,7 @@ class MenuManager {
      * @param layer Layout level whose menu is to be created
      */
     _constructSubmenu(&layer) {
-        global menus
-        newMenu := (layer.id = "TRAYMENU") ? A_TrayMenu : Menu()
-        menus.Push(newMenu)
-        layer.menu := newMenu
+        layer.menu := (layer.id = "TRAYMENU") ? A_TrayMenu : Menu()
         layer.menu.name := layer.id
         layer.menu.content := layer.content
     }
