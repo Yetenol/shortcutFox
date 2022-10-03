@@ -1,9 +1,9 @@
 #Include trayLayout.ahk
 #Include core.ahk
 
+trayMenu := A_trayMenu
 menus := []
 class MenuManager {
-    _trayMenu := A_trayMenu
     static ITEM_TYPES := {    ; Enumeration for all types of items
         ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
         GROUP: 1,    ; list of child items seperated by horizontal lines, ignores title
@@ -185,8 +185,9 @@ _doesMeetMaxDisplay(&item) {
  * @param inheritIcon Inherited icon from the parent level
  */
 _attachItem(&item := unset, &inheritIcon := false, &recursionMenu := unset) {
+    global trayLayout
     if (!isSet(recursionMenu)) {    ; recursion starts at the root of the definition
-        recursionMenu := this._trayMenu
+        recursionMenu := trayLayout.menu
     }
     if (!inheritIcon && item.hasOwnProp("icon")) {
         icon := item.icon
