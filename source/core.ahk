@@ -1,13 +1,5 @@
 #Include config.ahk
 
-logIfDebug(lines*)
-{
-    if (DO_DEBUG)
-    {
-        log(lines*)
-    }
-}
-
 log(lines*)
 {
     text := ""

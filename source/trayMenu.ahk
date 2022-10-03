@@ -95,7 +95,8 @@ class MenuManager {
      * @param recursionLayer Definition layer to recursively parse through
      */
     _parseLayout(&recursionLayer) {
-        logIfDebug("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
+        if DO_DEBUG_LAYOUT()
+            log("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
         for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
