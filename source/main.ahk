@@ -22,7 +22,7 @@ FileInstall("..\scripts\toggleRunAtStartup.ps1.bat", "scripts\toggleRunAtStartup
 ; Create tray menu
 tray := MenuManager()
 
-#!f:: {
+#!c:: {
     tray.clear()
 }
 
