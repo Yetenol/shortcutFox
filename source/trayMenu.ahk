@@ -31,6 +31,7 @@ class MenuManager {
     clear() {
         global trayLayout
         this._clearChildren(&trayLayout)
+        trayLayout.menu := A_TrayMenu
     }
     /**
      * Print the current traymenu layout into a file.
@@ -61,7 +62,8 @@ class MenuManager {
         } else {
             draw := "├"
         }
-            line := indent draw " " recursionLayer.id "`n"
+            line := indent draw " " recursionLayer.id
+        line := (recursionLayer.HasOwnProp("menu")) ? " (" recursionLayer.menu.requestSeperator ")" : "`n"
         fileAppend(line, filename, "UTF-8")
         if (recursionLayer.hasOwnProp("content")) {
             max := recursionLayer.content.Length
@@ -77,8 +79,8 @@ class MenuManager {
      * @param parent an item in the layout to recursively clear through
      */
     _clearChildren(&parent) {
-        parent.menu.delete() ; remove all custom menu item
-        parent.DeleteProp(menu) ; 
+        parent.menu.delete()    ; remove all custom menu item
+        parent.DeleteProp("menu")    ;
 
         for item in parent.content {
             if (this._isSubmenuOrGroup(&item)) {
@@ -189,7 +191,7 @@ _attachItem(&recursionMenu, &item := unset, &inheritIcon := false) {
         recursionMenu := trayLayout.menu
     }
     icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
-    ; logIfDebug("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
+    ; log("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.GROUP:
@@ -267,6 +269,7 @@ _findItem(id, &recursionLayer := unset) {
 _drawSeperatorIfRequested(&menu) {
     if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
         if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
+            log("draw seperator", "name:`t" menu.name)
             menu.add()    ; add a seperator line
             menu.requestSeperator := false
         }
