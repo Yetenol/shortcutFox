@@ -1,9 +1,9 @@
-#Include trayMenu_LAYOUT.ahk
+#Include trayLayout.ahk
 #Include core.ahk
 
 class MenuManager {
     _LAYOUT := false    ; imported definition of the layout
-    _traymenu := A_trayMenu
+    _trayMenu := A_trayMenu
 
     static ITEM_TYPES := {    ; Enumeration for all types of items
         ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
@@ -121,7 +121,7 @@ class MenuManager {
      */
     _constructSubmenu(&layer) {
         if (layer.id = "TRAYMENU") {
-            layer.menu := this._traymenu
+            layer.menu := this._trayMenu
         } else {
             layer.menu := Menu()
         }
@@ -207,7 +207,7 @@ _doesMeetMaxDisplay(&item) {
  */
 _attachItem(&item := unset, &inheritIcon := false, &recursionMenu := unset) {
     if (!isSet(recursionMenu)) {    ; recursion starts at the root of the definition
-        recursionMenu := this._traymenu
+        recursionMenu := this._trayMenu
     }
 
     if (!inheritIcon && item.hasOwnProp("icon")) {
