@@ -3,7 +3,6 @@
 
 menus := []
 class MenuManager {
-    _LAYOUT := false    ; imported definition of the layout
     _trayMenu := A_trayMenu
     static ITEM_TYPES := {    ; Enumeration for all types of items
         ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
@@ -14,25 +13,25 @@ class MenuManager {
      * Build the traymenu.
      * @param layout nested object that defined the structure of the traymenu
      */
-    __New(&layout) {
-        this._LAYOUT := layout
-        this._parseLayout(&layout)
+    __New() {
+        global trayLayout
+        this._parseLayout(&trayLayout)
         this.update()
     }
     /**
      * Rerender the entire menu.
      */
     update() {
-        this.clear()    ;
-        rootItem := this._LAYOUT
-        this._attachItem(&rootItem)
+        global trayLayout
+        this.clear()
+        this._attachItem(&trayLayout)
     }
     /**
      * Unrender all submenus including the root menu.
      */
     clear() {
-        rootItem := this._LAYOUT
-        this._clearChildren(rootItem)
+        global trayLayout
+        this._clearChildren(&trayLayout)
     }
     /**
      * Print the current traymenu layout into a file.
@@ -43,8 +42,9 @@ class MenuManager {
      * @param last Is it the last item of the current recursionLayer?
      */
     logAll(filename := "traymenu.txt", recursionLayer := unset, layerIndex := 0, first := false, last := false) {
+        global trayLayout
         if (!isSet(recursionLayer)) {
-            recursionLayer := this._LAYOUT    ; start recursion at top level of layout definition
+            recursionLayer := trayLayout    ; start recursion at top level of layout definition
             if (fileExist(filename)) {
                 fileDelete(filename)
             }
@@ -248,8 +248,9 @@ _drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
  * @param recursionLayer INTERNAL - Layout level to recursively search through
  */
 _findItem(id, &recursionLayer := unset) {
+    global trayLayout
     if (!isSet(recursionLayer)) {
-        recursionLayer := this._LAYOUT    ; recursion starts at the root of the definition
+        recursionLayer := trayLayout    ; recursion starts at the root of the definition
     }
     for item in recursionLayer.content {
         if (this._isValidItem(item) && item.id = id) {

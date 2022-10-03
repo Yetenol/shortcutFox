@@ -20,6 +20,10 @@ FileInstall("..\scripts\wingetUpdateAll.ps1.bat", "scripts\wingetUpdateAll.ps1.b
 FileInstall("..\scripts\toggleRunAtStartup.ps1.bat", "scripts\toggleRunAtStartup.ps1.bat")
 
 ; Create tray menu
-tray := MenuManager(&trayLayout)
+tray := MenuManager()
+
+#!f:: {
+    tray.clear()
+}
 
 return
