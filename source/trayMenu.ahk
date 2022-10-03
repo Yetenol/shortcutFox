@@ -1,16 +1,15 @@
 #Include trayLayout.ahk
 #Include core.ahk
 
+menus := []
 class MenuManager {
     _LAYOUT := false    ; imported definition of the layout
     _trayMenu := A_trayMenu
-
     static ITEM_TYPES := {    ; Enumeration for all types of items
         ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
         GROUP: 1,    ; list of child items seperated by horizontal lines, ignores title
         SUBMENU: 2,    ; single title item that expands to a new submenu
     }
-
     /**
      * Build the traymenu.
      * @param layout nested object that defined the structure of the traymenu
@@ -20,7 +19,6 @@ class MenuManager {
         this._parseLayout(&layout)
         this.update()
     }
-
     /**
      * Rerender the entire menu.
      */
@@ -29,7 +27,6 @@ class MenuManager {
         rootItem := this._LAYOUT
         this._attachItem(&rootItem)
     }
-
     /**
      * Unrender all submenus including the root menu.
      */
@@ -37,7 +34,6 @@ class MenuManager {
         rootItem := this._LAYOUT
         this._clearChildren(rootItem)
     }
-
     /**
      * Print the current traymenu layout into a file.
      * @param filename File to override
@@ -53,12 +49,10 @@ class MenuManager {
                 fileDelete(filename)
             }
         }
-
         indent := ""
         loop layerIndex {
             indent := indent " "
         }
-
         if (first && last) {
             draw := "└"
         } else if (first) {
@@ -68,11 +62,8 @@ class MenuManager {
         } else {
             draw := "├"
         }
-
             line := indent draw " " recursionLayer.id "`n"
-
         fileAppend(line, filename, "UTF-8")
-
         if (recursionLayer.hasOwnProp("content")) {
             max := recursionLayer.content.Length
             for i, item in recursionLayer.content {
@@ -82,22 +73,17 @@ class MenuManager {
             }
         }
     }
-
     /**
      * Unrender all menu entries.
      * @param parent an item in the layout to recursively clear through
      */
     _clearChildren(parent) {
-        parent.menu.delete()
-        parent.DeleteProp(menu)
-
-        for item in parent.content {
-            if (this._isSubmenuOrGroup(&item)) {
-                this._clearChildren(item)
-            }
+        global menus
+        while menus.Has(0) {
+            submenu := menus.Pop()
+            submenu.Delete()
         }
     }
-
     /**
      * Prepare menu for initialization:
      * - Construct submenu objects to which the entries will be attached.
@@ -114,21 +100,18 @@ class MenuManager {
             }
         }
     }
-
     /**
      * Construct submenu objects to which the entries will be attached.
      * @param layer Layout level whose menu is to be created
      */
     _constructSubmenu(&layer) {
-        if (layer.id = "TRAYMENU") {
-            layer.menu := this._trayMenu
-        } else {
-            layer.menu := Menu()
-        }
+        global menus
+        newMenu := (layer.id = "TRAYMENU") ? A_TrayMenu : Menu()
+        menus.Push(newMenu)
+        layer.menu := newMenu
         layer.menu.name := layer.id
         layer.menu.content := layer.content
     }
-
     /**
      * If necessary, dissolve the link in its content.
      * @param item Possible symbolic link
@@ -138,7 +121,6 @@ class MenuManager {
             this._pasteReferencedContent(&item, &destinationLayer, position)
         }
     }
-
     /**
      * Is the item a symbolic link to another submenu or group?
      * @param item Action, submenu, group or symbolic link to examine
@@ -163,7 +145,6 @@ class MenuManager {
     _pasteReferencedContent(&linkItem, &destinationLayer, itemPosition) {
     destinationLayer.content[itemPosition] := this._findItem(linkItem)
 }
-
 /**
  * Return get type of an item
  * @param item Action, submenu or group to examine
@@ -182,7 +163,6 @@ _getItemType(item) {
         return false
     }
 }
-
 /**
  * Does the element meet its maximum number of children?
  * - if YES: display it as a group seperated by lines
@@ -198,7 +178,6 @@ _doesMeetMaxDisplay(&item) {
         return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
     }
 }
-
 /**
  * Add the element to the specified menu.
  * @param item Action, submenu or group to attach
@@ -209,31 +188,25 @@ _attachItem(&item := unset, &inheritIcon := false, &recursionMenu := unset) {
     if (!isSet(recursionMenu)) {    ; recursion starts at the root of the definition
         recursionMenu := this._trayMenu
     }
-
     if (!inheritIcon && item.hasOwnProp("icon")) {
         icon := item.icon
     } else {
         icon := inheritIcon
     }
-
     ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
-
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.GROUP:
             recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
             this._attachChildren(&item, &icon, &recursionMenu)
             recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
-
         case MenuManager.ITEM_TYPES.SUBMENU:
             this._attachChildren(&item, &icon,)
             this._drawItem(&item, &icon, &recursionMenu,)
-
         case MenuManager.ITEM_TYPES.ACTION:
             this._drawItem(&item, &icon, &recursionMenu, handler)
     }
 }
-
 /**
  * Add all children of an item to the specified menu.
  * @param item Submenu or group containing the children
@@ -244,14 +217,12 @@ _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
     if (!isSet(destinationMenu)) {
         destinationMenu := item.menu
     }
-
     if (this._isSubmenuOrGroup(item)) {
         for child in item.content {
             this._attachItem(&child, &inheritIcon, &destinationMenu)
         }
     }
 }
-
 /**
  * Draw the entry into the specified menu.
  * @param item Item to draw
@@ -271,7 +242,6 @@ _drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
     this._drawIcon(&item, &icon, &menu)
     menu.isEmpty := false    ; flag non-empty menus
 }
-
 /**
  * Find an item by its id.
  * @param id Target's id
@@ -281,7 +251,6 @@ _findItem(id, &recursionLayer := unset) {
     if (!isSet(recursionLayer)) {
         recursionLayer := this._LAYOUT    ; recursion starts at the root of the definition
     }
-
     for item in recursionLayer.content {
         if (this._isValidItem(item) && item.id = id) {
             return item
@@ -294,7 +263,6 @@ _findItem(id, &recursionLayer := unset) {
     }
     return false    ; couldn't find item
 }
-
 /**
  * Draw a seperator line if this has been requested beforehand.
  * @param menu Menu to examine
@@ -309,7 +277,6 @@ _drawSeperatorIfRequested(&menu) {
         menu.requestSeperator := false
     }
 }
-
 /**
  * Draw the specified icon into a submenu or action
  * @param item Item to draw into
@@ -323,7 +290,6 @@ _drawIcon(&item, &icon, &menu) {
         menu.setIcon(item.text, icon)
     }
 }
-
 }
 
 /**
