@@ -269,7 +269,8 @@ _findItem(id, &recursionLayer := unset) {
 _drawSeperatorIfRequested(&menu) {
     if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
         if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
-            log("draw seperator", "name:`t" menu.name)
+            if DO_DEBUG_SEPERATOR()
+                log("draw seperator", "name:`t" menu.name)
             menu.add()    ; add a seperator line
             menu.requestSeperator := false
         }
@@ -299,12 +300,14 @@ _drawIcon(&item, &icon, &menu) {
  * @param menu Entry's submenu or traymenu
  */
 handler(itemName, itemPosition, menu) {
-    logIfDebug("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
+    if DO_DEBUG_HANDLER()
+        log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
     action := findAction(&menu, itemName)
     if (action = false) {
         throw TargetError("Cannot find clicked item")
     }
-    logIfDebug("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
+    if DO_DEBUG_HANDLER()
+        log("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
     if (action.hasOwnProp("delay")) {
         Sleep action.delay
     }
