@@ -188,12 +188,8 @@ _attachItem(&recursionMenu, &item := unset, &inheritIcon := false) {
     if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
         recursionMenu := trayLayout.menu
     }
-    if (!inheritIcon && item.hasOwnProp("icon")) {
-        icon := item.icon
-    } else {
-        icon := inheritIcon
-    }
-    ; MsgBox("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
+    icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
+    ; logIfDebug("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.GROUP:

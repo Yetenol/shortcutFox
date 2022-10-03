@@ -26,4 +26,12 @@ tray := MenuManager()
     tray.clear()
 }
 
+#!u:: {
+    tray.update()
+}
+
+#!l:: {
+    tray.logAll()
+}
+
 return
