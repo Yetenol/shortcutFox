@@ -187,7 +187,7 @@ _doesMeetMaxDisplay(&item) {
  * @param recursionMenu Menu to which is attached
  * @param inheritIcon Inherited icon from the parent level
  */
-_attachItem(&recursionMenu, &item := unset, &inheritIcon := false) {
+_attachItem(&recursionMenu, &item, &inheritIcon := false) {
     global trayLayout
     if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
         recursionMenu := trayLayout.menu
