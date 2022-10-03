@@ -10,6 +10,7 @@ TRAYMENU_LAYOUT := {
                     id: "RUN_AT_STARTUP",
                     text: "Run at startup",
                     interactive: "switch",
+                    run: "scripts\toggleRunAtStartup.ps1.bat",
                 },
                     {
                         id: "SUSPEND",
