@@ -42,7 +42,7 @@ trayLayout := {
                     ]
             },
             {
-                id: "SET_DEFAULT_ACTION",
+                id: "DEFAULT_ACTION",
                 text: "Set left click action...",
                 maxDisplay: 0,
                 icon: "*",

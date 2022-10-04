@@ -16,8 +16,21 @@ class MenuManager {
      */
     __New() {
         global trayLayout
+        A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
+        defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
+        if (defaultAction) {
+            icon := defaultAction.icon
+            if icon is array {    ; icon contains a path and index
+                TraySetIcon(icon[1], icon[2])
+            } else if icon is string {    ; icon only contains a path
+                TraySetIcon(icon)
+            }
+        }
         this._parseLayout(&trayLayout)
         this.update()
+        if (defaultAction) {
+            A_TrayMenu.Default := defaultAction.text
+        }
     }
     /**
      * Rerender the entire menu.
@@ -25,7 +38,9 @@ class MenuManager {
     update() {
         global trayLayout
         this.clear()
-        rootMenu := { name: "TRAYMENU" }
+        rootMenu := {
+            name: "TRAYMENU"
+        }
         this._attachItem(&rootMenu, &trayLayout)
     }
     /**
@@ -61,7 +76,6 @@ class MenuManager {
             }
         }
     }
-
     /**
      * Print the current traymenu layout into a file.
      * @param filename File to override
@@ -72,7 +86,7 @@ class MenuManager {
      */
     logAll(filename := "traymenu.txt", recursionLayer := unset, layerIndex := 0, first := false, last := false) {
         global trayLayout
-        if (!isSet(recursionLayer)) {
+        if (!IsSet(recursionLayer)) {
             recursionLayer := trayLayout    ; start recursion at top level of layout definition
             if (fileExist(filename)) {
                 fileDelete(filename)
@@ -257,7 +271,7 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
  * @param destinationMenu Menu to which is attached
  */
 _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
-    if (!isSet(destinationMenu)) {
+    if (!IsSet(destinationMenu)) {
         destinationMenu := item.menu
     }
     isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
@@ -278,10 +292,10 @@ _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
  * @param clickhandler Function to run or Submenu to open when clicked
  */
 _drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
-    if (!isSet(menu)) {
+    if (!IsSet(menu)) {
         menu := item.menu
     }
-    if (!isSet(clickhandler)) {
+    if (!IsSet(clickhandler)) {
         clickhandler := item.menu
     }
     this._drawSeperatorIfRequested(&menu)
@@ -296,7 +310,7 @@ _drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
  */
 _findItem(id, &recursionLayer := unset) {
     global trayLayout
-    if (!isSet(recursionLayer)) {
+    if (!IsSet(recursionLayer)) {
         recursionLayer := trayLayout    ; recursion starts at the root of the definition
     }
     for item in recursionLayer.content {
@@ -333,17 +347,20 @@ _drawSeperatorIfRequested(&menu) {
  * @param icon path or [path, index] to apply
  * @param menu traymenu or submenu to which is drawn
  */
-_drawIcon(&item, &icon, &menu) {
+_drawIcon(&item, &icon, &menu := unset) {
+    if !IsSet(menu) {
+        menu := A_TrayMenu
+    }
     if item.HasOwnProp("switch") {
         this._drawCheckmark(&item, readSetting(item.id), &menu)
     } else if item.HasOwnProp("optionOf") {
         this._drawCheckmark(&item, item.id == readSetting(item.optionOf), &menu)
     }
-    if icon is array {    ; icon contains a path and index
-        menu.setIcon(item.text, icon[1], icon[2])
-    } else if icon is string {    ; icon only contains a path
-        menu.setIcon(item.text, icon)
-    }
+        if icon is array {    ; icon contains a path and index
+            menu.setIcon(item.text, icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            menu.setIcon(item.text, icon)
+        }
 }
 _drawCheckmark(&item, state, &menu) {
     if state {
@@ -354,7 +371,6 @@ _drawCheckmark(&item, state, &menu) {
     }
 }
 }
-
 /**
  * Display debugging information about the clicked entry.
  * @param itemName Entry's text
@@ -388,7 +404,6 @@ handler(itemName, itemPosition, menu) {
         toggleSetting(action.id)
     }
 }
-
 /**
  * Find the corresponding action for the clicked item
  * @param menu Menu where the click took place

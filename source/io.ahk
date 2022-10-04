@@ -11,7 +11,7 @@ CONFIG_SECTION := "Settings"
 hasSetting(id) {
     global CONFIG_FILE
     value := IniRead(CONFIG_FILE, CONFIG_SECTION, id, "NON_PRESENT")
-    return value == "NON_PRESENT"
+    return value != "NON_PRESENT"
 }
 
 ; read trayDefault config
