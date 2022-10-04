@@ -57,8 +57,9 @@ class MenuManager {
                         menu.Check(item.text)
                     } else {
                         menu.Uncheck(item.text)
+                        menu.SetIcon(item.text, "*")
                     }
-                    case MenuManager.ITEM_TYPES.GROUP:
+                case MenuManager.ITEM_TYPES.GROUP:
                     this._updateCheckmark(&item, activeId, &menu)
                 case MenuManager.ITEM_TYPES.SUBMENU:
                     this._updateCheckmark(&item, activeId)
@@ -228,8 +229,12 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
     if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
         recursionMenu := trayLayout.menu
     }
+    if DO_DEBUG_ITEM()
+        if item.HasOwnProp("text") && item.HasOwnProp("icon") {
+            iconPath := (item.icon is array) ? item.icon[1] item.icon[2] : item.icon
+            Log("attach", "id:`t" item.id, "text:`t" item.text, "icon:`t" iconPath, "inherit:`t" inheritIcon)
+        }
     icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
-    ; log("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.ACTION:
