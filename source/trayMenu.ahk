@@ -205,7 +205,7 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
         case MenuManager.ITEM_TYPES.ACTION:
             this._drawItem(&item, &icon, &recursionMenu, handler)
         case MenuManager.ITEM_TYPES.SWITCH:
-            noIcon := ""
+            noIcon := "*"
             this._drawItem(&item, &noIcon, &recursionMenu, handler)
             if (readSetting(item.id)) {
                 recursionMenu.Check(item.Text)
@@ -215,9 +215,12 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
             this._attachChildren(&item, &icon, &recursionMenu)
             recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
         case MenuManager.ITEM_TYPES.SUBMENU:
-            this._attachChildren(&item, &icon,)
-            this._drawItem(&item, &icon, &recursionMenu,)
+            this._attachChildren(&item, &icon)
+            this._drawItem(&item, &icon, &recursionMenu)
         case MenuManager.ITEM_TYPES.CHOICE:
+            noIcon := "*"
+            this._attachChildren(&item, &noIcon)
+            this._drawItem(&item, &noIcon, &recursionMenu)
     }
 }
 /**
@@ -230,8 +233,12 @@ _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
     if (!isSet(destinationMenu)) {
         destinationMenu := item.menu
     }
+    isOption := item.HasOwnProp("optionOf")
     if (this._isSubmenuOrGroup(item)) {
         for child in item.content {
+            if isOption {
+                child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
+            }
             this._attachItem(&destinationMenu, &child, &inheritIcon)
         }
     }
