@@ -202,6 +202,13 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
     ; log("attachItem`nitem:`t" item.id "`nmenu:`t" menu.name)
     switch this._getItemType(item)
     {
+        case MenuManager.ITEM_TYPES.ACTION:
+            this._drawItem(&item, &icon, &recursionMenu, handler)
+        case MenuManager.ITEM_TYPES.SWITCH:
+            this._drawItem(&item, &icon, &recursionMenu, handler)
+            if (readSetting(item.id)) {
+                recursionMenu.Check(item.Text)
+            }
         case MenuManager.ITEM_TYPES.GROUP:
             recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
             this._attachChildren(&item, &icon, &recursionMenu)
@@ -209,8 +216,7 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
         case MenuManager.ITEM_TYPES.SUBMENU:
             this._attachChildren(&item, &icon,)
             this._drawItem(&item, &icon, &recursionMenu,)
-        case MenuManager.ITEM_TYPES.ACTION:
-            this._drawItem(&item, &icon, &recursionMenu, handler)
+        case MenuManager.ITEM_TYPES.CHOICE:
     }
 }
 /**
