@@ -46,10 +46,10 @@ trayLayout := {
                     text: "Set left click action...",
                     maxDisplay: 0,
                     icon: "*",
-                    interactive: "choice",
+                    choice: "NO_DEFAULT_ACTION",
                     content:
                         [{
-                            id: "RESET_DEFAULT_ACTION",
+                            id: "NO_DEFAULT_ACTION",
                             text: "None",
                         },
                         "MAIN_SHORTCUTS",

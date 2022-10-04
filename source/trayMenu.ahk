@@ -3,10 +3,12 @@
 #Include io.ahk
 
 class MenuManager {
-    static ITEM_TYPES := {    ; Enumeration for all types of items
-        ACTION: 0,    ; run command or send keystrokes, used as DEFAULT
-        GROUP: 1,    ; list of child items seperated by horizontal lines, ignores title
-        SUBMENU: 2,    ; single title item that expands to a new submenu
+    static ITEM_TYPES := {    ; all items need an ID and TEXT
+        ACTION: 0,    ; Do DELAY interval, RUN file, SEND keystrokes, assumed by default
+        GROUP: 1,    ; List of CONTENT seperated by horizontal line, ignores title
+        SUBMENU: 2,    ; Expandable submenu with list of CONTENT
+        CHOICE: 3,    ; Expandable setting with list of options (CONTENT)
+        SWITCH : 4,    ; Toggleable setting, SWITCH sets the default state
     }
     /**
      * Build the traymenu.
@@ -154,17 +156,21 @@ class MenuManager {
  * @returns ({MenuManager.ITEM_TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
  */
 _getItemType(item) {
-    if (this._isSubmenuOrGroup(item)) {
-        if (this._doesMeetMaxDisplay(&item)) {
+    if !this._isValidItem(item) {
+        return false
+    }
+    if item.HasOwnProp("switch") {
+        return MenuManager.ITEM_TYPES.SWITCH
+    } else if item.HasOwnProp("content") && item.content is array {
+        if item.HasOwnProp("choice") {
+            return MenuManager.ITEM_TYPES.CHOICE
+        } else if this._doesMeetMaxDisplay(&item) {
             return MenuManager.ITEM_TYPES.GROUP
         } else {
             return MenuManager.ITEM_TYPES.SUBMENU
         }
-    } else if (this._isValidItem(item)) {
-        return MenuManager.ITEM_TYPES.ACTION
-    } else {
-        return false
     }
+        return MenuManager.ITEM_TYPES.ACTION
 }
 /**
  * Does the element meet its maximum number of children?
