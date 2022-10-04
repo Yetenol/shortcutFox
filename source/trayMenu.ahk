@@ -43,23 +43,25 @@ class MenuManager {
         writeSetting(choiceId, option)
         this._updateCheckmark(&choiceItem, option)
     }
-    _updateCheckmark(&parent, activeId) {
-        if DO_DEBUG_CLICK()
-            Log("recursive", "id:`t" parent.id, "#children:`t" parent.content.Length == activeId)
+    _updateCheckmark(&parent, activeId, &menu := unset) {
+        if !IsSet(menu) {
+            menu := parent.menu
+        }
         for item in parent.content {
             switch this._getItemType(item)
             {
-                case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SUBMENU:
+                case MenuManager.ITEM_TYPES.ACTION:
                     if DO_DEBUG_CLICK()
-                        Log("checkmark", "id:`t" item.id, "text:`t" item.text, "set=`t" item.id == activeId)
+                        Log("checkmark", "id:`t" item.id, "text:`t" item.text, "set=`t" item.id == activeId, "menu:`t" parent.menu.name)
                     if item.id == activeId {
-                        parent.menu.Check(item.text)
+                        menu.Check(item.text)
                     } else {
-                        parent.menu.Uncheck(item.text)
+                        menu.Uncheck(item.text)
                     }
-            }
-            if (this._isSubmenuOrGroup(item)) {
-                this._updateCheckmark(&item, activeId)
+                    case MenuManager.ITEM_TYPES.GROUP:
+                    this._updateCheckmark(&item, activeId, &menu)
+                case MenuManager.ITEM_TYPES.SUBMENU:
+                    this._updateCheckmark(&item, activeId)
             }
         }
     }
