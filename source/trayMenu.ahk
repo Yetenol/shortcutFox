@@ -53,12 +53,7 @@ class MenuManager {
                 case MenuManager.ITEM_TYPES.ACTION:
                     if DO_DEBUG_CLICK()
                         Log("checkmark", "id:`t" item.id, "text:`t" item.text, "set=`t" item.id == activeId, "menu:`t" parent.menu.name)
-                    if item.id == activeId {
-                        menu.Check(item.text)
-                    } else {
-                        menu.Uncheck(item.text)
-                        menu.SetIcon(item.text, "*")
-                    }
+                    this._drawCheckmark(&item, item.id == activeId, &menu)
                 case MenuManager.ITEM_TYPES.GROUP:
                     this._updateCheckmark(&item, activeId, &menu)
                 case MenuManager.ITEM_TYPES.SUBMENU:
@@ -234,7 +229,7 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
             iconPath := (item.icon is array) ? item.icon[1] item.icon[2] : item.icon
             Log("attach", "id:`t" item.id, "text:`t" item.text, "icon:`t" iconPath, "inherit:`t" inheritIcon)
         }
-    icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
+            icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.ACTION:
@@ -242,9 +237,6 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
         case MenuManager.ITEM_TYPES.SWITCH:
             noIcon := "*"
             this._drawItem(&item, &noIcon, &recursionMenu, handler)
-            if (readSetting(item.id)) {
-                recursionMenu.Check(item.Text)
-            }
         case MenuManager.ITEM_TYPES.GROUP:
             recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
             this._attachChildren(&item, &icon, &recursionMenu)
@@ -342,15 +334,23 @@ _drawSeperatorIfRequested(&menu) {
  * @param menu traymenu or submenu to which is drawn
  */
 _drawIcon(&item, &icon, &menu) {
-    if (item.HasOwnProp("interactive") && item.interactive = "switch") {
-        ; if (readSetting(item.id)) {
-        ; menu.Check(item.text)
-        ; }
+    if item.HasOwnProp("switch") {
+        this._drawCheckmark(&item, readSetting(item.id), &menu)
+    } else if item.HasOwnProp("optionOf") {
+        this._drawCheckmark(&item, item.id == readSetting(item.optionOf), &menu)
     }
-    if (icon is array) {    ; icon contains a path and index
+    if icon is array {    ; icon contains a path and index
         menu.setIcon(item.text, icon[1], icon[2])
-    } else if (icon is string) {    ; icon only contains a path
+    } else if icon is string {    ; icon only contains a path
         menu.setIcon(item.text, icon)
+    }
+}
+_drawCheckmark(&item, state, &menu) {
+    if state {
+        menu.Check(item.text)
+    } else {
+        menu.Uncheck(item.text)
+        menu.SetIcon(item.text, "*")
     }
 }
 }
