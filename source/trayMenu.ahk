@@ -205,7 +205,8 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
         case MenuManager.ITEM_TYPES.ACTION:
             this._drawItem(&item, &icon, &recursionMenu, handler)
         case MenuManager.ITEM_TYPES.SWITCH:
-            this._drawItem(&item, &icon, &recursionMenu, handler)
+            noIcon := ""
+            this._drawItem(&item, &noIcon, &recursionMenu, handler)
             if (readSetting(item.id)) {
                 recursionMenu.Check(item.Text)
             }
@@ -336,7 +337,7 @@ handler(itemName, itemPosition, menu) {
     if (action.hasOwnProp("run")) {
         Run action.run
     }
-    if (action.HasOwnProp("interactive") && action.interactive = "switch") {
+    if (action.HasOwnProp("switch")) {
         menu.ToggleCheck(itemName)
         toggleSetting(action.id)
     }

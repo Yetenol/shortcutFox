@@ -10,6 +10,7 @@ trayLayout := {
                     id: "RUN_AT_STARTUP",
                     text: "Run at startup",
                     switch : false,
+                    icon: [A_WinDir "\System32\netshell.dll", 104],
                     run: "scripts\toggleRunAtStartup.ps1.bat",
                 },
                 {
