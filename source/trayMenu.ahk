@@ -36,6 +36,34 @@ class MenuManager {
         this._clearChildren(&trayLayout)
         trayLayout.menu := A_TrayMenu
     }
+    clickChoice(choiceId, option) {
+        choiceItem := this._findItem(choiceId)
+        if DO_DEBUG_CLICK()
+            Log("click", "choice:`t" choiceId, "option:`t" option, "item:`t" choiceItem.id)
+        writeSetting(choiceId, option)
+        this._updateCheckmark(&choiceItem, option)
+    }
+    _updateCheckmark(&parent, activeId) {
+        if DO_DEBUG_CLICK()
+            Log("recursive", "id:`t" parent.id, "#children:`t" parent.content.Length == activeId)
+        for item in parent.content {
+            switch this._getItemType(item)
+            {
+                case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SUBMENU:
+                    if DO_DEBUG_CLICK()
+                        Log("checkmark", "id:`t" item.id, "text:`t" item.text, "set=`t" item.id == activeId)
+                    if item.id == activeId {
+                        parent.menu.Check(item.text)
+                    } else {
+                        parent.menu.Uncheck(item.text)
+                    }
+            }
+            if (this._isSubmenuOrGroup(item)) {
+                this._updateCheckmark(&item, activeId)
+            }
+        }
+    }
+
     /**
      * Print the current traymenu layout into a file.
      * @param filename File to override
@@ -162,7 +190,7 @@ _getItemType(item) {
     if item.HasOwnProp("switch") {
         return MenuManager.ITEM_TYPES.SWITCH
     } else if item.HasOwnProp("content") && item.content is array {
-        if item.HasOwnProp("choice") {
+        if item.HasOwnProp("choice") && !item.HasOwnProp("optionOf") {
             return MenuManager.ITEM_TYPES.CHOICE
         } else if this._doesMeetMaxDisplay(&item) {
             return MenuManager.ITEM_TYPES.GROUP
@@ -233,7 +261,7 @@ _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
     if (!isSet(destinationMenu)) {
         destinationMenu := item.menu
     }
-    isOption := item.HasOwnProp("optionOf")
+    isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
     if (this._isSubmenuOrGroup(item)) {
         for child in item.content {
             if isOption {
@@ -330,21 +358,25 @@ handler(itemName, itemPosition, menu) {
     if DO_DEBUG_HANDLER()
         log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
     action := findAction(&menu, itemName)
-    if (action = false) {
+    if action = false {
         throw TargetError("Cannot find clicked item")
     }
     if DO_DEBUG_HANDLER()
         log("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
-    if (action.hasOwnProp("delay")) {
+    if action.HasOwnProp("optionOf") {
+        tray.clickChoice(action.optionOf, action.id)
+        return
+    }
+    if action.HasOwnProp("delay") {
         Sleep action.delay
     }
-    if (action.hasOwnProp("send")) {
+    if action.hasOwnProp("send") {
         Send action.send
     }
-    if (action.hasOwnProp("run")) {
+    if action.hasOwnProp("run") {
         Run action.run
     }
-    if (action.HasOwnProp("switch")) {
+    if action.HasOwnProp("switch") {
         menu.ToggleCheck(itemName)
         toggleSetting(action.id)
     }
