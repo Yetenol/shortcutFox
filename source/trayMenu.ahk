@@ -168,7 +168,7 @@ class MenuManager {
      * @returns ({MenuManager.ITEM_TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
      */
     _getItemType(item) {
-        if !this._isValidItem(item) {
+        if !this._isValidItem(&item) {
             return false
         }
         if item.HasOwnProp("switch") {
@@ -238,7 +238,7 @@ class MenuManager {
             recursionLayer := trayLayout    ; recursion starts at the root of the definition
         }
         for item in recursionLayer.content {
-            if (this._isValidItem(item) && item.id = id) {
+            if (this._isValidItem(&item) && item.id = id) {
                 return item
             } else if (this._hasChildren(item)) {
                 referencedItem := this._findItem(id, &item)
@@ -313,12 +313,12 @@ class MenuManager {
      * Does the item fullfill the minimum specifications for a menu entry?
      * @param item Action, submenu, group or symbolic link to examine
      */
-    _isValidItem(item) => (item is object) && item.hasOwnProp("id")
+    _isValidItem(&item) => (item is object) && item.hasOwnProp("id")
     /**
      * Does the element contain children, which is true for submenus and groups?
      * @param item Action, submenu, group or symbolic link to examine
      */
-    _hasChildren(item) => this._isValidItem(item) && item.hasOwnProp("content")
+    _hasChildren(item) => this._isValidItem(&item) && item.hasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.
