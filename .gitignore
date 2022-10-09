@@ -1,0 +1,3 @@
+# Ignore packaged files while debugging
+source/icons
+source/scripts
