@@ -62,47 +62,6 @@ class MenuManager {
         }
     }
     /**
-     * Print the current traymenu layout into a file.
-     * @param filename File to override
-     * @param recursionLayer Definition layer to recursively parse through
-     * @param layerIndex Position within the current layer
-     * @param first Is it the first item of the current recursionLayer?
-     * @param last Is it the last item of the current recursionLayer?
-     */
-    logAll(filename := "traymenu.txt", recursionLayer := unset, layerIndex := 0, first := false, last := false) {
-        global trayLayout
-        if (!IsSet(recursionLayer)) {
-            recursionLayer := trayLayout    ; start recursion at top level of layout definition
-            if (fileExist(filename)) {
-                fileDelete(filename)
-            }
-        }
-        indent := ""
-        loop layerIndex {
-            indent := indent " "
-        }
-        if (first && last) {
-            draw := "└"
-        } else if (first) {
-            draw := "├"
-        } else if (last) {
-            draw := "└"
-        } else {
-            draw := "├"
-        }
-            line := indent draw " " recursionLayer.id
-        line := (recursionLayer.HasOwnProp("menu")) ? " (" recursionLayer.menu.requestSeperator ")" : "`n"
-        fileAppend(line, filename, "UTF-8")
-        if (recursionLayer.hasOwnProp("content")) {
-            max := recursionLayer.content.Length
-            for i, item in recursionLayer.content {
-                first := (i = 1)
-                last := (i = max)
-                this.logAll(filename, item, layerIndex + 1, first, last)
-            }
-        }
-    }
-    /**
      * Unrender all menu entries.
      * @param parent an item in the layout to recursively clear through
      */
