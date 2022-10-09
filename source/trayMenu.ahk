@@ -45,6 +45,58 @@ class MenuManager {
         writeSetting(choiceId, option)
         this._updateCheckmark(&choiceItem, option)
     }
+    /**
+     * Add the element to the specified menu.
+     * @param item Action, submenu or group to attach
+     * @param recursionMenu Menu to which is attached
+     * @param inheritIcon Inherited icon from the parent level
+     */
+    _attachItem(&recursionMenu, &item, &inheritIcon := false) {
+        global trayLayout
+        if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
+            recursionMenu := trayLayout.menu
+        }
+        icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
+        switch this._getItemType(item)
+        {
+            case MenuManager.ITEM_TYPES.ACTION:
+                this._drawItem(&item, &icon, &recursionMenu, handler)
+            case MenuManager.ITEM_TYPES.SWITCH:
+                noIcon := "*"
+                this._drawItem(&item, &noIcon, &recursionMenu, handler)
+            case MenuManager.ITEM_TYPES.GROUP:
+                recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
+                this._attachChildren(&item, &icon, &recursionMenu)
+                recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
+            case MenuManager.ITEM_TYPES.SUBMENU:
+                this._attachChildren(&item, &icon)
+                this._drawItem(&item, &icon, &recursionMenu)
+            case MenuManager.ITEM_TYPES.CHOICE:
+                noIcon := "*"
+                this._attachChildren(&item, &noIcon)
+                this._drawItem(&item, &noIcon, &recursionMenu)
+        }
+    }
+    /**
+     * Add all children of an item to the specified menu.
+     * @param item Submenu or group containing the children
+     * @param inheritIcon Inherited icon from the parent level
+     * @param destinationMenu Menu to which is attached
+     */
+    _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
+        if (!IsSet(destinationMenu)) {
+            destinationMenu := item.menu
+        }
+        isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
+        if (this._isSubmenuOrGroup(item)) {
+            for child in item.content {
+                if isOption {
+                    child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
+                }
+                this._attachItem(&destinationMenu, &child, &inheritIcon)
+            }
+        }
+    }
     _updateCheckmark(&parent, activeId, &menu := unset) {
         if !IsSet(menu) {
             menu := parent.menu
@@ -74,6 +126,28 @@ class MenuManager {
                 this._clearChildren(&item)
             }
         }
+    }
+    /**
+     * Return get type of an item
+     * @param item Action, submenu or group to examine
+     * @returns ({MenuManager.ITEM_TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
+     */
+    _getItemType(item) {
+        if !this._isValidItem(item) {
+            return false
+        }
+        if item.HasOwnProp("switch") {
+            return MenuManager.ITEM_TYPES.SWITCH
+        } else if item.HasOwnProp("content") && item.content is array {
+            if item.HasOwnProp("choice") && !item.HasOwnProp("optionOf") {
+                return MenuManager.ITEM_TYPES.CHOICE
+            } else if this._doesMeetMaxDisplay(&item) {
+                return MenuManager.ITEM_TYPES.GROUP
+            } else {
+                return MenuManager.ITEM_TYPES.SUBMENU
+            }
+        }
+            return MenuManager.ITEM_TYPES.ACTION
     }
     /**
      * Prepare menu for initialization:
@@ -133,28 +207,6 @@ class MenuManager {
     destinationLayer.content[itemPosition] := this._findItem(linkItem)
 }
 /**
- * Return get type of an item
- * @param item Action, submenu or group to examine
- * @returns ({MenuManager.ITEM_TYPES.} SUBMENU, GROUP or ACTION) or false if invalid
- */
-_getItemType(item) {
-    if !this._isValidItem(item) {
-        return false
-    }
-    if item.HasOwnProp("switch") {
-        return MenuManager.ITEM_TYPES.SWITCH
-    } else if item.HasOwnProp("content") && item.content is array {
-        if item.HasOwnProp("choice") && !item.HasOwnProp("optionOf") {
-            return MenuManager.ITEM_TYPES.CHOICE
-        } else if this._doesMeetMaxDisplay(&item) {
-            return MenuManager.ITEM_TYPES.GROUP
-        } else {
-            return MenuManager.ITEM_TYPES.SUBMENU
-        }
-    }
-        return MenuManager.ITEM_TYPES.ACTION
-}
-/**
  * Does the element meet its maximum number of children?
  * - if YES: display it as a group seperated by lines
  * - if NO:  display it as a new submenu
@@ -167,58 +219,6 @@ _doesMeetMaxDisplay(&item) {
         return false
     } else {
         return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
-    }
-}
-/**
- * Add the element to the specified menu.
- * @param item Action, submenu or group to attach
- * @param recursionMenu Menu to which is attached
- * @param inheritIcon Inherited icon from the parent level
- */
-_attachItem(&recursionMenu, &item, &inheritIcon := false) {
-    global trayLayout
-    if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
-        recursionMenu := trayLayout.menu
-    }
-    icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
-    switch this._getItemType(item)
-    {
-        case MenuManager.ITEM_TYPES.ACTION:
-            this._drawItem(&item, &icon, &recursionMenu, handler)
-        case MenuManager.ITEM_TYPES.SWITCH:
-            noIcon := "*"
-            this._drawItem(&item, &noIcon, &recursionMenu, handler)
-        case MenuManager.ITEM_TYPES.GROUP:
-            recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
-            this._attachChildren(&item, &icon, &recursionMenu)
-            recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
-        case MenuManager.ITEM_TYPES.SUBMENU:
-            this._attachChildren(&item, &icon)
-            this._drawItem(&item, &icon, &recursionMenu)
-        case MenuManager.ITEM_TYPES.CHOICE:
-            noIcon := "*"
-            this._attachChildren(&item, &noIcon)
-            this._drawItem(&item, &noIcon, &recursionMenu)
-    }
-}
-/**
- * Add all children of an item to the specified menu.
- * @param item Submenu or group containing the children
- * @param inheritIcon Inherited icon from the parent level
- * @param destinationMenu Menu to which is attached
- */
-_attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
-    if (!IsSet(destinationMenu)) {
-        destinationMenu := item.menu
-    }
-    isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
-    if (this._isSubmenuOrGroup(item)) {
-        for child in item.content {
-            if isOption {
-                child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
-            }
-            this._attachItem(&destinationMenu, &child, &inheritIcon)
-        }
     }
 }
 /**
