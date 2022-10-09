@@ -61,7 +61,7 @@ class MenuManager {
      */
     _dissolveSymbolicLinks(&item, &destinationLayer, position) {
         if this._isSymbolicLink(&item) {
-            this._pasteReferencedContent(&item, &destinationLayer, position)
+            destinationLayer.content[position] := this._getReferencedContent(&item)
         }
     }
     /**
@@ -184,9 +184,7 @@ class MenuManager {
      * @param destinationLayer Layer of the symbolic link
      * @param itemPosition Position within the layer
      */
-    _pasteReferencedContent(&linkItem, &destinationLayer, itemPosition) {
-        destinationLayer.content[itemPosition] := this._findItem(linkItem)
-    }
+    _getReferencedContent(&linkItem) => this._findItem(linkItem)
     /**
      * Does the element meet its maximum number of children?
      * - if YES: display it as a group seperated by lines
@@ -194,125 +192,125 @@ class MenuManager {
      * @param item Submenu or group to examine
      */
     _doesMeetMaxDisplay(&item) {
-        if (!item.hasOwnProp("maxDisplay")) {
-            return true
-        } else if (item.maxDisplay = 0) {
-            return false
-        } else {
-            return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
-        }
+    if (!item.hasOwnProp("maxDisplay")) {
+        return true
+    } else if (item.maxDisplay = 0) {
+        return false
+    } else {
+        return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
     }
-    /**
-     * Draw the entry into the specified menu.
-     * @param item Item to draw
-     * @param icon Icon to draw
-     * @param menu Menu on which is drawn
-     * @param clickhandler Function to run or Submenu to open when clicked
-     */
-    _drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
-        if (!IsSet(menu)) {
-            menu := item.menu
-        }
-        if (!IsSet(clickhandler)) {
-            clickhandler := item.menu
-        }
-        this._drawSeperatorIfRequested(&menu)
-        menu.add(item.text, clickhandler)
-        this._drawIcon(&item, &icon, &menu)
-        menu.isEmpty := false    ; flag non-empty menus
+}
+/**
+ * Draw the entry into the specified menu.
+ * @param item Item to draw
+ * @param icon Icon to draw
+ * @param menu Menu on which is drawn
+ * @param clickhandler Function to run or Submenu to open when clicked
+ */
+_drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
+    if (!IsSet(menu)) {
+        menu := item.menu
     }
-    /**
-     * Find an item by its id.
-     * @param id Target's id
-     * @param recursionLayer INTERNAL - Layout level to recursively search through
-     */
-    _findItem(id, &recursionLayer := unset) {
-        global trayLayout
-        if (!IsSet(recursionLayer)) {
-            recursionLayer := trayLayout    ; recursion starts at the root of the definition
-        }
-        for item in recursionLayer.content {
-            if (this._isValidItem(&item) && item.id = id) {
-                return item
-            } else if (this._hasChildren(&item)) {
-                referencedItem := this._findItem(id, &item)
-                if (referencedItem) {
-                    return referencedItem
-                }
+    if (!IsSet(clickhandler)) {
+        clickhandler := item.menu
+    }
+    this._drawSeperatorIfRequested(&menu)
+    menu.add(item.text, clickhandler)
+    this._drawIcon(&item, &icon, &menu)
+    menu.isEmpty := false    ; flag non-empty menus
+}
+/**
+ * Find an item by its id.
+ * @param id Target's id
+ * @param recursionLayer INTERNAL - Layout level to recursively search through
+ */
+_findItem(id, &recursionLayer := unset) {
+    global trayLayout
+    if (!IsSet(recursionLayer)) {
+        recursionLayer := trayLayout    ; recursion starts at the root of the definition
+    }
+    for item in recursionLayer.content {
+        if (this._isValidItem(&item) && item.id = id) {
+            return item
+        } else if (this._hasChildren(&item)) {
+            referencedItem := this._findItem(id, &item)
+            if (referencedItem) {
+                return referencedItem
             }
         }
-        return false    ; couldn't find item
     }
-    /**
-     * Draw a seperator line if this has been requested beforehand.
-     * @param menu Menu to examine
-     */
-    _drawSeperatorIfRequested(&menu) {
-        if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
-            if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
-                menu.add()    ; add a seperator line
-                menu.requestSeperator := false
-            }
-        } else {    ; menu is empty
+    return false    ; couldn't find item
+}
+/**
+ * Draw a seperator line if this has been requested beforehand.
+ * @param menu Menu to examine
+ */
+_drawSeperatorIfRequested(&menu) {
+    if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
+        if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
+            menu.add()    ; add a seperator line
             menu.requestSeperator := false
         }
+    } else {    ; menu is empty
+        menu.requestSeperator := false
     }
-    /**
-     * Draw the specified icon into a submenu or action
-     * @param item Item to draw into
-     * @param icon path or [path, index] to apply
-     * @param menu traymenu or submenu to which is drawn
-     */
-    _drawIcon(&item, &icon, &menu := unset) {
-        if !IsSet(menu) {
-            menu := A_TrayMenu
-        }
-        if item.HasOwnProp("switch") {
-            this._drawCheckmark(&item, readSetting(item.id), &menu)
-        } else if item.HasOwnProp("optionOf") {
-            this._drawCheckmark(&item, item.id == readSetting(item.optionOf), &menu)
-        }
-            if icon is array {    ; icon contains a path and index
-                menu.setIcon(item.text, icon[1], icon[2])
-            } else if icon is string {    ; icon only contains a path
-                menu.setIcon(item.text, icon)
-            }
+}
+/**
+ * Draw the specified icon into a submenu or action
+ * @param item Item to draw into
+ * @param icon path or [path, index] to apply
+ * @param menu traymenu or submenu to which is drawn
+ */
+_drawIcon(&item, &icon, &menu := unset) {
+    if !IsSet(menu) {
+        menu := A_TrayMenu
     }
-    _drawCheckmark(&item, state, &menu) {
-        if state {
-            menu.Check(item.text)
-        } else {
-            menu.Uncheck(item.text)
-            menu.SetIcon(item.text, "*")
-        }
+    if item.HasOwnProp("switch") {
+        this._drawCheckmark(&item, readSetting(item.id), &menu)
+    } else if item.HasOwnProp("optionOf") {
+        this._drawCheckmark(&item, item.id == readSetting(item.optionOf), &menu)
     }
-    _applyDefaultAction() {
-        defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
-        if (defaultAction) {
-            icon := defaultAction.icon
-            if icon is array {    ; icon contains a path and index
-                TraySetIcon(icon[1], icon[2])
-            } else if icon is string {    ; icon only contains a path
-                TraySetIcon(icon)
-            }
-                A_TrayMenu.Default := defaultAction.text
+        if icon is array {    ; icon contains a path and index
+            menu.setIcon(item.text, icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            menu.setIcon(item.text, icon)
         }
+}
+_drawCheckmark(&item, state, &menu) {
+    if state {
+        menu.Check(item.text)
+    } else {
+        menu.Uncheck(item.text)
+        menu.SetIcon(item.text, "*")
     }
-    /**
-     * Is the item a symbolic link to another submenu or group?
-     * @param item Action, submenu, group or symbolic link to examine
-     */
-    _isSymbolicLink(&item) => item is string
-    /**
-     * Does the item fullfill the minimum specifications for a menu entry?
-     * @param item Action, submenu, group or symbolic link to examine
-     */
-    _isValidItem(&item) => (item is object) && item.hasOwnProp("id")
-    /**
-     * Does the element contain children, which is true for submenus and groups?
-     * @param item Action, submenu, group or symbolic link to examine
-     */
-    _hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
+}
+_applyDefaultAction() {
+    defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
+    if (defaultAction) {
+        icon := defaultAction.icon
+        if icon is array {    ; icon contains a path and index
+            TraySetIcon(icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            TraySetIcon(icon)
+        }
+            A_TrayMenu.Default := defaultAction.text
+    }
+}
+/**
+ * Is the item a symbolic link to another submenu or group?
+ * @param item Action, submenu, group or symbolic link to examine
+ */
+_isSymbolicLink(&item) => item is string
+/**
+ * Does the item fullfill the minimum specifications for a menu entry?
+ * @param item Action, submenu, group or symbolic link to examine
+ */
+_isValidItem(&item) => (item is object) && item.hasOwnProp("id")
+/**
+ * Does the element contain children, which is true for submenus and groups?
+ * @param item Action, submenu, group or symbolic link to examine
+ */
+_hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.
