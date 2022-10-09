@@ -53,8 +53,6 @@ class MenuManager {
     }
     clickChoice(choiceId, option) {
         choiceItem := this._findItem(choiceId)
-        if DO_DEBUG_CLICK()
-            Log("click", "choice:`t" choiceId, "option:`t" option, "item:`t" choiceItem.id)
         writeSetting(choiceId, option)
         this._updateCheckmark(&choiceItem, option)
     }
@@ -66,8 +64,6 @@ class MenuManager {
             switch this._getItemType(item)
             {
                 case MenuManager.ITEM_TYPES.ACTION:
-                    if DO_DEBUG_CLICK()
-                        Log("checkmark", "id:`t" item.id, "text:`t" item.text, "set=`t" item.id == activeId, "menu:`t" parent.menu.name)
                     this._drawCheckmark(&item, item.id == activeId, &menu)
                 case MenuManager.ITEM_TYPES.GROUP:
                     this._updateCheckmark(&item, activeId, &menu)
@@ -138,8 +134,6 @@ class MenuManager {
      * @param recursionLayer Definition layer to recursively parse through
      */
     _parseLayout(&recursionLayer) {
-        if DO_DEBUG_LAYOUT()
-            log("parseLayout", "layer:`t" recursionLayer.id, "content:`t" recursionLayer.content.Length)
         this._constructSubmenu(&recursionLayer)
         for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
@@ -238,12 +232,7 @@ _attachItem(&recursionMenu, &item, &inheritIcon := false) {
     if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
         recursionMenu := trayLayout.menu
     }
-    if DO_DEBUG_ITEM()
-        if item.HasOwnProp("text") && item.HasOwnProp("icon") {
-            iconPath := (item.icon is array) ? item.icon[1] item.icon[2] : item.icon
-            Log("attach", "id:`t" item.id, "text:`t" item.text, "icon:`t" iconPath, "inherit:`t" inheritIcon)
-        }
-            icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
+    icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
     switch this._getItemType(item)
     {
         case MenuManager.ITEM_TYPES.ACTION:
@@ -332,8 +321,6 @@ _findItem(id, &recursionLayer := unset) {
 _drawSeperatorIfRequested(&menu) {
     if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
         if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
-            if DO_DEBUG_SEPERATOR()
-                log("draw seperator", "name:`t" menu.name)
             menu.add()    ; add a seperator line
             menu.requestSeperator := false
         }
@@ -378,14 +365,10 @@ _drawCheckmark(&item, state, &menu) {
  * @param menu Entry's submenu or traymenu
  */
 handler(itemName, itemPosition, menu) {
-    if DO_DEBUG_HANDLER()
-        log("Clicked on tray:", "Text:`t" itemName, "Position:`t" itemPosition, "Menu:`t" menu.name)
     action := findAction(&menu, itemName)
     if action = false {
         throw TargetError("Cannot find clicked item")
     }
-    if DO_DEBUG_HANDLER()
-        log("Found aciton:", "Id:`t" action.id, "Text:`t" action.text)
     if action.HasOwnProp("optionOf") {
         tray.clickChoice(action.optionOf, action.id)
         return
