@@ -155,12 +155,6 @@ class MenuManager {
     _clearChildren(&parent) {
         parent.menu.delete()    ; remove all custom menu item
         parent.DeleteProp("menu")    ;
-
-        for item in parent.content {
-            if (this._hasChildren(&item)) {
-                this._clearChildren(&item)
-            }
-        }
     }
     /**
      * Return get type of an item
