@@ -2,9 +2,9 @@
 Persistent    ; Keep the application alive
 SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script folder)
 
-#Include trayMenu.ahk
 #Include core.ahk
-#Include io.ahk
+#Include trayMenu.ahk
+#Include hotkeys.ahk
 
 ; Prepare resource folders
 resourceFolders := "icons,scripts"
