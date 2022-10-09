@@ -60,7 +60,7 @@ class MenuManager {
      * @param item Possible symbolic link
      */
     _dissolveSymbolicLinks(&item, &destinationLayer, position) {
-        if (this._isSymbolicLink(item)) {
+        if this._isSymbolicLink(&item) {
             this._pasteReferencedContent(&item, &destinationLayer, position)
         }
     }
@@ -74,7 +74,7 @@ class MenuManager {
         this._constructSubmenu(&recursionLayer)
         for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
-            if (this._hasChildren(item)) {
+            if this._hasChildren(&item) {
                 this._parseLayout(&item)
             }
         }
@@ -123,7 +123,7 @@ class MenuManager {
             destinationMenu := item.menu
         }
         isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
-        if (this._hasChildren(item)) {
+        if (this._hasChildren(&item)) {
             for child in item.content {
                 if isOption {
                     child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
@@ -234,7 +234,7 @@ class MenuManager {
         for item in recursionLayer.content {
             if (this._isValidItem(&item) && item.id = id) {
                 return item
-            } else if (this._hasChildren(item)) {
+            } else if (this._hasChildren(&item)) {
                 referencedItem := this._findItem(id, &item)
                 if (referencedItem) {
                     return referencedItem
@@ -302,7 +302,7 @@ class MenuManager {
      * Is the item a symbolic link to another submenu or group?
      * @param item Action, submenu, group or symbolic link to examine
      */
-    _isSymbolicLink(item) => item is string
+    _isSymbolicLink(&item) => item is string
     /**
      * Does the item fullfill the minimum specifications for a menu entry?
      * @param item Action, submenu, group or symbolic link to examine
@@ -312,7 +312,7 @@ class MenuManager {
      * Does the element contain children, which is true for submenus and groups?
      * @param item Action, submenu, group or symbolic link to examine
      */
-    _hasChildren(item) => this._isValidItem(&item) && item.hasOwnProp("content")
+    _hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.
