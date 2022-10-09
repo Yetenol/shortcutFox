@@ -32,6 +32,11 @@ class MenuManager {
         }
         this._attachItem(&rootMenu, &trayLayout)
     }
+    clickChoice(choiceId, option) {
+        choiceItem := this._findItem(choiceId)
+        writeSetting(choiceId, option)
+        this._updateCheckmark(&choiceItem, option)
+    }
     /**
      * Unrender all submenus including the root menu.
      */
@@ -39,21 +44,6 @@ class MenuManager {
         global trayLayout
         this._clearChildren(&trayLayout)
         trayLayout.menu := A_TrayMenu
-    }
-    /**
-     * Prepare menu for initialization:
-     * - Construct submenu objects to which the entries will be attached.
-     * - Replace symbolic links with a copy of their referenced item, submenu or group.
-     * @param recursionLayer Definition layer to recursively parse through
-     */
-    _parseLayout(&recursionLayer) {
-        this._constructSubmenu(&recursionLayer)
-        for position, item in recursionLayer.content {
-            this._dissolveSymbolicLinks(&item, &recursionLayer, position)
-            if (this._isSubmenuOrGroup(item)) {
-                this._parseLayout(&item)
-            }
-        }
     }
     /**
      * Construct submenu objects to which the entries will be attached.
@@ -73,11 +63,22 @@ class MenuManager {
             this._pasteReferencedContent(&item, &destinationLayer, position)
         }
     }
-    clickChoice(choiceId, option) {
-        choiceItem := this._findItem(choiceId)
-        writeSetting(choiceId, option)
-        this._updateCheckmark(&choiceItem, option)
+    /**
+     * Prepare menu for initialization:
+     * - Construct submenu objects to which the entries will be attached.
+     * - Replace symbolic links with a copy of their referenced item, submenu or group.
+     * @param recursionLayer Definition layer to recursively parse through
+     */
+    _parseLayout(&recursionLayer) {
+        this._constructSubmenu(&recursionLayer)
+        for position, item in recursionLayer.content {
+            this._dissolveSymbolicLinks(&item, &recursionLayer, position)
+            if (this._isSubmenuOrGroup(item)) {
+                this._parseLayout(&item)
+            }
+        }
     }
+
     /**
      * Add the element to the specified menu.
      * @param item Action, submenu or group to attach
