@@ -17,20 +17,9 @@ class MenuManager {
     __New() {
         global trayLayout
         A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
-        defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
-        if (defaultAction) {
-            icon := defaultAction.icon
-            if icon is array {    ; icon contains a path and index
-                TraySetIcon(icon[1], icon[2])
-            } else if icon is string {    ; icon only contains a path
-                TraySetIcon(icon)
-            }
-        }
         this._parseLayout(&trayLayout)
         this.update()
-        if (defaultAction) {
-            A_TrayMenu.Default := defaultAction.text
-        }
+        this._applyDefaultAction()
     }
     /**
      * Rerender the entire menu.
@@ -355,6 +344,18 @@ _drawCheckmark(&item, state, &menu) {
     } else {
         menu.Uncheck(item.text)
         menu.SetIcon(item.text, "*")
+    }
+}
+_applyDefaultAction() {
+    defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
+    if (defaultAction) {
+        icon := defaultAction.icon
+        if icon is array {    ; icon contains a path and index
+            TraySetIcon(icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            TraySetIcon(icon)
+        }
+            A_TrayMenu.Default := defaultAction.text
     }
 }
 }
