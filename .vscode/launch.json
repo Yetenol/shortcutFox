@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "AutoHotkey Debug (Advanced Configuration)",
+            "type": "autohotkey",
+            "request": "launch",
+            "program": "${workspaceFolder}/source/main.ahk",
+            "args": [],
+            "port": "9002-9010",
+            "variableCategories": "recommend",
+            "useDebugDirective": true,
+            "useAutoJumpToError": true
+        }
+    ],
+    "compounds": []
+}

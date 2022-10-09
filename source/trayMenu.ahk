@@ -10,6 +10,7 @@ class MenuManager {
         CHOICE: 3,    ; Expandable setting with list of options (CONTENT)
         SWITCH : 4,    ; Toggleable setting, SWITCH sets the default state
     }
+    renderedContent := []
     /**
      * Build the traymenu.
      * @param layout nested object that defined the structure of the traymenu
@@ -73,7 +74,7 @@ class MenuManager {
         this._constructSubmenu(&recursionLayer)
         for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
-            if (this._isSubmenuOrGroup(item)) {
+            if (this._hasChildren(item)) {
                 this._parseLayout(&item)
             }
         }
@@ -122,7 +123,7 @@ class MenuManager {
             destinationMenu := item.menu
         }
         isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
-        if (this._isSubmenuOrGroup(item)) {
+        if (this._hasChildren(item)) {
             for child in item.content {
                 if isOption {
                     child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
@@ -156,7 +157,7 @@ class MenuManager {
         parent.DeleteProp("menu")    ;
 
         for item in parent.content {
-            if (this._isSubmenuOrGroup(&item)) {
+            if (this._hasChildren(&item)) {
                 this._clearChildren(&item)
             }
         }
@@ -239,7 +240,7 @@ class MenuManager {
         for item in recursionLayer.content {
             if (this._isValidItem(item) && item.id = id) {
                 return item
-            } else if (this._isSubmenuOrGroup(item)) {
+            } else if (this._hasChildren(item)) {
                 referencedItem := this._findItem(id, &item)
                 if (referencedItem) {
                     return referencedItem
@@ -317,7 +318,7 @@ class MenuManager {
      * Does the element contain children, which is true for submenus and groups?
      * @param item Action, submenu, group or symbolic link to examine
      */
-    _isSubmenuOrGroup(item) => this._isValidItem(item) && item.hasOwnProp("content")
+    _hasChildren(item) => this._isValidItem(item) && item.hasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.
