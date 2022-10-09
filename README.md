@@ -1,9 +1,21 @@
-# **shortcutFox** ![GitHub last commit](https://img.shields.io/github/last-commit/yetenol/shortcutFox?color=white)
+<h1> shortcutFox </h1>
 
-This branch aims to learn the syntax of AutoHotkey v2 
-and help to convert other AutoHotkey projects.
+[⌂](README.md) Home
 
-## Build instructions
+> This branch aims to learn the syntax of AutoHotkey v2 
+> and help to convert other AutoHotkey projects.
+
+Table of Contents
+- [Features](#features)
+  - [Application shortcuts](#application-shortcuts)
+- [Build instructions](#build-instructions)
+
+# Features
+## Application shortcuts
+- Focus or launch **KeeWeb**  
+    `[Win + Shift + V]` 
+
+# Build instructions
 - install depedencies
     - [AutoHotkey v2](https://www.autohotkey.com/download/ahk-v2.zip)
     - [ahk2exe Compiler](https://www.autohotkey.com/download/ahk.zip) _extract Compiler Folder_
