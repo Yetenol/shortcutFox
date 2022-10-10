@@ -1,5 +1,8 @@
 <h1> shortcutFox </h1>
 
+[![Download script](https://img.shields.io/github/downloads/yetenol/shortcutFox/total.svg)](https://github.com/yetenol/shortcutFox/releases/latest/download/shortcutFox.exe)
+[![List releases](https://img.shields.io/github/release/yetenol/shortcutFox.svg)](https://github.com/yetenol/shortcutFox/releases)
+
 [⌂](README.md) Home
 
 > This branch aims to learn the syntax of AutoHotkey v2 
