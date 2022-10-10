@@ -16,36 +16,16 @@ class MenuManager {
      * @param layout nested object that defined the structure of the traymenu
      */
     __New() {
-        global trayLayout
         A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
         this._removeStandard()
-        this._parseLayout(&trayLayout)
+        this._parseLayout()
         ; this.update()
         this._applyDefaultAction()
-    }
-    /**
-     * Rerender the entire menu.
-     */
-    update() {
-        global trayLayout
-        this.clear()
-        rootMenu := {
-            name: "TRAYMENU"
-        }
-        this._attachItem(&rootMenu, &trayLayout)
     }
     clickChoice(choiceId, option) {
         choiceItem := this._findItem(choiceId)
         writeSetting(choiceId, option)
         this._updateCheckmark(&choiceItem, option)
-    }
-    /**
-     * Unrender all submenus including the root menu.
-     */
-    clear() {
-        global trayLayout
-        this._clearChildren(&trayLayout)
-        trayLayout.menu := A_TrayMenu
     }
     /**
      * Construct submenu objects to which the entries will be attached.
@@ -109,13 +89,18 @@ class MenuManager {
      * - Replace symbolic links with a copy of their referenced item, submenu or group.
      * @param recursionLayer Definition layer to recursively parse through
      */
-    _parseLayout(&layer, menu := unset, requestSeperator := false, choiceID := false, activeOption := false) {
+    _parseLayout(&layer := unset, menu := unset, requestSeperator := false, choiceID := false, activeOption := false) {
+        global trayLayout
+        if not IsSet(layer) {
+            layer := trayLayout.Clone()
+        }
         if not IsSet(menu) {
             menu := this._constructSubmenu(A_TrayMenu)
             this.trayMenu := menu
         }
         this._dissolveSymbolicLinks(&layer)
-        for item in layer.content {
+        for itemDefinition in layer.content {
+            item := itemDefinition.Clone()
             this._inheritIcon(&item, &layer)
             this._referenceChoice(&item, choiceID)
             this._applyCheckmark(&item, activeOption)
@@ -140,61 +125,8 @@ class MenuManager {
             }
         }
     }
-
-    /**
-     * Add the element to the specified menu.
-     * @param item Action, submenu or group to attach
-     * @param recursionMenu Menu to which is attached
-     * @param inheritIcon Inherited icon from the parent level
-     */
-    _attachItem(&recursionMenu, &item, &inheritIcon := false) {
-        global trayLayout
-        if (recursionMenu.name = "TRAYMENU") {    ; recursion starts at the root of the definition
-            recursionMenu := trayLayout.menu
-        }
-        icon := (inheritIcon) ? inheritIcon : (item.hasOwnProp("icon")) ? item.icon : false
-        switch this._getItemType(item)
-        {
-            case MenuManager.ITEM_TYPES.ACTION:
-                this._drawItem(&item, &icon, &recursionMenu, handler)
-            case MenuManager.ITEM_TYPES.SWITCH:
-                noIcon := "*"
-                this._drawItem(&item, &noIcon, &recursionMenu, handler)
-            case MenuManager.ITEM_TYPES.GROUP:
-                recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
-                this._attachChildren(&item, &icon, &recursionMenu)
-                recursionMenu.requestSeperator := true    ; remember to add a seperator line before the next item on this submenu level
-            case MenuManager.ITEM_TYPES.SUBMENU:
-                this._attachChildren(&item, &icon)
-                this._drawItem(&item, &icon, &recursionMenu)
-            case MenuManager.ITEM_TYPES.CHOICE:
-                noIcon := "*"
-                this._attachChildren(&item, &noIcon)
-                this._drawItem(&item, &noIcon, &recursionMenu)
-        }
-    }
     _removeStandard() {
         A_TrayMenu.Delete()
-    }
-    /**
-     * Add all children of an item to the specified menu.
-     * @param item Submenu or group containing the children
-     * @param inheritIcon Inherited icon from the parent level
-     * @param destinationMenu Menu to which is attached
-     */
-    _attachChildren(&item, &inheritIcon, &destinationMenu := unset) {
-        if (!IsSet(destinationMenu)) {
-            destinationMenu := item.menu
-        }
-        isOption := item.HasOwnProp("choice") || item.HasOwnProp("optionOf")
-        if (this._hasChildren(&item)) {
-            for child in item.content {
-                if isOption {
-                    child.optionOf := (item.HasOwnProp("optionOf")) ? item.optionOf : item.id
-                }
-                this._attachItem(&destinationMenu, &child, &inheritIcon)
-            }
-        }
     }
     _updateCheckmark(&parent, activeId, &menu := unset) {
         if !IsSet(menu) {
@@ -208,14 +140,6 @@ class MenuManager {
                     this._drawIcon(&item, &menu)
             }
         }
-    }
-    /**
-     * Unrender all menu entries.
-     * @param parent an item in the layout to recursively clear through
-     */
-    _clearChildren(&parent) {
-        parent.menu.delete()    ; remove all custom menu item
-        parent.DeleteProp("menu")    ;
     }
     /**
      * Return get type of an item
