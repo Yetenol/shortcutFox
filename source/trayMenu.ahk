@@ -76,17 +76,22 @@ class MenuManager {
             position++
         }
     }
-    _inheritIcon(&item, &inheritIcon := unset) {
-        if IsSet(inheritIcon) {
-            item.icon := inheritIcon
+    _inheritIcon(&item := false, &layer := false) {
+        if layer.HasOwnProp("icon") {
+            icon := layer.icon
+            if icon is Object && icon.HasOwnProp("state") {
+
+            } else {
+                item.icon := icon
+            }
         }
     }
-    _referenceChoice(&item, choiceID := unset) {
+    _referenceChoice(&item, choiceID := false) {
         if choiceID != false {
             item.optionOf := choiceID
         }
     }
-    _applyCheckmark(&item, activeOption := unset) {
+    _applyCheckmark(&item, activeOption := false) {
         state := false
         if activeOption != false {
             state := item.id = activeOption
@@ -96,11 +101,7 @@ class MenuManager {
             return
         }
 
-            if state {
-                item.icon := { state: "ENABLED" }
-            } else {
-                item.icon := { state: "DISABLED" }
-            }
+            item.icon := { state: state }
     }
     /**
      * Prepare menu for initialization:
@@ -108,14 +109,14 @@ class MenuManager {
      * - Replace symbolic links with a copy of their referenced item, submenu or group.
      * @param recursionLayer Definition layer to recursively parse through
      */
-    _parseLayout(&layer, menu := unset, &inheritIcon := unset, requestSeperator := false, choiceID := false, activeOption := false) {
+    _parseLayout(&layer, menu := unset, requestSeperator := false, choiceID := false, activeOption := false) {
         if not IsSet(menu) {
             menu := this._constructSubmenu(A_TrayMenu)
-            this.trayMenu := &menu
+            this.trayMenu := menu
         }
         this._dissolveSymbolicLinks(&layer)
         for item in layer.content {
-            this._inheritIcon(&item, &inheritIcon)
+            this._inheritIcon(&item, &layer)
             this._referenceChoice(&item, choiceID)
             this._applyCheckmark(&item, activeOption)
             switch this._getItemType(item) {
@@ -124,18 +125,17 @@ class MenuManager {
                     this._drawItem(&item, &menu, , requestSeperator)
                     requestSeperator := false
                 case MenuManager.ITEM_TYPES.GROUP:
-                    this._parseLayout(&item, menu, &inheritIcon, true)
+                    this._parseLayout(&item, menu, true, choiceID, activeOption)
                 case MenuManager.ITEM_TYPES.SUBMENU:
                     submenu := this._constructSubmenu()
                     this._drawItem(&item, &menu, submenu, requestSeperator)
                     requestSeperator := false
-                    this._parseLayout(&item, submenu, &inheritIcon)
+                    this._parseLayout(&item, submenu, , choiceID, activeOption)
                 case MenuManager.ITEM_TYPES.CHOICE:
                     submenu := this._constructSubmenu()
                     this._drawItem(&item, &menu, submenu, requestSeperator)
                     requestSeperator := false
-                    choiceID := item.id
-                    this._parseLayout(&item, submenu, &inheritIcon, , choiceID, readSetting(choiceID))
+                    this._parseLayout(&item, submenu, , item.id, readSetting(item.id))
                 default:
             }
         }
@@ -198,17 +198,14 @@ class MenuManager {
     }
     _updateCheckmark(&parent, activeId, &menu := unset) {
         if !IsSet(menu) {
-            menu := parent.menu
+            menu := this.trayMenu
         }
         for item in parent.content {
             switch this._getItemType(item)
             {
                 case MenuManager.ITEM_TYPES.ACTION:
-                    this._drawCheckmark(&item, item.id == activeId, &menu)
-                case MenuManager.ITEM_TYPES.GROUP:
-                    this._updateCheckmark(&item, activeId, &menu)
-                case MenuManager.ITEM_TYPES.SUBMENU:
-                    this._updateCheckmark(&item, activeId)
+                    this._applyCheckmark(&item, activeId)
+                    this._drawIcon(&item, &menu)
             }
         }
     }
@@ -399,19 +396,9 @@ handler(itemName, itemPosition, menu) {
  * @param text Name of the clicked item
  */
 findAction(&menu, text) {
-    if (!menu.hasOwnProp("content")) {
-        throw TargetError("Invalid menu! Doesn't have content")
-    }
-
     for item in menu.content {
-        if (item.hasOwnProp("text") && item.text = text) {
+        if item.text == text {
             return item
-        }
-        if (item.hasOwnProp("content")) {
-            action := findAction(&item, text)
-            if (action != false) {
-                return action
-            }
         }
     }
     return false    ; couldn't find item
