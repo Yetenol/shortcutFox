@@ -18,6 +18,7 @@ class MenuManager {
     __New() {
         global trayLayout
         A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
+        this._removeStandard()
         this._parseLayout(&trayLayout)
         ; this.update()
         this._applyDefaultAction()
@@ -59,9 +60,20 @@ class MenuManager {
      * If necessary, dissolve the link in its content.
      * @param item Possible symbolic link
      */
-    _dissolveSymbolicLinks(&item, &destinationLayer, position) {
+    _pasteSymbolicLinks(&item, &destinationLayer, position) {
         if this._isSymbolicLink(&item) {
             destinationLayer.content[position] := this._getReferencedContent(&item)
+        }
+    }
+    _dissolveSymbolicLinks(&recursionLayer) {
+        position := 1
+        while position <= recursionLayer.content.Length {
+            item := recursionLayer.content[position]
+            if this._isSymbolicLink(&item) {
+                this._pasteSymbolicLinks(&item, &recursionLayer, position)
+                position--
+            }
+            position++
         }
     }
     /**
@@ -75,17 +87,19 @@ class MenuManager {
             menu := this._constructSubmenu(A_TrayMenu)
             this.trayMenu := &menu
         }
-        for position, item in recursionLayer.content {
-            this._dissolveSymbolicLinks(&item, &recursionLayer, position)
+        this._dissolveSymbolicLinks(&recursionLayer,)
+        for item in recursionLayer.content {
             switch this._getItemType(item) {
                 case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SWITCH:
                     menu.content.Push(item)
                     this._drawItem(&item, &inheritIcon, &menu, , requestSeperator)
+                    requestSeperator := false
                 case MenuManager.ITEM_TYPES.GROUP:
                     this._parseLayout(&item, menu, &inheritIcon, true)
                 case MenuManager.ITEM_TYPES.SUBMENU, MenuManager.ITEM_TYPES.CHOICE:
                     submenu := this._constructSubmenu()
-                    this._drawItem(&item, &inheritIcon, &menu, submenu)
+                    this._drawItem(&item, &inheritIcon, &menu, submenu, requestSeperator)
+                    requestSeperator := false
                     this._parseLayout(&item, submenu)
                 default:
             }
@@ -123,6 +137,9 @@ class MenuManager {
                 this._attachChildren(&item, &noIcon)
                 this._drawItem(&item, &noIcon, &recursionMenu)
         }
+    }
+    _removeStandard() {
+        A_TrayMenu.Delete()
     }
     /**
      * Add all children of an item to the specified menu.
