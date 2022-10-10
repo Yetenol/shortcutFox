@@ -10,7 +10,7 @@ class MenuManager {
         CHOICE: 3,    ; Expandable setting with list of options (CONTENT)
         SWITCH : 4,    ; Toggleable setting, SWITCH sets the default state
     }
-    renderedContent := []
+    trayMenu := {}
     /**
      * Build the traymenu.
      * @param layout nested object that defined the structure of the traymenu
@@ -19,7 +19,7 @@ class MenuManager {
         global trayLayout
         A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
         this._parseLayout(&trayLayout)
-        this.update()
+        ; this.update()
         this._applyDefaultAction()
     }
     /**
@@ -50,10 +50,10 @@ class MenuManager {
      * Construct submenu objects to which the entries will be attached.
      * @param layer Layout level whose menu is to be created
      */
-    _constructSubmenu(&layer) {
-        layer.menu := (layer.id = "TRAYMENU") ? A_TrayMenu : Menu()
-        layer.menu.name := layer.id
-        layer.menu.content := layer.content
+    _constructSubmenu(preset := unset) {
+        submenu := (IsSet(preset)) ? preset : Menu()
+        submenu.content := []
+        return submenu
     }
     /**
      * If necessary, dissolve the link in its content.
@@ -70,12 +70,24 @@ class MenuManager {
      * - Replace symbolic links with a copy of their referenced item, submenu or group.
      * @param recursionLayer Definition layer to recursively parse through
      */
-    _parseLayout(&recursionLayer) {
-        this._constructSubmenu(&recursionLayer)
+    _parseLayout(&recursionLayer, menu := unset, &inheritIcon := unset, requestSeperator := false) {
+        if not IsSet(menu) {
+            menu := this._constructSubmenu(A_TrayMenu)
+            this.trayMenu := &menu
+        }
         for position, item in recursionLayer.content {
             this._dissolveSymbolicLinks(&item, &recursionLayer, position)
-            if this._hasChildren(&item) {
-                this._parseLayout(&item)
+            switch this._getItemType(item) {
+                case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SWITCH:
+                    menu.content.Push(item)
+                    this._drawItem(&item, &inheritIcon, &menu, , requestSeperator)
+                case MenuManager.ITEM_TYPES.GROUP:
+                    this._parseLayout(&item, menu, &inheritIcon, true)
+                case MenuManager.ITEM_TYPES.SUBMENU, MenuManager.ITEM_TYPES.CHOICE:
+                    submenu := this._constructSubmenu()
+                    this._drawItem(&item, &inheritIcon, &menu, submenu)
+                    this._parseLayout(&item, submenu)
+                default:
             }
         }
     }
@@ -207,17 +219,15 @@ class MenuManager {
  * @param menu Menu on which is drawn
  * @param clickhandler Function to run or Submenu to open when clicked
  */
-_drawItem(&item, &icon, &menu := unset, clickhandler := unset) {
-    if (!IsSet(menu)) {
-        menu := item.menu
+_drawItem(&item, &icon, &menu, clickhandler := unset, requestSeperator := false) {
+    if not IsSet(clickhandler) {
+        clickhandler := handler
     }
-    if (!IsSet(clickhandler)) {
-        clickhandler := item.menu
+    if requestSeperator {
+        this._drawSeperator(&menu)
     }
-    this._drawSeperatorIfRequested(&menu)
     menu.add(item.text, clickhandler)
-    this._drawIcon(&item, &icon, &menu)
-    menu.isEmpty := false    ; flag non-empty menus
+    ; this._drawIcon(&item, &icon, &menu)
 }
 /**
  * Find an item by its id.
@@ -245,15 +255,8 @@ _findItem(id, &recursionLayer := unset) {
  * Draw a seperator line if this has been requested beforehand.
  * @param menu Menu to examine
  */
-_drawSeperatorIfRequested(&menu) {
-    if (menu.hasOwnProp("isEmpty") && !menu.isEmpty) {    ; menu is not empty
-        if (menu.hasOwnProp("requestSeperator") && menu.requestSeperator) {
-            menu.add()    ; add a seperator line
-            menu.requestSeperator := false
-        }
-    } else {    ; menu is empty
-        menu.requestSeperator := false
-    }
+_drawSeperator(&menu) {
+    menu.add()    ; add a seperator line
 }
 /**
  * Draw the specified icon into a submenu or action
