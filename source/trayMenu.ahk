@@ -65,16 +65,42 @@ class MenuManager {
             destinationLayer.content[position] := this._getReferencedContent(&item)
         }
     }
-    _dissolveSymbolicLinks(&recursionLayer) {
+    _dissolveSymbolicLinks(&layer) {
         position := 1
-        while position <= recursionLayer.content.Length {
-            item := recursionLayer.content[position]
+        while position <= layer.content.Length {
+            item := layer.content[position]
             if this._isSymbolicLink(&item) {
-                this._pasteSymbolicLinks(&item, &recursionLayer, position)
+                this._pasteSymbolicLinks(&item, &layer, position)
                 position--
             }
             position++
         }
+    }
+    _inheritIcon(&item, &inheritIcon := unset) {
+        if IsSet(inheritIcon) {
+            item.icon := inheritIcon
+        }
+    }
+    _referenceChoice(&item, choiceID := unset) {
+        if choiceID != false {
+            item.optionOf := choiceID
+        }
+    }
+    _applyCheckmark(&item, activeOption := unset) {
+        state := false
+        if activeOption != false {
+            state := item.id = activeOption
+        } else if this._isSwitch(&item) {
+            state := readSetting(item.id)
+        } else {
+            return
+        }
+
+            if state {
+                item.icon := { state: "ENABLED" }
+            } else {
+                item.icon := { state: "DISABLED" }
+            }
     }
     /**
      * Prepare menu for initialization:
@@ -82,25 +108,34 @@ class MenuManager {
      * - Replace symbolic links with a copy of their referenced item, submenu or group.
      * @param recursionLayer Definition layer to recursively parse through
      */
-    _parseLayout(&recursionLayer, menu := unset, &inheritIcon := unset, requestSeperator := false) {
+    _parseLayout(&layer, menu := unset, &inheritIcon := unset, requestSeperator := false, choiceID := false, activeOption := false) {
         if not IsSet(menu) {
             menu := this._constructSubmenu(A_TrayMenu)
             this.trayMenu := &menu
         }
-        this._dissolveSymbolicLinks(&recursionLayer,)
-        for item in recursionLayer.content {
+        this._dissolveSymbolicLinks(&layer)
+        for item in layer.content {
+            this._inheritIcon(&item, &inheritIcon)
+            this._referenceChoice(&item, choiceID)
+            this._applyCheckmark(&item, activeOption)
             switch this._getItemType(item) {
                 case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SWITCH:
                     menu.content.Push(item)
-                    this._drawItem(&item, &inheritIcon, &menu, , requestSeperator)
+                    this._drawItem(&item, &menu, , requestSeperator)
                     requestSeperator := false
                 case MenuManager.ITEM_TYPES.GROUP:
                     this._parseLayout(&item, menu, &inheritIcon, true)
-                case MenuManager.ITEM_TYPES.SUBMENU, MenuManager.ITEM_TYPES.CHOICE:
+                case MenuManager.ITEM_TYPES.SUBMENU:
                     submenu := this._constructSubmenu()
-                    this._drawItem(&item, &inheritIcon, &menu, submenu, requestSeperator)
+                    this._drawItem(&item, &menu, submenu, requestSeperator)
                     requestSeperator := false
-                    this._parseLayout(&item, submenu)
+                    this._parseLayout(&item, submenu, &inheritIcon)
+                case MenuManager.ITEM_TYPES.CHOICE:
+                    submenu := this._constructSubmenu()
+                    this._drawItem(&item, &menu, submenu, requestSeperator)
+                    requestSeperator := false
+                    choiceID := item.id
+                    this._parseLayout(&item, submenu, &inheritIcon, , choiceID, readSetting(choiceID))
                 default:
             }
         }
@@ -236,7 +271,7 @@ class MenuManager {
  * @param menu Menu on which is drawn
  * @param clickhandler Function to run or Submenu to open when clicked
  */
-_drawItem(&item, &icon, &menu, clickhandler := unset, requestSeperator := false) {
+_drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
     if not IsSet(clickhandler) {
         clickhandler := handler
     }
@@ -244,7 +279,7 @@ _drawItem(&item, &icon, &menu, clickhandler := unset, requestSeperator := false)
         this._drawSeperator(&menu)
     }
     menu.add(item.text, clickhandler)
-    ; this._drawIcon(&item, &icon, &menu)
+    this._drawIcon(&item, &icon, &menu)
 }
 /**
  * Find an item by its id.
@@ -281,27 +316,22 @@ _drawSeperator(&menu) {
  * @param icon path or [path, index] to apply
  * @param menu traymenu or submenu to which is drawn
  */
-_drawIcon(&item, &icon, &menu := unset) {
-    if !IsSet(menu) {
-        menu := A_TrayMenu
+_drawIcon(&item, &icon, &menu) {
+    if not IsSet(icon) {
+        return
     }
-    if item.HasOwnProp("switch") {
-        this._drawCheckmark(&item, readSetting(item.id), &menu)
-    } else if item.HasOwnProp("optionOf") {
-        this._drawCheckmark(&item, item.id == readSetting(item.optionOf), &menu)
-    }
-        if icon is array {    ; icon contains a path and index
-            menu.setIcon(item.text, icon[1], icon[2])
-        } else if icon is string {    ; icon only contains a path
-            menu.setIcon(item.text, icon)
-        }
-}
-_drawCheckmark(&item, state, &menu) {
-    if state {
-        menu.Check(item.text)
-    } else {
-        menu.Uncheck(item.text)
+
+    if icon is array && icon.Length = 2 {    ; icon contains a path and index
+        menu.setIcon(item.text, icon[1], icon[2])
+    } else if icon is string {    ; icon only contains a path
+        menu.setIcon(item.text, icon)
+    } else if icon is object && icon.HasOwnProp("state") {
         menu.SetIcon(item.text, "*")
+        if icon.state {
+            menu.Check(item.text)
+        } else {
+            menu.Uncheck(item.text)
+        }
     }
 }
 _applyDefaultAction() {
@@ -316,6 +346,7 @@ _applyDefaultAction() {
             A_TrayMenu.Default := defaultAction.text
     }
 }
+_isSwitch(&item) => item.HasOwnProp("switch")
 /**
  * Is the item a symbolic link to another submenu or group?
  * @param item Action, submenu, group or symbolic link to examine
@@ -325,7 +356,7 @@ _isSymbolicLink(&item) => item is string
  * Does the item fullfill the minimum specifications for a menu entry?
  * @param item Action, submenu, group or symbolic link to examine
  */
-_isValidItem(&item) => (item is object) && item.hasOwnProp("id")
+_isValidItem(&item) => item is object && item.hasOwnProp("id")
 /**
  * Does the element contain children, which is true for submenus and groups?
  * @param item Action, submenu, group or symbolic link to examine
@@ -347,6 +378,7 @@ handler(itemName, itemPosition, menu) {
         tray.clickChoice(action.optionOf, action.id)
         return
     }
+
     if action.HasOwnProp("delay") {
         Sleep action.delay
     }
