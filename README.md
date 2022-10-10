@@ -8,12 +8,28 @@
 Table of Contents
 - [Features](#features)
   - [Application shortcuts](#application-shortcuts)
+    - [Tray Shortcuts](#tray-shortcuts)
 - [Build instructions](#build-instructions)
 
 # Features
 ## Application shortcuts
 - Focus or launch **KeeWeb**  
     `[Win + Shift + V]` 
+
+### Tray Shortcuts
+- Right click the tray icon:
+    - Enable run at startup _< `#Manage script...` submenu_
+    - Take screenshot
+    - Calibrate pen
+    - Update all repositories
+    - Update all applications
+    - Connect to a bluetooth device
+    - Transfer files using bluetooth
+    - Setup Windows Hello Face
+    - Setup Windows Hello Fingerprint
+- Left click the tray:
+    - Execute the default action
+    - Configurable _< `Set left click action...` submenu_
 
 # Build instructions
 - install depedencies
