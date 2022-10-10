@@ -321,7 +321,8 @@ handler(itemName, itemPosition, menu) {
         Send action.send
     }
     if action.hasOwnProp("run") {
-        Run action.run
+        file := NormalizePath(action.run)
+        Run file, A_WorkingDir
     }
     if action.HasOwnProp("switch") {
         menu.ToggleCheck(itemName)
@@ -340,4 +341,11 @@ findAction(&menu, text) {
         }
     }
     return false    ; couldn't find item
+}
+
+NormalizePath(path) {
+    cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
+    buf := Buffer(cc * 2)
+    DllCall("GetFullPathName", "str", path, "uint", cc, "ptr", buf, "ptr", 0)
+    return StrGet(buf)
 }
