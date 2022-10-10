@@ -25,6 +25,9 @@ class MenuManager {
         choiceItem := this._findItem(choiceId)
         writeSetting(choiceId, option)
         this._updateCheckmark(option, &menu)
+        if choiceId == "DEFAULT_ACTION" {
+            this._applyDefaultAction()
+        }
     }
     /**
      * Construct submenu objects to which the entries will be attached.
@@ -199,7 +202,7 @@ _drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
  * @param id Target's id
  * @param recursionLayer INTERNAL - Layout level to recursively search through
  */
-_findItem(id, &recursionLayer := unset) {
+_findItem(id, recursively := true, &recursionLayer := unset) {
     global trayLayout
     if (!IsSet(recursionLayer)) {
         recursionLayer := trayLayout    ; recursion starts at the root of the definition
@@ -207,8 +210,8 @@ _findItem(id, &recursionLayer := unset) {
     for item in recursionLayer.content {
         if (this._isValidItem(&item) && item.id = id) {
             return item
-        } else if (this._hasChildren(&item)) {
-            referencedItem := this._findItem(id, &item)
+        } else if recursively && this._hasChildren(&item) {
+            referencedItem := this._findItem(id, recursively, &item)
             if (referencedItem) {
                 return referencedItem
             }
@@ -247,17 +250,36 @@ _drawIcon(&item, &menu) {
         }
     }
 }
-_applyDefaultAction() {
-    defaultAction := this._findItem(readSetting("DEFAULT_ACTION"))
-    if (defaultAction) {
-        icon := defaultAction.icon
-        if icon is array {    ; icon contains a path and index
-            TraySetIcon(icon[1], icon[2])
-        } else if icon is string {    ; icon only contains a path
-            TraySetIcon(icon)
-        }
-            A_TrayMenu.Default := defaultAction.text
+_readDefaultAction() {
+    defaultID := readSetting("DEFAULT_ACTION")
+    if defaultID ~= "NON_PRESENT|NO_DEFAULT_ACTION" {
+        return false
     }
+    mainTrayMenu := this.trayMenu
+    defaultAction := this._findItem(defaultID, false, &mainTrayMenu)
+    if not defaultAction {
+        if "yes" = MsgBox("Unkown action:`t" defaultID "`nWhould you like to reset the default action?", "Unkown default action", "YesNo") {
+            removeSetting("DEFAULT_ACTION")
+        }
+        return false
+    }
+    return defaultAction
+}
+
+_applyDefaultAction() {
+    global NO_ICON
+    action := this._readDefaultAction()
+    if not action {
+        TraySetIcon(NO_ICON)
+        return
+    }
+    icon := action.icon
+    if icon is array {    ; icon contains a path and index
+        TraySetIcon(icon[1], icon[2])
+    } else if icon is string {    ; icon only contains a path
+        TraySetIcon(icon)
+    }
+        A_TrayMenu.Default := action.text
 }
 _isSwitch(&item) => item.HasOwnProp("switch")
 /**

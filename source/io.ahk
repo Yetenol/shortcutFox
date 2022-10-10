@@ -34,3 +34,9 @@ writeSetting(id, value) {
 toggleSetting(id) {
     writeSetting(id, !readSetting(id))
 }
+
+removeSetting(id) {
+    if hasSetting(id) {
+        IniDelete(CONFIG_FILE, CONFIG_SECTION, id)
+    }
+}
