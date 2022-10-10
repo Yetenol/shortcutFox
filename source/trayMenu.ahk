@@ -273,6 +273,7 @@ _applyDefaultAction() {
     action := this._readDefaultAction()
     if not action {
         TraySetIcon(DEFAULT_ICON)
+        A_TrayMenu.Default := ""
         return
     }
     icon := action.icon
