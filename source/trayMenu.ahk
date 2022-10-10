@@ -279,7 +279,7 @@ _drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
         this._drawSeperator(&menu)
     }
     menu.add(item.text, clickhandler)
-    this._drawIcon(&item, &icon, &menu)
+    this._drawIcon(&item, &menu)
 }
 /**
  * Find an item by its id.
@@ -316,11 +316,11 @@ _drawSeperator(&menu) {
  * @param icon path or [path, index] to apply
  * @param menu traymenu or submenu to which is drawn
  */
-_drawIcon(&item, &icon, &menu) {
-    if not IsSet(icon) {
+_drawIcon(&item, &menu) {
+    if not item.HasOwnProp("icon") {
         return
     }
-
+    icon := item.icon
     if icon is array && icon.Length = 2 {    ; icon contains a path and index
         menu.setIcon(item.text, icon[1], icon[2])
     } else if icon is string {    ; icon only contains a path
