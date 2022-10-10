@@ -1,13 +1,2 @@
-#Include config.ahk
-
-log(lines*)
-{
-    text := ""
-
-    for line in lines
-    {
-        text := text line "`n"
-    }
-
-    MsgBox(text)
-}
+KEEWEB_BIN := "C:\Program Files\KeeWeb\KeeWeb.exe"
+NO_ICON := "*"
