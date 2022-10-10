@@ -81,19 +81,14 @@ TRAY_LAYOUT := {
                             id: "BLUETOOTH",
                             text: "Bluetooth audio and file transfer",
                             icon: [A_WinDir "\System32\netshell.dll", 104],
-                            maxDisplay: 0,
+                            maxDisplay: 1,
                             content:
                                 [{
                                     id: "BLUETOOTH_FILE_TRANSFER",
                                     text: "Transfer files using Bluetooth",
                                     run: "fsquirt",
                                 },
-                                    {
-                                        id: "CONNECT_BLUETOOTH_DEVICE",
-                                        text: "Connect bluetooth device",
-                                        run: "explorer ms-settings:connecteddevices",
-                                    },
-                                ]
+                            ]
                         },
                             {
                                 id: "UPDATES",
