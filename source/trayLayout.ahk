@@ -1,4 +1,4 @@
-trayLayout := {
+TRAY_LAYOUT := {
     id: "TRAYMENU",
     content:
         [{

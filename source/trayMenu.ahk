@@ -92,9 +92,9 @@ class MenuManager {
      * @param recursionLayer Definition layer to recursively parse through
      */
     _parseLayout(&layer := unset, menu := unset, requestSeperator := false, choiceID := false, activeOption := false) {
-        global trayLayout
+        global TRAY_LAYOUT
         if not IsSet(layer) {
-            layer := trayLayout.Clone()
+            layer := TRAY_LAYOUT.Clone()
         }
         if not IsSet(menu) {
             menu := this._constructSubmenu(A_TrayMenu)
@@ -203,9 +203,9 @@ _drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
  * @param recursionLayer INTERNAL - Layout level to recursively search through
  */
 _findItem(id, recursively := true, &recursionLayer := unset) {
-    global trayLayout
+    global TRAY_LAYOUT
     if (!IsSet(recursionLayer)) {
-        recursionLayer := trayLayout    ; recursion starts at the root of the definition
+        recursionLayer := TRAY_LAYOUT    ; recursion starts at the root of the definition
     }
     for item in recursionLayer.content {
         if (this._isValidItem(&item) && item.id = id) {
