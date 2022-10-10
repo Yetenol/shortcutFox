@@ -6,7 +6,7 @@
 [⌂](README.md) Home
 
 > ShortcutFox ia a shortcut menu for the system tray
-> that can setup modified using a [json-like file](source/trayLayout.ahk)
+> that can be easily modified using a [json-like file](source/trayLayout.ahk)
 
 Table of Contents
 - [Features](#features)
