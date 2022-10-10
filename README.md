@@ -5,8 +5,8 @@
 
 [⌂](README.md) Home
 
-> This branch aims to learn the syntax of AutoHotkey v2 
-> and help to convert other AutoHotkey projects.
+> ShortcutFox ia a shortcut menu for the system tray
+> that can setup modified using a [json-like file](source/trayLayout.ahk)
 
 Table of Contents
 - [Features](#features)
