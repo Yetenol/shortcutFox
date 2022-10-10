@@ -19,13 +19,12 @@ class MenuManager {
         A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
         this._removeStandard()
         this._parseLayout()
-        ; this.update()
         this._applyDefaultAction()
     }
-    clickChoice(choiceId, option) {
+    clickChoice(choiceId, option, &menu) {
         choiceItem := this._findItem(choiceId)
         writeSetting(choiceId, option)
-        this._updateCheckmark(&choiceItem, option)
+        this._updateCheckmark(option, &menu)
     }
     /**
      * Construct submenu objects to which the entries will be attached.
@@ -128,17 +127,10 @@ class MenuManager {
     _removeStandard() {
         A_TrayMenu.Delete()
     }
-    _updateCheckmark(&parent, activeId, &menu := unset) {
-        if !IsSet(menu) {
-            menu := this.trayMenu
-        }
-        for item in parent.content {
-            switch this._getItemType(item)
-            {
-                case MenuManager.ITEM_TYPES.ACTION:
-                    this._applyCheckmark(&item, activeId)
-                    this._drawIcon(&item, &menu)
-            }
+    _updateCheckmark(activeId, &menu) {
+        for item in menu.content {
+            this._applyCheckmark(&item, activeId)
+            this._drawIcon(&item, &menu)
         }
     }
     /**
@@ -296,7 +288,7 @@ handler(itemName, itemPosition, menu) {
         throw TargetError("Cannot find clicked item")
     }
     if action.HasOwnProp("optionOf") {
-        tray.clickChoice(action.optionOf, action.id)
+        tray.clickChoice(action.optionOf, action.id, &menu)
         return
     }
 
