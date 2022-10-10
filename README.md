@@ -13,6 +13,7 @@ Table of Contents
   - [Application shortcuts](#application-shortcuts)
     - [Tray Shortcuts](#tray-shortcuts)
 - [Build instructions](#build-instructions)
+- [Credits](#credits)
 
 # Features
 ## Application shortcuts
@@ -45,3 +46,8 @@ $compiler = "$env:ProgramFiles\AutoHotkey 2\Compiler\Ahk2Exe.exe"
 $ahk2 = "$env:ProgramFiles\AutoHotkey 2\AutoHotkey64.exe"
 & $compiler /bin $ahk2 /in source/main.ahk /out bin\shortcutFox.exe
 ```
+
+# Credits
+
+- Icons from [Icons8](https://icons8.com/icons/fluency)
+- Converted to ICO using [Convertio](https://convertio.co/png-ico/)

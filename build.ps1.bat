@@ -5,5 +5,5 @@ $compiler = "$env:ProgramFiles\AutoHotkey 2\Compiler\Ahk2Exe.exe"
 $ahk2 = "$env:ProgramFiles\AutoHotkey 2\AutoHotkey64.exe"
 
 # Get-Process shortcutFox -ErrorAction SilentlyContinue | Stop-Process
-& $compiler /bin $ahk2 /in source/main.ahk /out bin\shortcutFox.exe
+& $compiler /bin $ahk2 /in source/main.ahk /out bin\shortcutFox.exe /icon icons\shortcut.ico
 # Start-Process -FilePath "bin\shortcutFox.exe"

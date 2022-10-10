@@ -1,6 +1,8 @@
-#Include trayLayout.ahk
 #Include core.ahk
+#Include trayLayout.ahk
 #Include io.ahk
+
+TraySetIcon(DEFAULT_ICON)
 
 class MenuManager {
     static ITEM_TYPES := {    ; all items need an ID and TEXT
@@ -267,10 +269,10 @@ _readDefaultAction() {
 }
 
 _applyDefaultAction() {
-    global NO_ICON
+    global DEFAULT_ICON
     action := this._readDefaultAction()
     if not action {
-        TraySetIcon(NO_ICON)
+        TraySetIcon(DEFAULT_ICON)
         return
     }
     icon := action.icon

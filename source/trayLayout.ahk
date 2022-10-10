@@ -67,21 +67,21 @@ TRAY_LAYOUT := {
                                 id: "SETUP_HELLO_FACE",
                                 text: "Setup Hello Face",
                                 run: "explorer ms-settings:signinoptions-launchfaceenrollment",
-                                icon: [A_WinDir "\System32\ddores.dll", 87],
+                                icon: "icons\face-id.ico",
                             },
                                 {
                                     id: "SETUP_HELLO_FINGERPRINT",
                                     text: "Setup Hello Fingerprint",
                                     run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
-                                    icon: [A_WinDir "\System32\sensorscpl.dll", 11],
+                                    icon: "icons\add-fingerprint.ico",
                                 },
                             ]
                     },
                         {
                             id: "BLUETOOTH",
                             text: "Bluetooth audio and file transfer",
-                            icon: [A_WinDir "\System32\netshell.dll", 104],
                             maxDisplay: 1,
+                            icon: "icons\bluetooth.ico",
                             content:
                                 [{
                                     id: "BLUETOOTH_FILE_TRANSFER",
@@ -98,13 +98,13 @@ TRAY_LAYOUT := {
                                         id: "WINGET_UPDATE",
                                         text: "Update all applications",
                                         run: "scripts\wingetUpdateAll.ps1.bat",
-                                        icon: [A_WinDir "\System32\shell32.dll", 239],
+                                        icon: "icons\software-installer.ico",
                                     },
                                         {
                                             id: "GIT_UPDATE",
                                             text: "Update all repositories",
                                             run: "scripts\gitUpdateAll.ps1.bat",
-                                            icon: [A_WinDir "\System32\shell32.dll", 239],
+                                            icon: "icons\code-fork.ico",
                                         },
                                     ]
                             },
@@ -116,13 +116,13 @@ TRAY_LAYOUT := {
                                             id: "CALIBRATE_DIGITIZER",
                                             text: "Calibrate pen",
                                             run: "tabcal",
-                                            icon: [A_WinDir "\System32\ddores.dll", 27],
+                                            icon: "icons\whiteboard.ico",
                                         },
                                             {
                                                 id: "TAKE_SCREENSHOT",
                                                 text: "Take Screenshot",
                                                 send: "#+s",
-                                                icon: "icons\ScreenSketch.ico",
+                                                icon: "icons\windows-snipping-tool.ico",
                                             },
                                         ]
                                 },
