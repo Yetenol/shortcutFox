@@ -17,27 +17,42 @@ $repositories |
     $unchanged = ([DateTime]::Now - $_.LastWriteTime)
     if ($unchanged.Days -ge 1) {
         $unchanged = "" + $unchanged.Days + " days"
-    } else {
-        $unchanged = $unchanged.ToString().Substring(0,8)
     }
-    $repositories += $_
+    else {
+        $unchanged = $unchanged.ToString().Substring(0, 8)
+    }
     ([PSCustomObject]@{
-    Name = $_.Name;
-    Unchanged = $unchanged;
-    Location = $_.Parent.FullName;
-})} | Out-String
-
-# update recently modified repositories first
-$repositories = $repositories | sort LastWriteTime -Descending
+        Name      = $_.Name;
+        Unchanged = $unchanged;
+        Location  = $_.Parent.FullName;
+    }) 
+} | Out-String
 
 # Update repositories
 $index = 0
-$repositories |
+$repositories | 
+sort LastWriteTime -Descending |
 % { 
+    # Print progress information
     Write-Host @("`n(" + (++$index) + "/" + $repositories.Length + ") Found ") -NoNewline
     Write-Host $_.Name -ForegroundColor Cyan -NoNewline
     Write-Host " at " -NoNewline
     Write-Host $_.Parent.FullName -ForegroundColor Cyan
-    git -C $_.FullName pull --all
-    git -C $_.FullName push --all
- }
+    
+    $path = $_.FullName
+    $localBranches = git -C $path branch --format='%(refname:short)'
+    $remoteBranches = git -C $path branch --remotes --format='%(refname:short)' |
+    % { $_.replace("origin/", "") }
+    
+    # Sync branches, that are already on remote
+    $localBranches |
+    ? { $remoteBranches.Contains($_) } |
+    % { 
+        Write-Host "pull " -NoNewline
+        Write-Host $_" `t" -ForegroundColor Yellow -NoNewline
+        git -C $path pull origin $_":"$_
+        Write-Host "push " -NoNewline
+        Write-Host $_" `t" -ForegroundColor Yellow -NoNewline
+        git -C $path push origin $_":"$_
+    }
+}
