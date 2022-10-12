@@ -7,30 +7,17 @@ Write-Host "Scanning for repositories in $rootPath..."
 
 # Find repositories
 $repositories = @()
-$repositories = Get-ChildItem -Path $rootPath -Directory -Hidden -Recurse -Filter ".git" -ErrorAction SilentlyContinue | 
+Get-ChildItem -Path $rootPath -Directory -Hidden -Recurse -Filter ".git" -ErrorAction SilentlyContinue | 
 ? { $_.FullName -notmatch '\\\$RECYCLE\.BIN\\' } |
 % { $_.Parent } |
-sort LastWriteTime -Descending   # update recently modified repositories first
-
-$repositories |
 % {
-    $unchanged = ([DateTime]::Now - $_.LastWriteTime)
-    if ($unchanged.Days -ge 1) {
-        $unchanged = "" + $unchanged.Days + " days"
-    }
-    else {
-        $unchanged = $unchanged.ToString().Substring(0, 8)
-    }
-    ([PSCustomObject]@{
-        Name      = $_.Name;
-        Unchanged = $unchanged;
-        Location  = $_.Parent.FullName;
-    }) 
-} | Out-String
+    $repositories += $_
+    Write-Output $_
+}
 
 # Update repositories
 $index = 0
-$repositories | 
+$repositories |
 sort LastWriteTime -Descending |
 % { 
     # Print progress information
