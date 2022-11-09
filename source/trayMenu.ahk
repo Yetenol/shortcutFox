@@ -1,4 +1,4 @@
-#Include core.ahk
+#Include config.ahk
 #Include trayLayout.ahk
 #Include io.ahk
 
@@ -174,132 +174,132 @@ class MenuManager {
      * @param item Submenu or group to examine
      */
     _doesMeetMaxDisplay(&item) {
-    if (!item.hasOwnProp("maxDisplay")) {
-        return true
-    } else if (item.maxDisplay = 0) {
-        return false
-    } else {
-        return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
+        if (!item.hasOwnProp("maxDisplay")) {
+            return true
+        } else if (item.maxDisplay = 0) {
+            return false
+        } else {
+            return item.maxDisplay = -1 || item.content.Length <= item.maxDisplay
+        }
     }
-}
-/**
- * Draw the entry into the specified menu.
- * @param item Item to draw
- * @param icon Icon to draw
- * @param menu Menu on which is drawn
- * @param clickhandler Function to run or Submenu to open when clicked
- */
-_drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
-    if not IsSet(clickhandler) {
-        clickhandler := handler
+    /**
+     * Draw the entry into the specified menu.
+     * @param item Item to draw
+     * @param icon Icon to draw
+     * @param menu Menu on which is drawn
+     * @param clickhandler Function to run or Submenu to open when clicked
+     */
+    _drawItem(&item, &menu, clickhandler := unset, requestSeperator := false) {
+        if not IsSet(clickhandler) {
+            clickhandler := handler
+        }
+        if requestSeperator {
+            this._drawSeperator(&menu)
+        }
+        menu.add(item.text, clickhandler)
+        this._drawIcon(&item, &menu)
     }
-    if requestSeperator {
-        this._drawSeperator(&menu)
+    /**
+     * Find an item by its id.
+     * @param id Target's id
+     * @param recursionLayer INTERNAL - Layout level to recursively search through
+     */
+    _findItem(id, recursively := true, &recursionLayer := unset) {
+        global TRAY_LAYOUT
+        if (!IsSet(recursionLayer)) {
+            recursionLayer := TRAY_LAYOUT    ; recursion starts at the root of the definition
+        }
+        for item in recursionLayer.content {
+            if (this._isValidItem(&item) && item.id = id) {
+                return item
+            } else if recursively && this._hasChildren(&item) {
+                referencedItem := this._findItem(id, recursively, &item)
+                if (referencedItem) {
+                    return referencedItem
+                }
+            }
+        }
+        return false    ; couldn't find item
     }
-    menu.add(item.text, clickhandler)
-    this._drawIcon(&item, &menu)
-}
-/**
- * Find an item by its id.
- * @param id Target's id
- * @param recursionLayer INTERNAL - Layout level to recursively search through
- */
-_findItem(id, recursively := true, &recursionLayer := unset) {
-    global TRAY_LAYOUT
-    if (!IsSet(recursionLayer)) {
-        recursionLayer := TRAY_LAYOUT    ; recursion starts at the root of the definition
+    /**
+     * Draw a seperator line if this has been requested beforehand.
+     * @param menu Menu to examine
+     */
+    _drawSeperator(&menu) {
+        menu.add()    ; add a seperator line
     }
-    for item in recursionLayer.content {
-        if (this._isValidItem(&item) && item.id = id) {
-            return item
-        } else if recursively && this._hasChildren(&item) {
-            referencedItem := this._findItem(id, recursively, &item)
-            if (referencedItem) {
-                return referencedItem
+    /**
+     * Draw the specified icon into a submenu or action
+     * @param item Item to draw into
+     * @param icon path or [path, index] to apply
+     * @param menu traymenu or submenu to which is drawn
+     */
+    _drawIcon(&item, &menu) {
+        if not item.HasOwnProp("icon") {
+            return
+        }
+        icon := item.icon
+        if icon is array && icon.Length = 2 {    ; icon contains a path and index
+            menu.setIcon(item.text, icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            menu.setIcon(item.text, icon)
+        } else if icon is object && icon.HasOwnProp("state") {
+            menu.SetIcon(item.text, "*")
+            if icon.state {
+                menu.Check(item.text)
+            } else {
+                menu.Uncheck(item.text)
             }
         }
     }
-    return false    ; couldn't find item
-}
-/**
- * Draw a seperator line if this has been requested beforehand.
- * @param menu Menu to examine
- */
-_drawSeperator(&menu) {
-    menu.add()    ; add a seperator line
-}
-/**
- * Draw the specified icon into a submenu or action
- * @param item Item to draw into
- * @param icon path or [path, index] to apply
- * @param menu traymenu or submenu to which is drawn
- */
-_drawIcon(&item, &menu) {
-    if not item.HasOwnProp("icon") {
-        return
-    }
-    icon := item.icon
-    if icon is array && icon.Length = 2 {    ; icon contains a path and index
-        menu.setIcon(item.text, icon[1], icon[2])
-    } else if icon is string {    ; icon only contains a path
-        menu.setIcon(item.text, icon)
-    } else if icon is object && icon.HasOwnProp("state") {
-        menu.SetIcon(item.text, "*")
-        if icon.state {
-            menu.Check(item.text)
-        } else {
-            menu.Uncheck(item.text)
+    _readDefaultAction() {
+        defaultID := readSetting("DEFAULT_ACTION")
+        if defaultID ~= "NON_PRESENT|NO_DEFAULT_ACTION" {
+            return false
         }
-    }
-}
-_readDefaultAction() {
-    defaultID := readSetting("DEFAULT_ACTION")
-    if defaultID ~= "NON_PRESENT|NO_DEFAULT_ACTION" {
-        return false
-    }
-    mainTrayMenu := this.trayMenu
-    defaultAction := this._findItem(defaultID, false, &mainTrayMenu)
-    if not defaultAction {
-        if "yes" = MsgBox("Unkown action:`t" defaultID "`nWhould you like to reset the default action?", "Unkown default action", "YesNo") {
-            removeSetting("DEFAULT_ACTION")
+        mainTrayMenu := this.trayMenu
+        defaultAction := this._findItem(defaultID, false, &mainTrayMenu)
+        if not defaultAction {
+            if "yes" = MsgBox("Unkown action:`t" defaultID "`nWhould you like to reset the default action?", "Unkown default action", "YesNo") {
+                removeSetting("DEFAULT_ACTION")
+            }
+            return false
         }
-        return false
+        return defaultAction
     }
-    return defaultAction
-}
 
-_applyDefaultAction() {
-    global DEFAULT_ICON
-    action := this._readDefaultAction()
-    if not action {
-        TraySetIcon(DEFAULT_ICON)
-        A_TrayMenu.Default := ""
-        return
+    _applyDefaultAction() {
+        global DEFAULT_ICON
+        action := this._readDefaultAction()
+        if not action {
+            TraySetIcon(DEFAULT_ICON)
+            A_TrayMenu.Default := ""
+            return
+        }
+        icon := action.icon
+        if icon is array {    ; icon contains a path and index
+            TraySetIcon(icon[1], icon[2])
+        } else if icon is string {    ; icon only contains a path
+            TraySetIcon(icon)
+        }
+            A_TrayMenu.Default := action.text
     }
-    icon := action.icon
-    if icon is array {    ; icon contains a path and index
-        TraySetIcon(icon[1], icon[2])
-    } else if icon is string {    ; icon only contains a path
-        TraySetIcon(icon)
-    }
-        A_TrayMenu.Default := action.text
-}
-_isSwitch(&item) => item.HasOwnProp("switch")
-/**
- * Is the item a symbolic link to another submenu or group?
- * @param item Action, submenu, group or symbolic link to examine
- */
-_isSymbolicLink(&item) => item is string
-/**
- * Does the item fullfill the minimum specifications for a menu entry?
- * @param item Action, submenu, group or symbolic link to examine
- */
-_isValidItem(&item) => item is object && item.hasOwnProp("id")
-/**
- * Does the element contain children, which is true for submenus and groups?
- * @param item Action, submenu, group or symbolic link to examine
- */
-_hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
+    _isSwitch(&item) => item.HasOwnProp("switch")
+    /**
+     * Is the item a symbolic link to another submenu or group?
+     * @param item Action, submenu, group or symbolic link to examine
+     */
+    _isSymbolicLink(&item) => item is string
+    /**
+     * Does the item fullfill the minimum specifications for a menu entry?
+     * @param item Action, submenu, group or symbolic link to examine
+     */
+    _isValidItem(&item) => item is object && item.hasOwnProp("id")
+    /**
+     * Does the element contain children, which is true for submenus and groups?
+     * @param item Action, submenu, group or symbolic link to examine
+     */
+    _hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.

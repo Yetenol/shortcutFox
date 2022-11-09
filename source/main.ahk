@@ -2,8 +2,8 @@
 Persistent    ; Keep the application alive
 SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script folder)
 
-#Include core.ahk
-#Include packageResources.ahk
+#Include config.ahk
+#Include includeResources.ahk
 #Include hotkeys.ahk
 #Include trayMenu.ahk
 
