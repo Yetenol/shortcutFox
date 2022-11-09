@@ -35,7 +35,7 @@ TRAY_LAYOUT := {
                     },
                         {
                             id: "SEND_CTRLBREAK",
-                            text: "Send Ctrl + Pause",
+                            text: "Send Break",
                             delay: 2000,
                             send: "{CtrlBreak}",
                         },
