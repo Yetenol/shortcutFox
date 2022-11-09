@@ -14,3 +14,13 @@
         Run KEEWEB_BIN
     }
 }
+
+#WheelUp::
+{
+    SendInput "#{PgUp}"
+}
+
+#WheelDown::
+{
+    SendInput "#{PgDn}"
+}
