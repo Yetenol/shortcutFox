@@ -1,4 +1,4 @@
-#Include config.ahk
+#Include config/config.ahk
 
 ; Focus or launch KeeWeb [Win + Shift + V]
 #+V::

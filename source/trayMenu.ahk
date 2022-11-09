@@ -1,5 +1,5 @@
-#Include config.ahk
-#Include trayLayout.ahk
+#Include config/config.ahk
+#Include config/trayLayout.ahk
 #Include io.ahk
 
 TraySetIcon(DEFAULT_ICON)
