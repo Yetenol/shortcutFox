@@ -1,11 +1,5 @@
-startupShortcut := A_AppData "\Microsoft\Windows\Start Menu\Programs\Startup\shortcutFox.lnk"
-
 CONFIG_FILE := A_AppData "\shortcutFox\settings.ini"
 CONFIG_SECTION := "Settings"
-; if (!DirExist(CONFIG_FILE)) {
-; DirCreate CONFIG_FILE
-; }
-
 
 ; is the config available?
 hasSetting(id) {
