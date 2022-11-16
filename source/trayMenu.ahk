@@ -80,7 +80,12 @@ class MenuManager {
         if activeOption != false {
             state := item.id = activeOption
         } else if this._isSwitch(&item) {
-            state := readSetting(item.id)
+            value := readSetting(item.id)
+            if value == "NON_PRESENT" {
+                state := false
+            } else {
+                state := value
+            }
         } else {
             return
         }

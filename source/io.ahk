@@ -1,6 +1,10 @@
 CONFIG_FILE := A_AppData "\shortcutFox\settings.ini"
 CONFIG_SECTION := "Settings"
 
+if not FileExist(CONFIG_FILE) {
+    Run "powershell.exe -Command New-Item -Path " CONFIG_FILE " -Force"
+}
+
 ; is the config available?
 hasSetting(id) {
     global CONFIG_FILE
@@ -22,6 +26,7 @@ readSetting(id) {
 }
 
 writeSetting(id, value) {
+    global CONFIG_FILE, CONFIG_SECTION
     IniWrite(value, CONFIG_FILE, CONFIG_SECTION, id)
 }
 
@@ -30,6 +35,7 @@ toggleSetting(id) {
 }
 
 removeSetting(id) {
+    global CONFIG_FILE, CONFIG_SECTION
     if hasSetting(id) {
         IniDelete(CONFIG_FILE, CONFIG_SECTION, id)
     }

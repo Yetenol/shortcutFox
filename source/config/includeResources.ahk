@@ -1,21 +1,21 @@
 ; Prepare resource folders
 resourceFolders := "icons,scripts"
 loop parse resourceFolders, "," {
-    if (DirExist(A_LoopField))
-        DirDelete A_LoopField, true
-    DirCreate A_LoopField
+    if DirExist(A_LoopField) {
+        DirCreate A_LoopField
+    }
 }
 
 ; Install resource files
-FileInstall("icons\add-fingerprint.ico", "icons\add-fingerprint.ico")
-FileInstall("icons\bluetooth.ico", "icons\bluetooth.ico")
-FileInstall("icons\code-fork.ico", "icons\code-fork.ico")
-FileInstall("icons\face-id.ico", "icons\face-id.ico")
-FileInstall("icons\shortcut.ico", "icons\shortcut.ico")
-FileInstall("icons\software-installer.ico", "icons\software-installer.ico")
-FileInstall("icons\whiteboard.ico", "icons\whiteboard.ico")
-FileInstall("icons\windows-snipping-tool.ico", "icons\windows-snipping-tool.ico")
+FileInstall("icons\add-fingerprint.ico", "icons\add-fingerprint.ico", true)
+FileInstall("icons\bluetooth.ico", "icons\bluetooth.ico", true)
+FileInstall("icons\code-fork.ico", "icons\code-fork.ico", true)
+FileInstall("icons\face-id.ico", "icons\face-id.ico", true)
+FileInstall("icons\shortcut.ico", "icons\shortcut.ico", true)
+FileInstall("icons\software-installer.ico", "icons\software-installer.ico", true)
+FileInstall("icons\whiteboard.ico", "icons\whiteboard.ico", true)
+FileInstall("icons\windows-snipping-tool.ico", "icons\windows-snipping-tool.ico", true)
 
-FileInstall("scripts\gitUpdateAll.ps1.bat", "scripts\gitUpdateAll.ps1.bat")
-FileInstall("scripts\wingetUpdateAll.ps1.bat", "scripts\wingetUpdateAll.ps1.bat")
-FileInstall("scripts\toggleRunAtStartup.ps1.bat", "scripts\toggleRunAtStartup.ps1.bat")
+FileInstall("scripts\gitUpdateAll.ps1.bat", "scripts\gitUpdateAll.ps1.bat", true)
+FileInstall("scripts\wingetUpdateAll.ps1.bat", "scripts\wingetUpdateAll.ps1.bat", true)
+FileInstall("scripts\toggleRunAtStartup.ps1.bat", "scripts\toggleRunAtStartup.ps1.bat", true)

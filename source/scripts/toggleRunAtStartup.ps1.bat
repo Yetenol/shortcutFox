@@ -4,12 +4,10 @@
 # Import known folder
 $env:Startup = (New-Object -ComObject Shell.Application).NameSpace('shell:Startup').Self.Path
 
-$configFile = "$env:APPDATA\shortcutFox\RUN_AT_STARTUP.ini"
 $shortcutPath = "$env:Startup\shortcutFox.lnk"
 $executablePath = "D:\DEV\shortcutFox\bin\shortcutFox.exe"
 
-$doStartup = Get-Content -Path $configFile -ErrorAction SilentlyContinue
-if ($doStartup -eq "true") {
+if (Test-Path -Path $shortcutPath) {
     Remove-Item -Path $shortcutPath -ErrorAction SilentlyContinue
 } else {
     # Create startup shortcut
