@@ -16,6 +16,6 @@ FileInstall("icons\software-installer.ico", "icons\software-installer.ico", true
 FileInstall("icons\whiteboard.ico", "icons\whiteboard.ico", true)
 FileInstall("icons\windows-snipping-tool.ico", "icons\windows-snipping-tool.ico", true)
 
-FileInstall("scripts\gitUpdateAll.ps1.bat", "scripts\gitUpdateAll.ps1.bat", true)
-FileInstall("scripts\wingetUpdateAll.ps1.bat", "scripts\wingetUpdateAll.ps1.bat", true)
-FileInstall("scripts\toggleRunAtStartup.ps1.bat", "scripts\toggleRunAtStartup.ps1.bat", true)
+FileInstall("scripts\gitUpdateAll.ps1", "scripts\gitUpdateAll.ps1", true)
+FileInstall("scripts\wingetUpdateAll.ps1", "scripts\wingetUpdateAll.ps1", true)
+FileInstall("scripts\toggleRunAtStartup.ps1", "scripts\toggleRunAtStartup.ps1", true)

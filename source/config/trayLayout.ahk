@@ -11,7 +11,7 @@ TRAY_LAYOUT := {
                     text: "Run at startup",
                     switch : false,
                     icon: [A_WinDir "\System32\netshell.dll", 104],
-                    run: "scripts\toggleRunAtStartup.ps1.bat",
+                    run: "scripts\toggleRunAtStartup.ps1",
                 },
                 {
                     id: "SUSPEND",
@@ -97,13 +97,13 @@ TRAY_LAYOUT := {
                                     [{
                                         id: "WINGET_UPDATE",
                                         text: "Update all applications",
-                                        run: "scripts\wingetUpdateAll.ps1.bat",
+                                        run: "scripts\wingetUpdateAll.ps1",
                                         icon: "icons\software-installer.ico",
                                     },
                                         {
                                             id: "GIT_UPDATE",
                                             text: "Update all repositories",
-                                            run: "scripts\gitUpdateAll.ps1.bat",
+                                            run: "scripts\gitUpdateAll.ps1",
                                             icon: "icons\code-fork.ico",
                                         },
                                     ]
