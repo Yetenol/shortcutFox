@@ -23,7 +23,7 @@ sort LastWriteTime -Descending |
     # Print progress information
     Write-Host @("`n(" + (++$index) + "/" + $repositories.Length + ") Found ") -NoNewline
     Write-Host $_.Name -ForegroundColor Cyan -NoNewline
-    Write-Host " at " -NoNewline
+    Write-Host " in " -NoNewline
     Write-Host $_.Parent.FullName -ForegroundColor Cyan
     
     $path = $_.FullName
