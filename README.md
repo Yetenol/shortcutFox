@@ -14,7 +14,7 @@ ShortcutFox lists shortcuts, which can be easily customized with a [json-like fi
 - Focus next window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Up]`
 - Focus previous window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Down]`
 
-### Tray shortcuts
+## Tray shortcuts
 
 - Right click the tray icon:
     - Enable run at startup _< `#Manage script...` submenu_
