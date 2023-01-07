@@ -9,7 +9,7 @@ ShortcutFox lists shortcuts, which can be easily customized with a [json-like fi
 
 ## Keyboard shortcuts
 
-- Toggle **word case** for  [whitelisted apps](#whitelisted-apps) using `[CapsLock]`
+- Toggle **word case** for  [whitelisted apps](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
 - Focus or launch **KeeWeb** using `[Win + Shift + V]` 
 - Focus next window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Up]`
 - Focus previous window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Down]`
@@ -30,7 +30,7 @@ ShortcutFox lists shortcuts, which can be easily customized with a [json-like fi
     - Execute the default action
     - Configurable _< `Set left click action...` submenu_
 
-## Whitelisted apps
+## Whitelisted apps to toggle word case
 
 - Microsoft **Word**
 
