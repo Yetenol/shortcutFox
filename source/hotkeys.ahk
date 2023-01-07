@@ -24,3 +24,22 @@
 {
     SendInput "#{PgDn}"
 }
+
+CapsLock::
+{
+    WinGetClass("A") ; get active window
+    ; Selection := WinGetControls("A")
+    HWND := ControlGetFocus("A")
+    MsgBox HWND
+    ; if (RegExMatch(HWND, "Edit")) {
+        Selection := EditGetSelectedText(HWND, "A")
+        if (IsLower(Selection)) {
+            Selection := StrUpper(Selection)
+        } else if (IsUpper(Selection)) {
+            Selection := StrTitle(Selection)
+        } else {
+            Selection := StrLower(Selection)
+        }
+        EditPaste(Selection, HWND, "A")
+    ; }
+}
