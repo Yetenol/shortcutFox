@@ -43,7 +43,7 @@ ShortcutFox lists shortcuts, which can be easily customized with a [json-like fi
   with keybinding `[Shift + F3]` ← Change Word Case
 
 - **Obsidian**   
-  requiring [Toggle Case](obsidian://show-plugin?id=obsidian-toggle-case)  
+  requiring [Toggle Case](https://obsidian.md/plugins?id=obsidian-toggle-case)  
   with hotkey `[Shift + F3]` ← Toggle Case: Toggle Case
 
 # Build instructions
