@@ -6,11 +6,16 @@
 ShortcutFox lists shortcuts, which can be easily customized with a [json-like file](source/config/trayLayout.ahk), in the context menu of a system tray icon. Additionally, a few personalization tweaks are applied.
 
 # Features
-## Application shortcuts
-- Focus or launch **KeeWeb**  
-    `[Win + Shift + V]` 
 
-### Tray Shortcuts
+## Keyboard shortcuts
+
+- Toggle **word case** for  [whitelisted apps](#whitelisted%20apps) using `[CapsLock]`
+- Focus or launch **KeeWeb** using `[Win + Shift + V]` 
+- Focus next window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Up]`
+- Focus previous window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Down]`
+
+### Tray shortcuts
+
 - Right click the tray icon:
     - Enable run at startup _< `#Manage script...` submenu_
     - Take screenshot
@@ -24,6 +29,22 @@ ShortcutFox lists shortcuts, which can be easily customized with a [json-like fi
 - Left click the tray:
     - Execute the default action
     - Configurable _< `Set left click action...` submenu_
+
+## Whitelisted apps
+
+- Microsoft **Word**
+
+- Microsoft **PowerPoint**
+
+-  **Files** from [Files Community](https://files.community/)
+
+- Visual Studio **Code**  
+  requiring [Change Case](https://marketplace.visualstudio.com/items?itemName=FinnTenzor.change-case)  
+  with keybinding `[Shift + F3]` ← Change Word Case
+
+- **Obsidian**   
+  requiring [Toggle Case](obsidian://show-plugin?id=obsidian-toggle-case)  
+  with hotkey `[Shift + F3]` ← Toggle Case: Toggle Case
 
 # Build instructions
 
