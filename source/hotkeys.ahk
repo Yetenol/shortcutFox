@@ -3,18 +3,22 @@
 ; Toggle word case [CapsLock]
 SetNumLockState True
 SetCapsLockState "AlwaysOff"
+
+; Change word case
+#HotIf (
+    WinActive("ahk_exe Code.exe") or
+    WinActive("ahk_exe Obsidian.exe") or
+    WinActive("ahk_exe Files.exe") or
+    WinActive("ahk_exe WINWORD.EXE") or
+    WinActive("ahk_exe POWERPNT.EXE")
+) and readSetting("HOTKEY_TOGGLE_CASE")
 CapsLock::
 {
-    if WinActive("ahk_exe Code.exe") ||
-        WinActive("ahk_exe Obsidian.exe") ||
-        WinActive("ahk_exe Files.exe") ||
-        WinActive("ahk_exe WINWORD.EXE") ||
-        WinActive("ahk_exe POWERPNT.EXE")
     SendInput "+{F3}"
 }
 
-
-; Focus or launch KeeWeb [Win + Shift + V]
+; Focus or launch KeeWeb
+#HotIf readSetting("HOTKEY_LAUNCH_KEEWEB")
 #+V::
 {
     global KEEWEB_BIN
@@ -29,11 +33,14 @@ CapsLock::
     }
 }
 
+; Cycle window in zone
+#HotIf readSetting("HOTKEY_CYCLE_ZONE_WINDOW")
 #WheelUp::
 {
     SendInput "#{PgUp}"
 }
 
+#HotIf readSetting("HOTKEY_CYCLE_ZONE_WINDOW")
 #WheelDown::
 {
     SendInput "#{PgDn}"
