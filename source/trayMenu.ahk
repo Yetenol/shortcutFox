@@ -13,11 +13,6 @@ class MenuManager {
         CHOICE: 3,    ; Expandable setting with list of options (CONTENT)
         SWITCH : 4,    ; Toggleable setting, SWITCH sets the default state
     }
-    static CHECKMARK_STATES := {    ; all items need an ID and TEXT
-        OFF: 0,    ; Option/Switch is disabled
-        ENABLED: 1,    ; Switch is enabled
-        CHOOSEN: 2,    ; Option is enabled
-    }
     trayMenu := {}
     /**
      * Build the traymenu.
@@ -29,12 +24,29 @@ class MenuManager {
         this._parseLayout()
         this.applyDefaultAction()
     }
+    clickSwitch(&item, &menu) {
+        if not this._isSwitch(&item) {
+            return
+        }
+        if not hasSetting(item.id) {
+            writeSetting(item.id, item.switch)
+        }
+        writeSetting(item.id, !readSetting(item.id))
+        this._applySwitchIcon(&item)
+        this._drawIcon(&item, &menu)
+    }
     clickChoice(choiceId, option, &menu) {
         choiceItem := this._findItem(choiceId)
         writeSetting(choiceId, option)
-        this._updateCheckmark(option, &menu)
+        this._updateChoiceIcons(option, &menu)
         if choiceItem.HasOwnProp("call") {
             call(choiceItem.call, choiceItem.id)
+        }
+    }
+    _updateChoiceIcons(activeId, &menu) {
+        for item in menu.content {
+            this._applyOptionIcon(&item, activeId)
+            this._drawIcon(&item, &menu)
         }
     }
     /**
@@ -81,27 +93,32 @@ class MenuManager {
             item.optionOf := choiceID
         }
     }
-    _applyCheckmark(&item, activeOption := false) {
-        state := MenuManager.CHECKMARK_STATES.OFF
-        if activeOption != false {
-            if item.id = activeOption {
-                state := MenuManager.CHECKMARK_STATES.CHOOSEN
-            }
-        } else if this._isSwitch(&item) {
-            switch readSetting(item.id) {
-                case "NON_PRESENT":
-                    if (item.switch) {
-                        state := MenuManager.CHECKMARK_STATES.ENABLED
-                    }
-                    writeSetting(item.id, item.switch)
-                case true:
-                    state := state := MenuManager.CHECKMARK_STATES.ENABLED
-                default:
-            }
-        } else {
+    _applySwitchIcon(&item) {
+        if not this._isSwitch(&item) {
             return
         }
-        item.icon := { state: state }
+        if this._isSwitchEnabled(&item) {
+            item.icon := ICON_ENABLED_SWITCH
+        } else {
+            item.icon := ICON_DISABLED_SWITCH
+        }
+        
+    }
+    _isSwitchEnabled(&item) {
+        if not hasSetting(item.id) {
+            writeSetting(item.id, item.switch) ; apply default value
+        }
+        return readSetting(item.id)
+    }
+    _applyOptionIcon(&item, activeOption) {
+        if activeOption = false {
+            return
+        }
+        if item.id = activeOption {
+            item.icon := ICON_CHOOSEN_OPTION
+        } else {
+            item.icon := ICON_NOT_CHOOSEN_OPTION
+        }
     }
     /**
      * Prepare menu for initialization:
@@ -123,7 +140,8 @@ class MenuManager {
             item := itemDefinition.Clone()
             this._inheritIcon(&item, &layer)
             this._referenceChoice(&item, choiceID)
-            this._applyCheckmark(&item, activeOption)
+            this._applySwitchIcon(&item)
+            this._applyOptionIcon(&item, activeOption)
             switch this._getItemType(item) {
                 case MenuManager.ITEM_TYPES.ACTION, MenuManager.ITEM_TYPES.SWITCH:
                     menu.content.Push(item)
@@ -147,12 +165,6 @@ class MenuManager {
     }
     _removeStandard() {
         A_TrayMenu.Delete()
-    }
-    _updateCheckmark(activeId, &menu) {
-        for item in menu.content {
-            this._applyCheckmark(&item, activeId)
-            this._drawIcon(&item, &menu)
-        }
     }
     /**
      * Return get type of an item
@@ -255,24 +267,19 @@ class MenuManager {
             return
         }
         icon := item.icon
-        if icon is array && icon.Length = 2 {    ; icon contains a path and index
-            menu.setIcon(item.text, icon[1], icon[2])
-        } else if icon is string {    ; icon only contains a path
-            menu.setIcon(item.text, icon)
-        } else if icon is object && icon.HasOwnProp("state") {
-            switch icon.state {
-                case MenuManager.CHECKMARK_STATES.ENABLED:
-                    menu.SetIcon(item.text, "*")
-                    menu.Check(item.text)
-                case MenuManager.CHECKMARK_STATES.CHOOSEN:
-                    menu.SetIcon(item.text, A_WinDir "\System32\shell32.dll", 293)
-                    menu.Uncheck(item.text)
-                default:
-                    menu.SetIcon(item.text, "*")
-                    menu.Uncheck(item.text)
-            }
-
+        if icon is String {
+            icon := [icon, 1]
         }
+        if not (icon is Array and icon.Length = 2) {
+            return
+        }
+
+        if icon[1] = "CHECKMARK" {
+            menu.Check(item.text)
+            return
+        }
+        menu.Uncheck(item.text)
+        menu.setIcon(item.text, icon[1], icon[2])
     }
     _readDefaultAction() {
         defaultID := readSetting("DEFAULT_ACTION")
@@ -354,18 +361,7 @@ handler(itemName, itemPosition, menu) {
         Run file, A_WorkingDir
     }
     if action.HasOwnProp("switch") {
-        switch readSetting(action.id) {
-            case "NON_PRESENT":
-                writeSetting(action.id, !action.switch)
-                menu.ToggleCheck(itemName)
-            case true:
-                writeSetting(action.id, false)
-                menu.Uncheck(itemName)
-            default:
-                writeSetting(action.id, true)
-                menu.Check(itemName)
-
-        }
+        tray.clickSwitch(&action, &menu)
     }
     if action.HasOwnProp("call") {
         call(action.call, action.id)

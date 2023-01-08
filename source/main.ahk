@@ -9,5 +9,12 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 
 ; Create tray menu
 tray := MenuManager()
+restoreSuspendState()
+
+restoreSuspendState() {
+    if readSetting("SUSPEND") {
+        Suspend
+    }
+}
 
 return

@@ -23,7 +23,6 @@ closeApp() {
 ; Disable or enable all the selected hotkeys
 toggleSuspend(id) {
     Suspend
-    removeSetting(id)
 }
 
 toggleRunAtStartup(id) {

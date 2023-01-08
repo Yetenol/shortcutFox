@@ -69,7 +69,7 @@ TRAY_LAYOUT := {
                 id: "DEFAULT_ACTION",
                 text: "Set left click action",
                 maxDisplay: 0,
-                icon: "*",
+                icon: "",
                 choice: "NO_DEFAULT_ACTION",
                 call: "applyDefaultAction()",
                 content:
