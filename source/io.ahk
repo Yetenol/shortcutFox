@@ -30,10 +30,6 @@ writeSetting(id, value) {
     IniWrite(value, CONFIG_FILE, CONFIG_SECTION, id)
 }
 
-toggleSetting(id) {
-    writeSetting(id, !readSetting(id))
-}
-
 removeSetting(id) {
     global CONFIG_FILE, CONFIG_SECTION
     if hasSetting(id) {

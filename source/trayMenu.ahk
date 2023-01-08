@@ -338,8 +338,13 @@ handler(itemName, itemPosition, menu) {
         Run file, A_WorkingDir
     }
     if action.HasOwnProp("switch") {
-        menu.ToggleCheck(itemName)
-        toggleSetting(action.id)
+        if false = readSetting(action.id) {
+            writeSetting(action.id, true)
+            menu.Check(itemName)
+        } else {
+            writeSetting(action.id, false)
+            menu.Uncheck(itemName)
+        }
     }
     if action.HasOwnProp("call") {
         call(action.call, action.id)
