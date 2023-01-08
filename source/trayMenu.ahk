@@ -79,7 +79,9 @@ _referenceChoice(&item, choiceID := false) {
 _applyCheckmark(&item, activeOption := false) {
     state := false
     if activeOption != false {
-        state := item.id = activeOption
+        if item.id = activeOption {
+            state := "choosen"
+        }
     } else if this._isSwitch(&item) {
         switch readSetting(item.id) {
             case "NON_PRESENT":
@@ -253,12 +255,17 @@ _drawIcon(&item, &menu) {
     } else if icon is string {    ; icon only contains a path
         menu.setIcon(item.text, icon)
     } else if icon is object && icon.HasOwnProp("state") {
-        menu.SetIcon(item.text, "*")
-        if icon.state {
-            menu.Check(item.text)
+        if icon.state = "choosen" {
+            menu.SetIcon(item.text, A_WinDir "\System32\shell32.dll", 293)
         } else {
-            menu.Uncheck(item.text)
+            menu.SetIcon(item.text, "*")
+            if icon.state {
+                menu.Check(item.text)
+            } else {
+                menu.Uncheck(item.text)
+            }
         }
+        
     }
 }
 _readDefaultAction() {
