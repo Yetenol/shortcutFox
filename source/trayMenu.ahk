@@ -1,6 +1,7 @@
 #Include config/config.ahk
 #Include config/trayLayout.ahk
 #Include io.ahk
+#Include callFunctions.ahk
 
 TraySetIcon(DEFAULT_ICON)
 
@@ -21,14 +22,14 @@ class MenuManager {
     A_TrayMenu.ClickCount := 1    ; just require a single click instead of a double click
     this._removeStandard()
     this._parseLayout()
-    this._applyDefaultAction()
+    this.applyDefaultAction()
 }
 clickChoice(choiceId, option, &menu) {
     choiceItem := this._findItem(choiceId)
     writeSetting(choiceId, option)
     this._updateCheckmark(option, &menu)
-    if choiceId == "DEFAULT_ACTION" {
-        this._applyDefaultAction()
+    if choiceItem.HasOwnProp("call") {
+        call(choiceItem.call, choiceItem.id)
     }
 }
 /**
@@ -179,7 +180,7 @@ _getReferencedContent(&linkItem) => this._findItem(linkItem)
  * @param item Submenu or group to examine
  */
 _doesMeetMaxDisplay(&item) {
-    if (!item.hasOwnProp("maxDisplay")) {
+    if (!item.HasOwnProp("maxDisplay")) {
         return true
     } else if (item.maxDisplay = 0) {
         return false
@@ -273,7 +274,7 @@ _readDefaultAction() {
     return defaultAction
 }
 
-_applyDefaultAction() {
+applyDefaultAction() {
     global DEFAULT_ICON
     action := this._readDefaultAction()
     if not action {
@@ -299,12 +300,12 @@ _isSymbolicLink(&item) => item is string
  * Does the item fullfill the minimum specifications for a menu entry?
  * @param item Action, submenu, group or symbolic link to examine
  */
-_isValidItem(&item) => item is object && item.hasOwnProp("id")
+_isValidItem(&item) => item is object && item.HasOwnProp("id")
 /**
  * Does the element contain children, which is true for submenus and groups?
  * @param item Action, submenu, group or symbolic link to examine
  */
-_hasChildren(&item) => this._isValidItem(&item) && item.hasOwnProp("content")
+_hasChildren(&item) => this._isValidItem(&item) && item.HasOwnProp("content")
 }
 /**
  * Display debugging information about the clicked entry.
@@ -325,10 +326,10 @@ handler(itemName, itemPosition, menu) {
     if action.HasOwnProp("delay") {
         Sleep action.delay
     }
-    if action.hasOwnProp("send") {
+    if action.HasOwnProp("send") {
         Send action.send
     }
-    if action.hasOwnProp("run") {
+    if action.HasOwnProp("run") {
         file := NormalizePath(action.run)
         SplitPath file, , , &extension
         if (extension = "ps1") {
@@ -339,6 +340,9 @@ handler(itemName, itemPosition, menu) {
     if action.HasOwnProp("switch") {
         menu.ToggleCheck(itemName)
         toggleSetting(action.id)
+    }
+    if action.HasOwnProp("call") {
+        call(action.call, action.id)
     }
 }
 /**

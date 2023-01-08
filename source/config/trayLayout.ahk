@@ -10,16 +10,18 @@ TRAY_LAYOUT := {
                     id: "RUN_AT_STARTUP",
                     text: "Run at startup",
                     switch : false,
-                    icon: [A_WinDir "\System32\netshell.dll", 104],
-                    run: "scripts\toggleRunAtStartup.ps1",
+                    call: "toggleRunAtStartup()",
                 },
                 {
                     id: "SUSPEND",
                     text: "Suspend",
+                    switch: false,
+                    call: "toggleSuspend()",
                 },
                 {
                     id: "EXIT",
                     text: "Exit",
+                    call: "closeApp()",
                 },]
             },
             {
@@ -47,6 +49,7 @@ TRAY_LAYOUT := {
                 maxDisplay: 0,
                 icon: "*",
                 choice: "NO_DEFAULT_ACTION",
+                call: "applyDefaultAction()",
                 content:
                     [{
                         id: "NO_DEFAULT_ACTION",
