@@ -81,11 +81,14 @@ _applyCheckmark(&item, activeOption := false) {
     if activeOption != false {
         state := item.id = activeOption
     } else if this._isSwitch(&item) {
-        value := readSetting(item.id)
-        if value == "NON_PRESENT" {
-            state := false
-        } else {
-            state := value
+        switch readSetting(item.id) {
+            case "NON_PRESENT":
+                state := item.switch
+                writeSetting(item.id, item.switch)
+            case true:
+                state := true
+            default:
+                state := false
         }
     } else {
         return
@@ -338,12 +341,17 @@ handler(itemName, itemPosition, menu) {
         Run file, A_WorkingDir
     }
     if action.HasOwnProp("switch") {
-        if false = readSetting(action.id) {
-            writeSetting(action.id, true)
-            menu.Check(itemName)
-        } else {
-            writeSetting(action.id, false)
-            menu.Uncheck(itemName)
+        switch readSetting(action.id) {
+            case "NON_PRESENT":
+                writeSetting(action.id, !action.switch)
+                menu.ToggleCheck(itemName)
+            case true:
+                writeSetting(action.id, false)
+                menu.Uncheck(itemName)
+            default:
+                writeSetting(action.id, true)
+                menu.Check(itemName)
+
         }
     }
     if action.HasOwnProp("call") {
