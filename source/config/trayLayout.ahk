@@ -3,7 +3,7 @@ TRAY_LAYOUT := {
     content:
         [{
             id: "MANAGE_SCRIPT",
-            text: "Manage script...",
+            text: "Manage script",
             maxDisplay: 0,
             content:
                 [{
@@ -26,7 +26,7 @@ TRAY_LAYOUT := {
             },
             {
                 id: "MANAGE_HOTKEYS",
-                text: "Manage keyboard shortcuts...",
+                text: "Manage keyboard shortcuts",
                 maxDisplay: 0,
                 content:
                 [{
@@ -49,7 +49,7 @@ TRAY_LAYOUT := {
             },
             {
                 id: "SEND_KEYSTROKES",
-                text: "Send keystrokes...",
+                text: "Send keystrokes",
                 maxDisplay: 0,
                 content:
                     [{
