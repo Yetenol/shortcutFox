@@ -18,4 +18,3 @@ FileInstall("icons\windows-snipping-tool.ico", "icons\windows-snipping-tool.ico"
 
 FileInstall("scripts\gitUpdateAll.ps1", "scripts\gitUpdateAll.ps1", true)
 FileInstall("scripts\wingetUpdateAll.ps1", "scripts\wingetUpdateAll.ps1", true)
-FileInstall("scripts\toggleRunAtStartup.ps1", "scripts\toggleRunAtStartup.ps1", true)
