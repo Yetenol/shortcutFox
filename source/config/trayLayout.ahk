@@ -25,6 +25,29 @@ TRAY_LAYOUT := {
                 },]
             },
             {
+                id: "MANAGE_HOTKEYS",
+                text: "Manage keyboard shortcuts...",
+                maxDisplay: 0,
+                content:
+                [{
+                        id: "HOTKEY_TOGGLE_CASE",
+                        text: "Change word case using [CapsLock]",
+                        switch : false,
+                    }, {
+                        id: "HOTKEY_LAUNCH_KEEWEB",
+                        text: "Focus or launch KeeWeb using [Win + Shift + V]",
+                        switch : true,
+                    }, {
+                        id: "HOTKEY_CYCLE_ZONE_WINDOW",
+                        text: (
+                            "Cycle window in zone using "
+                            "[Win + Mouse Wheel Up] or [Win + Mouse Wheel Down]"
+                        ),
+                        switch : true,
+                    }
+                ]
+            },
+            {
                 id: "SEND_KEYSTROKES",
                 text: "Send keystrokes...",
                 maxDisplay: 0,
@@ -44,7 +67,7 @@ TRAY_LAYOUT := {
             },
             {
                 id: "DEFAULT_ACTION",
-                text: "Set left click action...",
+                text: "Set left click action",
                 maxDisplay: 0,
                 icon: "*",
                 choice: "NO_DEFAULT_ACTION",
@@ -55,29 +78,6 @@ TRAY_LAYOUT := {
                         text: "None",
                     },
                     "MAIN_SHORTCUTS",
-                ]
-            },
-            {
-                id: "MANAGE_HOTKEYS",
-                text: "Manage keyboard shortcuts...",
-                maxDisplay: 0,
-                content:
-                    [{
-                        id: "HOTKEY_TOGGLE_CASE",
-                        text: "Change word case using [CapsLock]",
-                        switch : false,
-                    }, {
-                        id: "HOTKEY_LAUNCH_KEEWEB",
-                        text: "Focus or launch KeeWeb using [Win + Shift + V]",
-                        switch : true,
-                    }, {
-                        id: "HOTKEY_CYCLE_ZONE_WINDOW",
-                        text: (
-                            "Cycle window in zone using "
-                            "[Win + Mouse Wheel Up] or [Win + Mouse Wheel Down]"
-                        ),
-                        switch : true,
-                    }
                 ]
             },
             {
