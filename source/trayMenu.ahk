@@ -1,5 +1,5 @@
 #Include config/config.ahk
-#Include config/trayLayout.ahk
+#Include config/trayShortcuts.ahk
 #Include io.ahk
 #Include callFunctions.ahk
 

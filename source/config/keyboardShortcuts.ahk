@@ -1,4 +1,4 @@
-#Include config/config.ahk
+#Include config.ahk
 
 ; Toggle word case [CapsLock]
 SetNumLockState True

@@ -4,7 +4,7 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 
 #Include config/config.ahk
 #Include config/includeResources.ahk
-#Include hotkeys.ahk
+#Include config/keyboardShortcuts.ahk
 #Include trayMenu.ahk
 
 ; Create tray menu
