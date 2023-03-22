@@ -9,7 +9,7 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 #Include MenuManager.ahk
 
 ; Create tray menu
-tray := MenuManager()
+tray := MenuBuilder()
 restoreSuspendState()
 
 restoreSuspendState() {
