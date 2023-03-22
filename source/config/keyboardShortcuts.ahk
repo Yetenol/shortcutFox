@@ -33,6 +33,16 @@ CapsLock::
     }
 }
 
+#HotIf (
+    WinActive("ahk_exe msedge.exe") and
+    !WinExist("ahk_exe KeeWeb.exe")
+) and readSetting("HOTKEY_PASTE_KEEWEB")
+^+v::
+{
+    Run KEEWEB_BIN
+}
+
+
 ; Cycle window in zone
 #HotIf readSetting("HOTKEY_CYCLE_ZONE_WINDOW")
 #WheelUp::

@@ -38,6 +38,10 @@ TRAY_LAYOUT := {
                         text: "Focus or launch KeeWeb using [Win + Shift + V]",
                         switch : true,
                     }, {
+                        id: "HOTKEY_PASTE_KEEWEB",
+                        text: "Paste or launch KeeWeb using [Ctrl + Shift + V]",
+                        switch : true,
+                    }, {
                         id: "HOTKEY_CYCLE_ZONE_WINDOW",
                         text: (
                             "Cycle window in zone using "
