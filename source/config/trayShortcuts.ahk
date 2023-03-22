@@ -42,12 +42,16 @@ TRAY_LAYOUT := {
                         text: "Paste or launch KeeWeb using [Ctrl + Shift + V]",
                         switch : true,
                     }, {
+                        id: "HOTKEY_PASTE_DATE",
+                        text: "Paste date in YYYY-MM-DD [Win + Alt + D]",
+                        switch : true,
+                    }, {
                         id: "HOTKEY_CYCLE_ZONE_WINDOW",
                         text: (
                             "Cycle window in zone using "
                             "[Win + Mouse Wheel Up] or [Win + Mouse Wheel Down]"
                         ),
-                        switch : true,
+                        switch : false,
                     }
                 ]
             },
