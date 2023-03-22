@@ -6,6 +6,7 @@ SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script f
 #Include config/includeResources.ahk
 #Include config/keyboardShortcuts.ahk
 #Include trayMenu.ahk
+#Include MenuManager.ahk
 
 ; Create tray menu
 tray := MenuManager()
