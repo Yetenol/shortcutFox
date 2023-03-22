@@ -29,7 +29,7 @@ handleClickEvent(itemName, itemPosition, menu) {
         Send action.send
     }
     if action.HasOwnProp("run") {
-        file := NormalizePath(action.run)
+        file := normalizePath(action.run)
         SplitPath file, , , &extension
         if (extension = "ps1") {
             Run "Powershell -ExecutionPolicy Bypass -File " file, A_WorkingDir
@@ -43,6 +43,7 @@ handleClickEvent(itemName, itemPosition, menu) {
         call(action.call, action.id)
     }
 }
+
 /**
  * Find the corresponding action for the clicked item
  * @param menu Menu where the click took place
@@ -57,7 +58,7 @@ findAction(&menu, text) {
     return false    ; couldn't find item
 }
 
-NormalizePath(path) {
+normalizePath(path) {
     cc := DllCall("GetFullPathName", "str", path, "uint", 0, "ptr", 0, "ptr", 0, "uint")
     buf := Buffer(cc * 2)
     DllCall("GetFullPathName", "str", path, "uint", cc, "ptr", buf, "ptr", 0)
