@@ -42,6 +42,10 @@ CapsLock::
     Run KEEWEB_BIN
 }
 
+#HotIf readSetting("HOTKEY_PASTE_DATE")
+#!d:: {
+    SendInput A_YYYY "-" A_MM "-" A_DD
+}
 
 ; Cycle window in zone
 #HotIf readSetting("HOTKEY_CYCLE_ZONE_WINDOW")
