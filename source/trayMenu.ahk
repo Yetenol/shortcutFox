@@ -12,7 +12,7 @@ TraySetIcon(DEFAULT_ICON)
  * @param itemPosition Entry's position within its submenu
  * @param menu Entry's submenu or traymenu
  */
-handler(itemName, itemPosition, menu) {
+handleClickEvent(itemName, itemPosition, menu) {
     action := findAction(&menu, itemName)
     if action = false {
         throw TargetError("Cannot find clicked item")
