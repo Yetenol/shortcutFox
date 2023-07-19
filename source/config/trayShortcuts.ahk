@@ -126,7 +126,7 @@ TRAY_LAYOUT := {
                         content:
                             [{
                                 id: "WINGET_UPDATE",
-                                text: "Update all applications",
+                                text: "Update all applications [Admin]",
                                 run: "scripts\wingetUpdateAll.ps1",
                                 icon: "icons\software-installer.ico",
                             }, {

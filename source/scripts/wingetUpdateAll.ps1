@@ -1,5 +1,14 @@
-# & cls & powershell -Command Start-Process wt -Verb RunAs -ArgumentList """PowerShell.exe -Command Invoke-Command -ScriptBlock ([ScriptBlock]::Create(((Get-Content %0) -join [Environment]::NewLine)))""" & exit
-# Script is executable and self-elevating when renamed *.cmd or *.bat
+$is_executed_privileged = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).
+    IsInRole([Security.Principal.WindowsBuiltInRole]::"Administrator")
+if (-not $is_executed_privileged) {
+    if ((Get-Command wt.exe) -ne $null) {
+        Start-Process wt "powershell -File $PSCommandPath -ExecutionPolicy Bypass" -Verb RunAs
+    }
+    else {
+        Start-Process powershell "-File $PSCommandPath -ExecutionPolicy Bypass" -Verb RunAs
+    }
+    exit
+}
 
 Write-Host "Fetching application updates...`n"
 
