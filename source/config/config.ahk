@@ -1,4 +1,4 @@
-KEEWEB_BIN := "C:\Program Files\KeeWeb\KeeWeb.exe"
+KEEWEB_PATH := "C:\Program Files\KeeWeb\KeeWeb.exe"
 STARTUP_SHORTCUT := "C:\Users\anton\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\shortcutFox.lnk"
 DEFAULT_ICON := "icons\shortcut.ico"
 

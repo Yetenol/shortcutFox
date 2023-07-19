@@ -43,7 +43,7 @@ TRAY_LAYOUT := {
                         switch : true,
                     }, {
                         id: "HOTKEY_PASTE_DATE",
-                        text: "Paste date in YYYY-MM-DD [Win + Alt + D]",
+                        text: "Insert the date formatted as YYYY-MM-DD [Win + Alt + D]",
                         switch : true,
                     }, {
                         id: "HOTKEY_CYCLE_ZONE_WINDOW",
