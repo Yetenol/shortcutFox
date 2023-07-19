@@ -62,12 +62,12 @@ TRAY_LAYOUT := {
                 content:
                     [{
                         id: "SEND_PAUSE",
-                        text: "Send Pause",
+                        text: "Send [Pause]",
                         delay: 2000,
                         send: "{Pause}",
                     }, {
                         id: "SEND_CTRLBREAK",
-                        text: "Send Break",
+                        text: "Send [Break]",
                         delay: 2000,
                         send: "{CtrlBreak}",
                     },

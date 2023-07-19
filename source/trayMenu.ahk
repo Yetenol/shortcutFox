@@ -34,7 +34,7 @@ handleClickEvent(itemName, itemPosition, menu) {
         if (extension = "ps1") {
             Run "Powershell -ExecutionPolicy Bypass -File " file, A_WorkingDir
         }
-        Run file, A_WorkingDir
+        Run action.run
     }
     if action.HasOwnProp("switch") {
         tray.clickSwitch(&action, &menu)
