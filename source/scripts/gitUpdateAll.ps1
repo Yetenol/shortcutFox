@@ -29,9 +29,9 @@ $repositories | sort LastWriteTime -Descending | foreach {
     $localBranches | where { 
         $remoteBranches.Contains($_) 
     } | foreach { 
-        Write-Host "fetch " -NoNewline
+        Write-Host "pull " -NoNewline
         Write-Host $_" `t" -ForegroundColor Yellow -NoNewline
-        git -C $path fetch origin $_":"$_
+        git -C $path pull origin $_":"$_ --ff-only
         Write-Host "push " -NoNewline
         Write-Host $_" `t" -ForegroundColor Yellow -NoNewline
         git -C $path push origin $_":"$_
