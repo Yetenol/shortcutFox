@@ -7,8 +7,17 @@ $repositories = @()
 Get-ChildItem -Path $rootPath -Directory -Hidden -Recurse -Filter ".git" -ErrorAction SilentlyContinue | 
 Where-Object { $_.FullName -notmatch '\\\$RECYCLE\.BIN\\' } | foreach { $_.Parent } | foreach {
     $repositories += $_
-    Write-Output $_
+
+    $TimeSpan = [DateTime]::Now - $_.LastWriteTime
+    $DaysSince = [Math]::floor($TimeSpan.TotalDays)
+    $Date = $_.LastWriteTime.ToString("yyyy-MM-dd hh:mm")
+    [PSCustomObject]@{
+        Repository = $_.Name
+        "Unchanged for" = "$DaysSince days".PadLeft(8) + " ($Date)"
+        Location = $_.Parent.FullName
+    }
 }
+
 
 # Update repositories
 $index = 0
