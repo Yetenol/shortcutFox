@@ -3,6 +3,14 @@
 SetNumLockState True
 SetCapsLockState "AlwaysOff"
 DetectHiddenWindows True
+SetTimer apply_reddit_wallpaper, 1000*60*60
+
+apply_reddit_wallpaper()
+{
+    if readSetting("APPLY_REDDIT_WALLPAPER") {
+        Run "Powershell -ExecutionPolicy Bypass -File .\scripts\applyRedditWallpaper.ps1", A_WorkingDir, "Hide"
+    }
+}
 
 is_Keeweb_installed() {
     global KEEWEB_PATH

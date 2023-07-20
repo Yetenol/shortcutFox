@@ -134,6 +134,11 @@ TRAY_LAYOUT := {
                                 text: "Update all repositories",
                                 run: "scripts\gitUpdateAll.ps1",
                                 icon: "icons\code-fork.ico",
+                            }, {
+                                id: "APPLY_REDDIT_WALLPAPER",
+                                text: "Apply reddit wallpaper hourly",
+                                run: "scripts\applyRedditWallpaper.ps1",
+                                switch : false,
                             },
                         ]
                     }, {
