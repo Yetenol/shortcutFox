@@ -16,6 +16,9 @@ FileInstall("icons\software-installer.ico", "icons\software-installer.ico", true
 FileInstall("icons\whiteboard.ico", "icons\whiteboard.ico", true)
 FileInstall("icons\windows-snipping-tool.ico", "icons\windows-snipping-tool.ico", true)
 FileInstall("icons\wallpaper.ico", "icons\wallpaper.ico", true)
+FileInstall("icons\cross.ico", "icons\cross.ico", true)
+FileInstall("icons\checked-checkbox.ico", "icons\checked-checkbox.ico", true)
+FileInstall("icons\unchecked-checkbox.ico", "icons\unchecked-checkbox.ico", true)
 
 FileInstall("scripts\gitUpdateAll.ps1", "scripts\gitUpdateAll.ps1", true)
 FileInstall("scripts\wingetUpdateAll.ps1", "scripts\wingetUpdateAll.ps1", true)

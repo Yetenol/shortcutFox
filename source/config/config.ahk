@@ -7,7 +7,7 @@ DEFAULT_ICON := "icons\shortcut.ico"
 ; checkmark: "CHECKMARK"
 ; icon from file: Path
 ; icon from icon group: [FilePath, IconNumber]
-ICON_DISABLED_SWITCH := [A_WinDir "\System32\shell32.dll", 132]
-ICON_ENABLED_SWITCH := [A_WinDir "\System32\shell32.dll", 295]
+ICON_DISABLED_SWITCH := "icons\unchecked-checkbox.ico"
+ICON_ENABLED_SWITCH := "icons\checked-checkbox.ico"
 ICON_CHOOSEN_OPTION := [A_WinDir "\System32\shell32.dll", 292]
 ICON_NOT_CHOOSEN_OPTION := ""
