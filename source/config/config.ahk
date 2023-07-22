@@ -10,7 +10,7 @@ DEFAULT_ICON := "icons\shortcut.ico"
  * use icon from bundle file (.dll): [FilePath, IconNumber] 
  * -> e.g. [A_WinDir "\System32\shell32.dll", 292]
  */
-ICON_DISABLED_SWITCH := "icons\unchecked-checkbox.ico"
-ICON_ENABLED_SWITCH := "icons\checked-checkbox.ico"
+ICON_DISABLED_SWITCH := "icons\unchecked-checkbox.png"
+ICON_ENABLED_SWITCH := "icons\checked-checkbox.png"
 ICON_CHOOSEN_OPTION := "icons\filled-circle.png"
 ICON_NOT_CHOOSEN_OPTION := "icons\unfilled-circle.png"
