@@ -103,41 +103,38 @@ TRAY_LAYOUT := {
                             icon: "",
                             content: [{
                                 id: "NO_SCHEDULED_ACTIONS",
-                                text: "All schedules disabled",
+                                text: "Disable all schedules",
                             }, {
                                 id: "SCHEDULE_WINGET_UPDATE",
                                 text: "Weekly update all applications [Admin]",
                                 run: "scripts\wingetUpdateAll.ps1",
-                                icon: "icons\software-installer.ico",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_GIT_UPDATE",
                                 text: "Weekly update all repositories",
                                 run: "scripts\gitUpdateAll.ps1",
-                                icon: "icons\code-fork.ico",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_REDDIT_WALLPAPER",
                                 text: "Hourly apply reddit wallpaper hourly",
                                 run: "scripts\applyRedditWallpaper.ps1",
-                                icon: "icons\wallpaper.ico",
                                 switch: false,
                             },]
                         }, {
                             id: "WINGET_UPDATE",
                             text: "Update all applications [Admin]",
                             run: "scripts\wingetUpdateAll.ps1",
-                            icon: "icons\software-installer.ico",
+                            icon: "icons\software.png",
                         }, {
                             id: "GIT_UPDATE",
                             text: "Update all repositories",
                             run: "scripts\gitUpdateAll.ps1",
-                            icon: "icons\code-fork.ico",
+                            icon: "icons\git-compare.png",
                         }, {
                             id: "APPLY_REDDIT_WALLPAPER",
                             text: "Apply reddit wallpaper hourly",
                             run: "scripts\applyRedditWallpaper.ps1",
-                            icon: "icons\wallpaper.ico",
+                            icon: "icons\wallpaper.png",
                         },]
                 }, {
                     id: "WINDOWS_HELLO",
@@ -147,16 +144,16 @@ TRAY_LAYOUT := {
                             id: "SETUP_HELLO_FACE",
                             text: "Setup Hello Face",
                             run: "explorer ms-settings:signinoptions-launchfaceenrollment",
-                            icon: "icons\face-id.ico",
+                            icon: "icons\face-recognition.png",
                         }, {
                             id: "SETUP_HELLO_FINGERPRINT",
                             text: "Setup Hello Fingerprint",
                             run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
-                            icon: "icons\add-fingerprint.ico",
+                            icon: "icons\fingerprint.png",
                         }, {
                             id: "BLUETOOTH_FILE_TRANSFER",
                             text: "Transfer files using Bluetooth",
-                            icon: "icons\bluetooth.ico",
+                            icon: "icons\bluetooth.png",
                             run: "fsquirt",
                         },]
                 }, {
@@ -167,12 +164,12 @@ TRAY_LAYOUT := {
                             id: "CALIBRATE_DIGITIZER",
                             text: "Calibrate pen",
                             run: "tabcal",
-                            icon: "icons\whiteboard.ico",
+                            icon: "icons\pen.png",
                         }, {
                             id: "TAKE_SCREENSHOT",
                             text: "Take Screenshot",
                             send: "#+s",
-                            icon: "icons\windows-snipping-tool.ico",
+                            icon: "icons\screenshot.png",
                         },]
                 },
             ]
