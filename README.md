@@ -3,32 +3,54 @@
 [![Download script](https://img.shields.io/github/downloads/yetenol/shortcutFox/total.svg)](https://github.com/yetenol/shortcutFox/releases/latest/download/shortcutFox.exe)
 [![List releases](https://img.shields.io/github/release/yetenol/shortcutFox.svg)](https://github.com/yetenol/shortcutFox/releases)
 
-ShortcutFox lists shortcuts, which can be easily customized with a [json-like file](source/config/trayLayout.ahk), in the context menu of a system tray icon. Additionally, a few personalization tweaks are applied.
+shortcutFox bundles optimizations and automations into a simple menu in the system tray.
+ShortcutFox lists shortcuts, which can be easily customized with a [human-readable file](source/config/trayLayout.ahk), in the context menu of a system tray icon. Additionally, a few personalization tweaks are applied.
 
 # Features
 
+![Usage example](example.png)
+
 ## Keyboard shortcuts
 
-- Toggle **word case** for  [whitelisted apps](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
-- Focus or launch **KeeWeb** using `[Win + Shift + V]` 
-- Focus next window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Up]`
-- Focus previous window it [fancy zone](https://learn.microsoft.com/en-us/windows/powertoys/fancyzones) using `[Win + Mouse Wheel Down]`
+- Change **word case** in [editors](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
+- Pop up **KeeWeb**
+  - Lookup credentials using `[Win + Shift + V]`
+  - Fill in credentials on websites `[Ctrl + Shift + V]`
+- Insert the date formatted as YYYY-MM-DD using `[Win + Alt + D]`
 
 ## Tray shortcuts
 
-- Right click the tray icon:
-    - Enable run at startup _< `#Manage script...` submenu_
-    - Take screenshot
-    - Calibrate pen
-    - Update all repositories
-    - Update all applications
-    - Connect to a bluetooth device
-    - Transfer files using bluetooth
-    - Setup Windows Hello Face
-    - Setup Windows Hello Fingerprint
-- Left click the tray:
-    - Execute the default action
-    - Configurable _< `Set left click action...` submenu_
+Push and pull and **repositories**
+- Finds all repositories
+- Pushes and pulls all branches that exist locally and remotely
+- Shows progress in a terminal window
+- Only fast-forwards the pulls
+
+Upgrade **applications**
+- Installs software upgrades via winget
+- Shows progress in a terminal window
+- Prompts to runs as administrator
+
+Apply reddit **wallpaper**
+- Applies image as desktop background
+- Downloads best image post from r/wallpaper subreddit
+- Stores the image in a Pictures subfolder
+
+Setup face recognition
+- Setup Windows Hello (again) to improve face recognition
+
+Add a fingerprint
+- Add a fingerprint to Windows Hello
+
+Transfer files via Bluetooth
+- Start Bluetooth File Transfer wizard
+
+Recalibrate the **digital pen**
+- Useful for convertible laptops
+
+Select area to **screenshot**
+- Start Snipping Tool area selection
+
 
 ## Whitelisted apps to toggle word case
 

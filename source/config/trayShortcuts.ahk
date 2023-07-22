@@ -42,32 +42,25 @@ TRAY_LAYOUT := {
             text: "Configure",
             content: [{
                 id: "MANAGE_HOTKEYS",
-                text: "Toggle keyboard shortcuts",
+                text: "Toggle &keyboard shortcuts",
                 maxDisplay: 0,
                 content:
                     [{
                         id: "HOTKEY_TOGGLE_CASE",
-                        text: "Change word case using [CapsLock]",
+                        text: "Change word case in editors using [CapsLock]",
                         switch: false,
                     }, {
                         id: "HOTKEY_LAUNCH_KEEWEB",
-                        text: "Focus or launch KeeWeb using [Win + Shift + V]",
+                        text: "Lookup credentials in KeeWeb using [Win + Shift + V]",
                         switch: true,
                     }, {
                         id: "HOTKEY_PASTE_KEEWEB",
-                        text: "Paste or launch KeeWeb using [Ctrl + Shift + V]",
+                        text: "Fill in credentials on websites from KeeWeb using [Ctrl + Shift + V]",
                         switch: true,
                     }, {
                         id: "HOTKEY_PASTE_DATE",
                         text: "Insert the date formatted as YYYY-MM-DD [Win + Alt + D]",
                         switch: true,
-                    }, {
-                        id: "HOTKEY_CYCLE_ZONE_WINDOW",
-                        text: (
-                            "Cycle window in zone using "
-                            "[Win + Mouse Wheel Up] or [Win + Mouse Wheel Down]"
-                        ),
-                        switch: false,
                     },]
             }, {
                 id: "DEFAULT_ACTION",
@@ -102,7 +95,7 @@ TRAY_LAYOUT := {
                                 text: "Disable all schedules",
                             }, {
                                 id: "SCHEDULE_WINGET_UPDATE",
-                                text: "Weekly update all applications [Admin]",
+                                text: "Weekly upgrade applications (run as admin)",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_GIT_UPDATE",
@@ -115,17 +108,17 @@ TRAY_LAYOUT := {
                             },]
                         }, {
                             id: "WINGET_UPDATE",
-                            text: "Update all applications [Admin]",
+                            text: "Upgrade &applications (run as admin)",
                             run: "scripts\wingetUpdateAll.ps1",
                             icon: "icons\software.png",
                         }, {
                             id: "GIT_UPDATE",
-                            text: "Update all repositories",
+                            text: "Push and pull all &repositories",
                             run: "scripts\gitUpdateAll.ps1",
                             icon: "icons\git-compare.png",
                         }, {
                             id: "APPLY_REDDIT_WALLPAPER",
-                            text: "Apply reddit wallpaper",
+                            text: "Apply reddit &wallpaper",
                             run: "scripts\applyRedditWallpaper.ps1",
                             icon: "icons\wallpaper.png",
                         },]
@@ -135,17 +128,17 @@ TRAY_LAYOUT := {
                     content:
                         [{
                             id: "SETUP_HELLO_FACE",
-                            text: "Setup Hello Face",
+                            text: "Setup face recognition",
                             run: "explorer ms-settings:signinoptions-launchfaceenrollment",
                             icon: "icons\face-recognition.png",
                         }, {
                             id: "SETUP_HELLO_FINGERPRINT",
-                            text: "Setup Hello Fingerprint",
+                            text: "Add a fingerprint",
                             run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
                             icon: "icons\fingerprint.png",
                         }, {
                             id: "BLUETOOTH_FILE_TRANSFER",
-                            text: "Transfer files using Bluetooth",
+                            text: "Transfer files via Bluetooth",
                             icon: "icons\bluetooth.png",
                             run: "fsquirt",
                         },]
@@ -160,7 +153,7 @@ TRAY_LAYOUT := {
                             icon: "icons\pen.png",
                         }, {
                             id: "TAKE_SCREENSHOT",
-                            text: "Take Screenshot",
+                            text: "Select area to screenshot",
                             send: "#+s",
                             icon: "icons\screenshot.png",
                         },]
