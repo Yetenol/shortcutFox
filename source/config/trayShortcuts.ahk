@@ -85,67 +85,37 @@ TRAY_LAYOUT := {
             text: "Main shortcuts",
             content:
                 [{
-                    id: "WINDOWS_HELLO",
-                    text: "Setup Windows Hello",
-                    content:
-                        [{
-                            id: "SETUP_HELLO_FACE",
-                            text: "Setup Hello Face",
-                            run: "explorer ms-settings:signinoptions-launchfaceenrollment",
-                            icon: "icons\face-id.ico",
-                        }, {
-                            id: "SETUP_HELLO_FINGERPRINT",
-                            text: "Setup Hello Fingerprint",
-                            run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
-                            icon: "icons\add-fingerprint.ico",
-                        },]
-                }, {
-                    id: "BLUETOOTH",
-                    text: "Bluetooth audio and file transfer",
-                    maxDisplay: 1,
-                    icon: "icons\bluetooth.ico",
-                    content:
-                        [{
-                            id: "BLUETOOTH_FILE_TRANSFER",
-                            text: "Transfer files using Bluetooth",
-                            run: "fsquirt",
-                        },]
-                }, {
-                    id: "SCHEDULE_ACTIONS",
-                    text: "Run update action periodically",
-                    maxDisplay: 0,
-                    icon: "",
-                    content: [{
-                        id: "NO_SCHEDULED_ACTIONS",
-                        text: "All schedules disabled",
-                    }, {
-                        id: "SCHEDULE_UPDATES",
-                        text: "Toggle update schedules",
-                        content: [{
-                            id: "SCHEDULE_WINGET_UPDATE",
-                            text: "Weekly update all applications [Admin]",
-                            run: "scripts\wingetUpdateAll.ps1",
-                            icon: "icons\software-installer.ico",
-                            switch: false,
-                        }, {
-                            id: "SCHEDULE_GIT_UPDATE",
-                            text: "Weekly update all repositories",
-                            run: "scripts\gitUpdateAll.ps1",
-                            icon: "icons\code-fork.ico",
-                            switch: false,
-                        }, {
-                            id: "SCHEDULE_REDDIT_WALLPAPER",
-                            text: "Hourly apply reddit wallpaper hourly",
-                            run: "scripts\applyRedditWallpaper.ps1",
-                            icon: "icons\wallpaper.ico",
-                            switch: false,
-                        },]
-                    }]
-                }, {
                     id: "UPDATES",
                     text: "Application updates",
                     content:
                         [{
+                            id: "SCHEDULE_ACTIONS",
+                            text: "Run update actions periodically",
+                            maxDisplay: 0,
+                            icon: "",
+                            content: [{
+                                id: "NO_SCHEDULED_ACTIONS",
+                                text: "All schedules disabled",
+                            }, {
+                                id: "SCHEDULE_WINGET_UPDATE",
+                                text: "Weekly update all applications [Admin]",
+                                run: "scripts\wingetUpdateAll.ps1",
+                                icon: "icons\software-installer.ico",
+                                switch: false,
+                            }, {
+                                id: "SCHEDULE_GIT_UPDATE",
+                                text: "Weekly update all repositories",
+                                run: "scripts\gitUpdateAll.ps1",
+                                icon: "icons\code-fork.ico",
+                                switch: false,
+                            }, {
+                                id: "SCHEDULE_REDDIT_WALLPAPER",
+                                text: "Hourly apply reddit wallpaper hourly",
+                                run: "scripts\applyRedditWallpaper.ps1",
+                                icon: "icons\wallpaper.ico",
+                                switch: false,
+                            },]
+                        }, {
                             id: "WINGET_UPDATE",
                             text: "Update all applications [Admin]",
                             run: "scripts\wingetUpdateAll.ps1",
@@ -160,6 +130,26 @@ TRAY_LAYOUT := {
                             text: "Apply reddit wallpaper hourly",
                             run: "scripts\applyRedditWallpaper.ps1",
                             icon: "icons\wallpaper.ico",
+                        },]
+                }, {
+                    id: "WINDOWS_HELLO",
+                    text: "Setup Windows Hello",
+                    content:
+                        [{
+                            id: "SETUP_HELLO_FACE",
+                            text: "Setup Hello Face",
+                            run: "explorer ms-settings:signinoptions-launchfaceenrollment",
+                            icon: "icons\face-id.ico",
+                        }, {
+                            id: "SETUP_HELLO_FINGERPRINT",
+                            text: "Setup Hello Fingerprint",
+                            run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
+                            icon: "icons\add-fingerprint.ico",
+                        }, {
+                            id: "BLUETOOTH_FILE_TRANSFER",
+                            text: "Transfer files using Bluetooth",
+                            icon: "icons\bluetooth.ico",
+                            run: "fsquirt",
                         },]
                 }, {
                     id: "CONVERTIBLE",
