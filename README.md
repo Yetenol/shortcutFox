@@ -3,8 +3,8 @@
 [![Download script](https://img.shields.io/github/downloads/yetenol/shortcutFox/total.svg)](https://github.com/yetenol/shortcutFox/releases/latest/download/shortcutFox.exe)
 [![List releases](https://img.shields.io/github/release/yetenol/shortcutFox.svg)](https://github.com/yetenol/shortcutFox/releases)
 
-shortcutFox bundles optimizations and automations into a simple menu in the system tray.
-ShortcutFox lists shortcuts, which can be easily customized with a [human-readable file](source/config/trayLayout.ahk), in the context menu of a system tray icon. Additionally, a few personalization tweaks are applied.
+shortcutFox is a menu in the system tray that contains frequently used actions , update scripts and settings for keyboard shortcuts. 
+With a [human readable configuration file](source/config/trayLayout.ahk) the menu can be edited or additional actions can be added.
 
 # Features
 
@@ -12,11 +12,13 @@ ShortcutFox lists shortcuts, which can be easily customized with a [human-readab
 
 ## Keyboard shortcuts
 
-- Change **word case** in [editors](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
-- Pop up **KeeWeb**
-  - Lookup credentials using `[Win + Shift + V]`
-  - Fill in credentials on websites `[Ctrl + Shift + V]`
-- Insert the date formatted as YYYY-MM-DD using `[Win + Alt + D]`
+Change **word case** in [editors](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
+
+Pop up **KeeWeb**
+- Lookup credentials using `[Win + Shift + V]`
+- Fill in credentials on websites `[Ctrl + Shift + V]`
+
+Insert the date formatted as YYYY-MM-DD using `[Win + Alt + D]`
 
 ## Tray shortcuts
 

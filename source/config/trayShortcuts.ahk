@@ -2,25 +2,14 @@ TRAY_LAYOUT := {
     id: "TRAYMENU",
     content:
         [{
-            id: "MANAGE_SCRIPT",
-            text: "Manage script",
-            maxDisplay: 0,
-            content:
-                [{
-                    id: "RUN_AT_STARTUP",
-                    text: "Run at startup",
-                    switch: false,
-                    call: "toggleRunAtStartup()",
-                }, {
-                    id: "SUSPEND",
-                    text: "Suspend",
-                    switch: false,
-                    call: "toggleSuspend()",
-                }, {
-                    id: "EXIT",
-                    text: "Exit",
-                    call: "closeApp()",
-                },]
+            id: "EXIT",
+            text: "Exit shortcutFox",
+            call: "closeApp()",
+        }, {
+            id: "RUN_AT_STARTUP",
+            text: "Run at startup",
+            switch: false,
+            call: "toggleRunAtStartup()",
         }, {
             id: "SEND_KEYSTROKES",
             text: "Send keystrokes",
@@ -38,28 +27,33 @@ TRAY_LAYOUT := {
                     send: "{CtrlBreak}",
                 },]
         }, {
-            id: "CONFIGURE",
-            text: "Configure",
+            id: "SETTINGS",
+            text: "Configure settings",
             content: [{
                 id: "MANAGE_HOTKEYS",
-                text: "Toggle &keyboard shortcuts",
+                text: "Toggle keyboard shortcuts",
                 maxDisplay: 0,
                 content:
                     [{
+                        id: "SUSPEND",
+                        text: "Suspend all keyboard shortcuts",
+                        switch: false,
+                        call: "toggleSuspend()",
+                    }, {
                         id: "HOTKEY_TOGGLE_CASE",
-                        text: "Change word case in editors using [CapsLock]",
+                        text: "Change word case [CapsLock]",
                         switch: false,
                     }, {
                         id: "HOTKEY_LAUNCH_KEEWEB",
-                        text: "Lookup credentials in KeeWeb using [Win + Shift + V]",
+                        text: "Lookup credentials [Win + Shift + V]",
                         switch: true,
                     }, {
                         id: "HOTKEY_PASTE_KEEWEB",
-                        text: "Fill in credentials on websites from KeeWeb using [Ctrl + Shift + V]",
+                        text: "Fill in credentials [Ctrl + Shift + V]",
                         switch: true,
                     }, {
                         id: "HOTKEY_PASTE_DATE",
-                        text: "Insert the date formatted as YYYY-MM-DD [Win + Alt + D]",
+                        text: "Insert date [Win + Alt + D]",
                         switch: true,
                     },]
             }, {
@@ -95,7 +89,7 @@ TRAY_LAYOUT := {
                                 text: "Disable all schedules",
                             }, {
                                 id: "SCHEDULE_WINGET_UPDATE",
-                                text: "Weekly upgrade applications (run as admin)",
+                                text: "Weekly upgrade applications",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_GIT_UPDATE",
