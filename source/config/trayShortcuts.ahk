@@ -2,45 +2,41 @@ TRAY_LAYOUT := {
     id: "TRAYMENU",
     content:
         [{
-            id: "ADMINISTRATIVE",
-            text: "Administrate script",
-            content: [{
-                id: "MANAGE_SCRIPT",
-                text: "Manage script",
-                maxDisplay: 0,
-                content:
-                    [{
-                        id: "RUN_AT_STARTUP",
-                        text: "Run at startup",
-                        switch: false,
-                        call: "toggleRunAtStartup()",
-                    }, {
-                        id: "SUSPEND",
-                        text: "Suspend",
-                        switch: false,
-                        call: "toggleSuspend()",
-                    }, {
-                        id: "EXIT",
-                        text: "Exit",
-                        call: "closeApp()",
-                    },]
-            }, {
-                id: "SEND_KEYSTROKES",
-                text: "Send keystrokes",
-                maxDisplay: 0,
-                content:
-                    [{
-                        id: "SEND_PAUSE",
-                        text: "Send [Pause]",
-                        delay: 2000,
-                        send: "{Pause}",
-                    }, {
-                        id: "SEND_CTRLBREAK",
-                        text: "Send [Break]",
-                        delay: 2000,
-                        send: "{CtrlBreak}",
-                    },]
-            },]
+            id: "MANAGE_SCRIPT",
+            text: "Manage script",
+            maxDisplay: 0,
+            content:
+                [{
+                    id: "RUN_AT_STARTUP",
+                    text: "Run at startup",
+                    switch: false,
+                    call: "toggleRunAtStartup()",
+                }, {
+                    id: "SUSPEND",
+                    text: "Suspend",
+                    switch: false,
+                    call: "toggleSuspend()",
+                }, {
+                    id: "EXIT",
+                    text: "Exit",
+                    call: "closeApp()",
+                },]
+        }, {
+            id: "SEND_KEYSTROKES",
+            text: "Send keystrokes",
+            maxDisplay: 0,
+            content:
+                [{
+                    id: "SEND_PAUSE",
+                    text: "Send [Pause]",
+                    delay: 2000,
+                    send: "{Pause}",
+                }, {
+                    id: "SEND_CTRLBREAK",
+                    text: "Send [Break]",
+                    delay: 2000,
+                    send: "{CtrlBreak}",
+                },]
         }, {
             id: "CONFIGURE",
             text: "Configure",
@@ -107,17 +103,14 @@ TRAY_LAYOUT := {
                             }, {
                                 id: "SCHEDULE_WINGET_UPDATE",
                                 text: "Weekly update all applications [Admin]",
-                                run: "scripts\wingetUpdateAll.ps1",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_GIT_UPDATE",
                                 text: "Weekly update all repositories",
-                                run: "scripts\gitUpdateAll.ps1",
                                 switch: false,
                             }, {
                                 id: "SCHEDULE_REDDIT_WALLPAPER",
-                                text: "Hourly apply reddit wallpaper hourly",
-                                run: "scripts\applyRedditWallpaper.ps1",
+                                text: "Hourly apply reddit wallpaper",
                                 switch: false,
                             },]
                         }, {
@@ -132,7 +125,7 @@ TRAY_LAYOUT := {
                             icon: "icons\git-compare.png",
                         }, {
                             id: "APPLY_REDDIT_WALLPAPER",
-                            text: "Apply reddit wallpaper hourly",
+                            text: "Apply reddit wallpaper",
                             run: "scripts\applyRedditWallpaper.ps1",
                             icon: "icons\wallpaper.png",
                         },]
