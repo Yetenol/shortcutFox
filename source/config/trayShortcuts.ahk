@@ -49,8 +49,7 @@ TRAY_LAYOUT := {
                         "[Win + Mouse Wheel Up] or [Win + Mouse Wheel Down]"
                     ),
                     switch: false,
-                }
-            ]
+                },]
         }, {
             id: "SEND_KEYSTROKES",
             text: "Send keystrokes",
@@ -66,8 +65,7 @@ TRAY_LAYOUT := {
                     text: "Send [Break]",
                     delay: 2000,
                     send: "{CtrlBreak}",
-                },
-            ]
+                },]
         }, {
             id: "DEFAULT_ACTION",
             text: "Set left click action",
@@ -100,8 +98,7 @@ TRAY_LAYOUT := {
                             text: "Setup Hello Fingerprint",
                             run: "explorer ms-settings:signinoptions-launchfingerprintenrollment",
                             icon: "icons\add-fingerprint.ico",
-                        },
-                    ]
+                        },]
                 }, {
                     id: "BLUETOOTH",
                     text: "Bluetooth audio and file transfer",
@@ -112,20 +109,38 @@ TRAY_LAYOUT := {
                             id: "BLUETOOTH_FILE_TRANSFER",
                             text: "Transfer files using Bluetooth",
                             run: "fsquirt",
-                        },
-                    ]
+                        },]
                 }, {
                     id: "SCHEDULE_ACTIONS",
-                    text: "Run action periodically",
+                    text: "Run update action periodically",
                     maxDisplay: 0,
                     icon: "",
-                    content: [
-                        {
-                            id: "NO_SCHEDULED_ACTIONS",
-                            text: "All schedules disabled",
-                        },
-                        "UPDATES",
-                    ]
+                    content: [{
+                        id: "NO_SCHEDULED_ACTIONS",
+                        text: "All schedules disabled",
+                    }, {
+                        id: "SCHEDULE_UPDATES",
+                        text: "Toggle update schedules",
+                        content: [{
+                            id: "SCHEDULE_WINGET_UPDATE",
+                            text: "Weekly update all applications [Admin]",
+                            run: "scripts\wingetUpdateAll.ps1",
+                            icon: "icons\software-installer.ico",
+                            switch: false,
+                        }, {
+                            id: "SCHEDULE_GIT_UPDATE",
+                            text: "Weekly update all repositories",
+                            run: "scripts\gitUpdateAll.ps1",
+                            icon: "icons\code-fork.ico",
+                            switch: false,
+                        }, {
+                            id: "SCHEDULE_REDDIT_WALLPAPER",
+                            text: "Hourly apply reddit wallpaper hourly",
+                            run: "scripts\applyRedditWallpaper.ps1",
+                            icon: "icons\wallpaper.ico",
+                            switch: false,
+                        },]
+                    }]
                 }, {
                     id: "UPDATES",
                     text: "Application updates",
@@ -144,9 +159,8 @@ TRAY_LAYOUT := {
                             id: "APPLY_REDDIT_WALLPAPER",
                             text: "Apply reddit wallpaper hourly",
                             run: "scripts\applyRedditWallpaper.ps1",
-                            switch: false,
-                        },
-                    ]
+                            icon: "icons\wallpaper.ico",
+                        },]
                 }, {
                     id: "CONVERTIBLE",
                     text: "Pen & touch screen utilities",
@@ -161,8 +175,7 @@ TRAY_LAYOUT := {
                             text: "Take Screenshot",
                             send: "#+s",
                             icon: "icons\windows-snipping-tool.ico",
-                        },
-                    ]
+                        },]
                 },
             ]
         }
