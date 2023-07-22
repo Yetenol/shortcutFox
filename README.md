@@ -3,7 +3,7 @@
 [![Download script](https://img.shields.io/github/downloads/yetenol/shortcutFox/total.svg)](https://github.com/yetenol/shortcutFox/releases/latest/download/shortcutFox.exe)
 [![List releases](https://img.shields.io/github/release/yetenol/shortcutFox.svg)](https://github.com/yetenol/shortcutFox/releases)
 
-shortcutFox add a menu to the system tray that contains frequently used actions, update scripts and settings for keyboard shortcuts. 
+shortcutFox adds a menu to the system tray that contains frequently used actions, update scripts and settings for keyboard shortcuts. 
 With a [human readable configuration file](source/config/trayShortcuts.ahk) the menu can be edited or additional actions can be added.
 
 # Features
