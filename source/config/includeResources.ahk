@@ -19,6 +19,8 @@ FileInstall("icons\wallpaper.ico", "icons\wallpaper.ico", true)
 FileInstall("icons\cross.ico", "icons\cross.ico", true)
 FileInstall("icons\checked-checkbox.ico", "icons\checked-checkbox.ico", true)
 FileInstall("icons\unchecked-checkbox.ico", "icons\unchecked-checkbox.ico", true)
+FileInstall("icons\filled-circle.png", "icons\filled-circle.png", true)
+FileInstall("icons\unfilled-circle.png", "icons\unfilled-circle.png", true)
 
 FileInstall("scripts\gitUpdateAll.ps1", "scripts\gitUpdateAll.ps1", true)
 FileInstall("scripts\wingetUpdateAll.ps1", "scripts\wingetUpdateAll.ps1", true)
