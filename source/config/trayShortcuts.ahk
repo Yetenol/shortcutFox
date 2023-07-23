@@ -40,21 +40,25 @@ TRAY_LAYOUT := {
                         switch: false,
                         call: "toggleSuspend()",
                     }, {
-                        id: "HOTKEY_TOGGLE_CASE",
-                        text: "Change word case [CapsLock]",
-                        switch: false,
-                    }, {
-                        id: "HOTKEY_LAUNCH_KEEWEB",
-                        text: "Lookup credentials [Win + Shift + V]",
-                        switch: true,
-                    }, {
-                        id: "HOTKEY_PASTE_KEEWEB",
-                        text: "Fill in credentials [Ctrl + Shift + V]",
-                        switch: true,
-                    }, {
-                        id: "HOTKEY_PASTE_DATE",
-                        text: "Insert date [Win + Alt + D]",
-                        switch: true,
+                        id: "TOGGLE_HOTKEYS",
+                        text: "List of keyboard shortcuts",
+                        content: [{
+                            id: "HOTKEY_TOGGLE_CASE",
+                            text: "Change word case [CapsLock]",
+                            switch: false,
+                        }, {
+                            id: "HOTKEY_LAUNCH_KEEWEB",
+                            text: "Lookup credentials [Win + Shift + V]",
+                            switch: true,
+                        }, {
+                            id: "HOTKEY_PASTE_KEEWEB",
+                            text: "Fill in credentials [Ctrl + Shift + V]",
+                            switch: true,
+                        }, {
+                            id: "HOTKEY_PASTE_DATE",
+                            text: "Insert date [Win + Alt + D]",
+                            switch: true,
+                        },]
                     },]
             }, {
                 id: "DEFAULT_ACTION",
@@ -68,8 +72,7 @@ TRAY_LAYOUT := {
                         id: "NO_DEFAULT_ACTION",
                         text: "None",
                     },
-                    "MAIN_SHORTCUTS",
-                ]
+                    "MAIN_SHORTCUTS",]
             },]
         }, {
             id: "MAIN_SHORTCUTS",
