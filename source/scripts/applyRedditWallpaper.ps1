@@ -16,7 +16,7 @@ $first_media_post = $posts | where is_reddit_media_domain | select -First 1
 $image_url = $first_media_post.url
 $image_extension = [IO.Path]::GetExtension($image_url)
 $image_raw_title = $first_media_post.title
-$image_title_without_dimensions = $image_raw_title -replace "\s*[\[\(]?\d+x\d+[\]\)]?.*", ""
+$image_title_without_dimensions = $image_raw_title -replace "\s*[\[\(]?\d+\s*[×x]\s*\d+[\]\)]?\s*", ""
 $image_title_without_square_brackets = $image_title_without_dimensions -replace "\[", "(" -replace "\]", ")"
 
 $date = [DateTime]::Now.ToString($DateFormat)
