@@ -3,8 +3,8 @@
  * @returns {bool} true if set, false if unset
  */
 hasSetting(id) {
-    global CONFIG_FILE
-    value := IniRead(CONFIG_FILE, CONFIG_SECTION, id, "NON_PRESENT")
+    global SETTINGS_FILE
+    value := IniRead(SETTINGS_FILE, SETTINGS_SECTION, id, "NON_PRESENT")
     return value != "NON_PRESENT"
 }
 
@@ -13,7 +13,7 @@ hasSetting(id) {
  * @returns {text} value of the setting
  */
 readSetting(id) {
-    value := IniRead(CONFIG_FILE, CONFIG_SECTION, id, "NON_PRESENT")
+    value := IniRead(SETTINGS_FILE, SETTINGS_SECTION, id, "NON_PRESENT")
     if (value ~= "1|yes|true|and|on") {
         return true
     } else if (value ~= "0|no|false|off") {
@@ -28,16 +28,16 @@ readSetting(id) {
  * @param value to set the setting to
  */
 writeSetting(id, value) {
-    global CONFIG_FILE, CONFIG_SECTION
-    IniWrite(value, CONFIG_FILE, CONFIG_SECTION, id)
+    global SETTINGS_FILE, SETTINGS_SECTION
+    IniWrite(value, SETTINGS_FILE, SETTINGS_SECTION, id)
 }
 
 /** Unset a specific setting in the settings file 
  * @param id (in constant case) names the setting to be removed.
  */
 removeSetting(id) {
-    global CONFIG_FILE, CONFIG_SECTION
+    global SETTINGS_FILE, SETTINGS_SECTION
     if hasSetting(id) {
-        IniDelete(CONFIG_FILE, CONFIG_SECTION, id)
+        IniDelete(SETTINGS_FILE, SETTINGS_SECTION, id)
     }
 }
