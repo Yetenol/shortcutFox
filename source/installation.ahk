@@ -1,17 +1,17 @@
 #Include config\config.ahk
 
-createConfigFile()
+createSettingsFile()
 createStartMenuShortcut()
 
 /** Create a settings file in the appdata user folder
  */
-createConfigFile() {
-    global CONFIG_FOLDER, CONFIG_FILE
-    if not DirExist(CONFIG_FOLDER) {
-        DirCreate(CONFIG_FOLDER)
+createSettingsFile() {
+    global SETTINGS_FOLDER, SETTINGS_FILE
+    if not DirExist(SETTINGS_FOLDER) {
+        DirCreate(SETTINGS_FOLDER)
     }
-    if not FileExist(CONFIG_FILE) {
-        FileAppend "", CONFIG_FILE
+    if not FileExist(SETTINGS_FILE) {
+        FileAppend "", SETTINGS_FILE
     }
 }
 
