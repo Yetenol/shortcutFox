@@ -3,7 +3,8 @@
 createSettingsFile()
 createStartMenuShortcut()
 
-/** Create a settings file in the appdata user folder
+/** Creates settings file to remember checkboxes statuses. 
+ * Add a folder and an INI file for settings to the current user's app data.
  */
 createSettingsFile() {
     global SETTINGS_FOLDER, SETTINGS_FILE
@@ -15,12 +16,13 @@ createSettingsFile() {
     }
 }
 
-/** Add shortcut to this application to the start menu.
- * Then you can search and launch the app through Windows Start.
- */
+
+/** Add this application to Windows start menu, to be able to launch it through Windows Start.
+ * Creates a shortcut to this executable in the programs common user folder
+*/
 createStartMenuShortcut() {
     global START_MENU_FILE
-    if not FileExist(START_MENU_FILE) {
+    if A_IsCompiled and (not FileExist(START_MENU_FILE)) {
         FileCreateShortcut(A_ScriptFullPath, START_MENU_FILE)
     }
 }
