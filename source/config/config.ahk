@@ -1,6 +1,7 @@
 KEEWEB_PATH := "C:\Program Files\KeeWeb\KeeWeb.exe"
 STARTUP_SHORTCUT := "C:\Users\anton\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\Startup\shortcutFox.lnk"
 DEFAULT_ICON := "icons\menu.png"
+DARK_MODE_ICON := "icons\dark-mode.png"
 
 /* ========== ICON TYPES =========
  * no icon: ""
