@@ -14,3 +14,8 @@ ICON_DISABLED_SWITCH := "icons\unchecked-checkbox.png"
 ICON_ENABLED_SWITCH := "icons\checked-checkbox.png"
 ICON_CHOOSEN_OPTION := "icons\filled-circle.png"
 ICON_NOT_CHOOSEN_OPTION := "icons\unfilled-circle.png"
+
+CONFIG_FOLDER := A_AppData "\shortcutFox"
+CONFIG_FILE := CONFIG_FOLDER "\settings.ini"
+CONFIG_SECTION := "Settings"
+START_MENU_FILE := A_Programs "\shortcutFox.lnk"

@@ -1,32 +1,3 @@
-CONFIG_FOLDER := A_AppData "\shortcutFox"
-CONFIG_FILE := CONFIG_FOLDER "\settings.ini"
-CONFIG_SECTION := "Settings"
-START_MENU_FILE := A_Programs "\shortcutFox.lnk"
-
-createConfigFile()
-createStartMenuShortcut()
-
-
-/** Create a settings file in the appdata user folder
- */
-createConfigFile() {
-    if not DirExist(CONFIG_FOLDER) {
-        DirCreate(CONFIG_FOLDER)
-    }
-    if not FileExist(CONFIG_FILE) {
-        FileAppend "", CONFIG_FILE
-    }
-}
-
-/** Add shortcut to this application to the start menu.
- * Then you can search and launch the app through Windows Start.
- */
-createStartMenuShortcut() {
-    if not FileExist(START_MENU_FILE) {
-        FileCreateShortcut(A_ScriptFullPath, START_MENU_FILE)
-    }
-}
-
 /** Has the given settings id been set?
  * @param id identifies which setting to check. Id is a name in constant case.
  * @returns {bool} true if set, false if unset
