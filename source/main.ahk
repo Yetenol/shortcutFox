@@ -1,4 +1,4 @@
-#SingleInstance force    ; Override existing instance when lauched again
+#SingleInstance force    ; Override existing instance when launched again
 Persistent    ; Keep the application alive
 SetWorkingDir(A_ScriptDir)    ; Ensures a consistent working directory (script folder)
 

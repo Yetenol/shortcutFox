@@ -5,7 +5,6 @@
 
 TraySetIcon(DEFAULT_ICON)
 
-
 /**
  * Display debugging information about the clicked entry.
  * @param itemName Entry's text
