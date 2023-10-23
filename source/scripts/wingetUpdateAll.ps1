@@ -17,7 +17,7 @@ $env:CommonDesktop = (New-Object -ComObject Shell.Application).NameSpace('shell:
 $env:Desktop = (New-Object -ComObject Shell.Application).NameSpace('shell:Desktop').Self.Path
 
 # Update all winget applications
-winget upgrade --all
+winget upgrade --all --accept-package-agreements
 
 # Remove any shortcuts placed on the desktop
 Remove-Item "$env:Desktop\*.lnk", "$env:CommonDesktop\*.lnk"
