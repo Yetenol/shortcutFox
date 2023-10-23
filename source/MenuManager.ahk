@@ -322,10 +322,14 @@ class MenuBuilder {
         }
         return defaultAction
     }
-
+    
     applyDefaultAction() {
         global DEFAULT_ICON
         action := this._readDefaultAction()
+        if 0 = RegRead("HKCU\Software\Microsoft\Windows\CurrentVersion\Themes\Personalize", "AppsUseLightTheme") {
+            TraySetIcon(DARK_MODE_ICON)
+            return
+        }
         if not action {
             TraySetIcon(DEFAULT_ICON)
             A_TrayMenu.Default := ""

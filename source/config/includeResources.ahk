@@ -15,6 +15,7 @@ FileInstall("icons\software.png", "icons\software.png", true)
 FileInstall("icons\unchecked-checkbox.png", "icons\unchecked-checkbox.png", true)
 FileInstall("icons\unfilled-circle.png", "icons\unfilled-circle.png", true)
 FileInstall("icons\wallpaper.png", "icons\wallpaper.png", true)
+FileInstall("icons\dark-mode.png", "icons\dark-mode.png", true)
 
 ; Pack script files into compiled script
 if not DirExist("scripts") {
