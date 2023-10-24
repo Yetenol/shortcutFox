@@ -70,29 +70,65 @@ Select area to **screenshot**
   requiring [Toggle Case](https://obsidian.md/plugins?id=obsidian-toggle-case)  
   with hotkey `[Shift + F3]` ← Toggle Case: Toggle Case
 
-# Build instructions
+# Build an executable yourself
 
-- install dependency **AutoHotkey v2**
-  by running **[setup](https://www.autohotkey.com/download/ahk-v2.exe)**
+Install dependency **[AutoHotkey v2](https://www.autohotkey.com/)** by running
+```powershell
+winget install -e AutoHotkey.AutoHotkey --scope machine
+```
 
-- install dependency **ahk2exe Compiler**  
-  by extracting the `Compiler` folder from [AutoHotkey v1](https://www.autohotkey.com/download/ahk.zip) _extract Compiler Folder_
+Install dependency **[Ahk2Exe Compiler](https://www.autohotkey.com/docs/v2/Scripts.htm#ahk2exe)** by executing
+```
+%ProgramFiles%\AutoHotkey\UX\install-ahk2exe.ahk
+```
+- Or open *AutoHotkey Dash* and click `Compile`
+- Confirm to download Ahk2Exe
 
-- **build an executable** from the project folder  
-  by packaging the Powershell script
-	```powershell
-	$compiler = "$env:ProgramFiles\AutoHotkey 2\Compiler\Ahk2Exe.exe"
-	$ahk2 = "$env:ProgramFiles\AutoHotkey 2\AutoHotkey64.exe"
-	& $compiler /bin $ahk2 /in source/main.ahk /out bin\shortcutFox.exe
-	```
+**Build** an executable
+```cmd
+"%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe" /in source/main.ahk /icon source\icons\menu.ico /bin "%ProgramFiles%\AutoHotkey\v2\AutoHotkey.exe"
+```
+```powershell
+& "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" /in source/main.ahk /icon source\icons\menu.ico /bin "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
+```
+- Or run build task [tasks.json](.vscode\tasks.json) in VS Code
 
-- **start** shortcutFox
+**Start** shortcutFox
   ```powershell
   .\bin\shortcutFox.exe
 	```
+- Or search *shortcutFox* in Windows Start
 
-- enable **run at startup** using  
-  `right-click tray icon > Manage script... > Run at startup`  
+# Develop and debug using Visual Studio Code
+
+Install **code editor** [Visual Studio Code](https://code.visualstudio.com/)
+```powershell
+winget install -e Microsoft.VisualStudioCode --scope machine
+```
+
+
+Add **language support** [AutoHotkey v2 Language Support](vscode:extension/thqby.vscode-autohotkey2-lsp)
+- [p] features IntelliSense for AutoHotkey's functions and your's
+- [p] features Rename Symbol
+
+Make sure that the debugger always executes the main source file and not the currently opened one. Disable `ahk2: Debug Script` and `ahk2: Debug Script with Params` keyboard shortcuts in `Keyboard Shortcuts (JSON)`:
+```json
+    {
+        "key": "f5",
+        "command": "-ahk2.debug",
+        "when": "!inDebugMode && editorLangId == 'ahk2' && resourceScheme == 'file'"
+    },
+    {
+        "key": "shift+f5",
+        "command": "-ahk2.debug.params",
+        "when": "editorLangId == 'ahk2' && resourceScheme == 'file'"
+    },
+```
+
+Add **debugging adapter** [vscode-autohotkey-debug](vscode:extension/zero-plusplus.vscode-autohotkey-debug)
+- [x] features Breakpoints
+
+The [debug configuration file](.vscode\launch.json) specifies that the main source file is always executed.
 
 # Credits
 
