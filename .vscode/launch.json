@@ -2,11 +2,12 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "AutoHotkey Debug (Advanced Configuration)",
+            "name": "AutoHotkey Debug",
             "type": "autohotkey",
             "request": "launch",
             "program": "${workspaceFolder}/source/main.ahk",
-        }
+            "args": []
+        },
     ],
     "compounds": []
 }
