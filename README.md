@@ -84,20 +84,19 @@ Install dependency **[Ahk2Exe Compiler](https://www.autohotkey.com/docs/v2/Scrip
 - Or open *AutoHotkey Dash* and click `Compile`
 - Confirm to download Ahk2Exe
 
-**Build** an executable
-```cmd
-"%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe" /in source/main.ahk /icon source\icons\menu.ico /bin "%ProgramFiles%\AutoHotkey\v2\AutoHotkey.exe"
-```
+**Build** an executable by pressing `[Ctrl+Shift+B]` to run [build task](.vscode\tasks.json) for VS Code or build using a terminal:
 ```powershell
-& "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" /in source/main.ahk /icon source\icons\menu.ico /bin "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
+& "$env:ProgramFiles\AutoHotkey\Compiler\Ahk2Exe.exe" /in source\main.ahk /out bin\shortcutFox.exe /icon source\icons\menu.ico /bin "$env:ProgramFiles\AutoHotkey\v2\AutoHotkey.exe"
 ```
-- Or run build task [tasks.json](.vscode\tasks.json) in VS Code
+```cmd
+"%ProgramFiles%\AutoHotkey\Compiler\Ahk2Exe.exe" /in source\main.ahk /out bin\shortcutFox.exe /icon source\icons\menu.ico /bin "%ProgramFiles%\AutoHotkey\v2\AutoHotkey.exe"
+```
 
-**Start** shortcutFox
+**Start** shortcutFox from Windows Start or execute:
   ```powershell
   .\bin\shortcutFox.exe
 	```
-- Or search *shortcutFox* in Windows Start
+- Click `Reload` if prompted that the application is still running
 
 # Develop and debug using Visual Studio Code
 
@@ -105,7 +104,6 @@ Install **code editor** [Visual Studio Code](https://code.visualstudio.com/)
 ```powershell
 winget install -e Microsoft.VisualStudioCode --scope machine
 ```
-
 
 Add **language support** [AutoHotkey v2 Language Support](vscode:extension/thqby.vscode-autohotkey2-lsp)
 - [p] features IntelliSense for AutoHotkey's functions and your's
@@ -128,7 +126,7 @@ Make sure that the debugger always executes the main source file and not the cur
 Add **debugging adapter** [vscode-autohotkey-debug](vscode:extension/zero-plusplus.vscode-autohotkey-debug)
 - [x] features Breakpoints
 
-The [debug configuration file](.vscode\launch.json) specifies that the main source file is always executed.
+The [debug configuration file](.vscode\launch.json) specifies which source file is the main file to compile from.
 
 # Credits
 
