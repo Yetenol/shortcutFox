@@ -106,8 +106,8 @@ winget install -e Microsoft.VisualStudioCode --scope machine
 ```
 
 Add **language support** [AutoHotkey v2 Language Support](vscode:extension/thqby.vscode-autohotkey2-lsp)
-- [p] features IntelliSense for AutoHotkey's functions and your's
-- [p] features Rename Symbol
+- [x] features IntelliSense for AutoHotkey's functions and your's
+- [x] features Rename Symbol
 
 Make sure that the debugger always executes the main source file and not the currently opened one. Disable `ahk2: Debug Script` and `ahk2: Debug Script with Params` keyboard shortcuts in `Keyboard Shortcuts (JSON)`:
 ```json
