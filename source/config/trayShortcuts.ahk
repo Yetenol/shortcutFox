@@ -58,7 +58,11 @@ TRAY_LAYOUT := {
                             id: "HOTKEY_PASTE_DATE",
                             text: "Insert date [Win + Alt + D]",
                             switch: true,
-                        },]
+                        }, {
+                            id: "HOTKEY_WINKEY_STARTS_POWERTOYS_RUN",
+                            text: "Open PowerToys Run [Win]",
+                            switch: false,
+                        }]
                     },]
             }, {
                 id: "DEFAULT_ACTION",

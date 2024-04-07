@@ -5,6 +5,7 @@ SetCapsLockState "AlwaysOff"
 DetectHiddenWindows True
 SetTimer apply_reddit_wallpaper, 1000*60*60
 
+
 apply_reddit_wallpaper()
 {
     if readSetting("APPLY_REDDIT_WALLPAPER") {
@@ -31,6 +32,30 @@ Launch_KeeWeb_in_the_background() {
     WinWaitNotActive(window_to_reactivate, , 2)
     WinActivate(window_to_reactivate)
 }
+
+/** Open the PowerToys Run quick launcher instead of the Windows start menu.
+ * To implement this, intercept when only the Windows key is pressed and released.
+ * Keyboard shortcuts such as Win+R are passed through to the system to maintain normal functionality.
+ */
+ih := InputHook("L1")
+#HotIf readSetting("HOTKEY_WINKEY_STARTS_POWERTOYS_RUN")
+LWin::
+{
+    ih.Start()
+    ErrorLevel := ih.Wait()
+    if (ErrorLevel = "Stopped") ; If catching was interrupted
+    {
+        Send "!{Space}" ; Set this to your powertoys run shortcut
+    } else {
+        Send "#" ih.Input ; Sends winkey + caught key
+    }
+}
+#HotIf readSetting("HOTKEY_WINKEY_STARTS_POWERTOYS_RUN")
+~LWin Up::
+{
+    ih.Stop()
+}
+
 
 /** Switch between word capitalizations in editor programs. 
 * To do this, send the key combination that is set 
@@ -117,3 +142,4 @@ and readSetting("HOTKEY_PASTE_KEEWEB") and is_Keeweb_installed()
 {
     SendInput "#{PgDn}"
 }
+

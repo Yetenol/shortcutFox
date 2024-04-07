@@ -12,13 +12,15 @@ With a [human readable configuration file](source/config/trayShortcuts.ahk) the 
 
 ## Keyboard shortcuts
 
-Change **word case** in [editors](#whitelisted-apps-to-toggle-word-case) using `[CapsLock]`
+Change **word case** in [editors](#whitelisted-apps-to-toggle-word-case). `[CapsLock]`
 
 Pop up **KeeWeb**
-- Lookup credentials using `[Win + Shift + V]`
-- Fill in credentials on websites `[Ctrl + Shift + V]`
+- Lookup credentials. `[Win + Shift + V]`
+- Fill in credentials on websites. `[Ctrl + Shift + V]`
 
-Insert the date formatted as YYYY-MM-DD using `[Win + Alt + D]`
+Insert the date formatted as YYYY-MM-DD. `[Win + Alt + D]`
+
+Quick launch with PowerToys Run instead of Windows Search. `[Win]`
 
 ## Tray shortcuts
 
