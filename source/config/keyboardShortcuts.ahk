@@ -77,7 +77,7 @@ CapsLock::
  * If it is not running yet, start it. Otherwise, bring it to the foreground.
  */
 #HotIf readSetting("HOTKEY_LAUNCH_KEEWEB") and is_Keeweb_installed()
-#+V::
+#y::
 {
     global KEEWEB_PATH
     DetectHiddenWindows False

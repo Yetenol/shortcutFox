@@ -48,7 +48,7 @@ TRAY_LAYOUT := {
                             switch: false,
                         }, {
                             id: "HOTKEY_LAUNCH_KEEWEB",
-                            text: "Lookup credentials [Win + Shift + V]",
+                            text: "Lookup credentials [Win + Y]",
                             switch: true,
                         }, {
                             id: "HOTKEY_PASTE_KEEWEB",
