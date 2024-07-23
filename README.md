@@ -95,9 +95,9 @@ Install dependency **[Ahk2Exe Compiler](https://www.autohotkey.com/docs/v2/Scrip
 ```
 
 **Start** shortcutFox from Windows Start or execute:
-  ```powershell
-  .\bin\shortcutFox.exe
-	```
+```powershell
+.\bin\shortcutFox.exe
+```
 - Click `Reload` if prompted that the application is still running
 
 # Develop and debug using Visual Studio Code
